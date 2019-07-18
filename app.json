@@ -1,0 +1,33 @@
+{
+  "expo": {
+    "name": "Favid",
+    "icon": "./src/assets/icons/icon.png",
+    "version": "2.0.1",
+    "slug": "favid-artist",
+    "sdkVersion": "33.0.0",
+    "privacy": "public",
+    "orientation": "portrait",
+    "githubUrl": "https://github.com/favid-inc/app-artist",
+    "ios": {
+      "bundleIdentifier": "br.com.favid.appartist",
+      "appStoreUrl": "https://itunes.apple.com/us/app/favid/id1246143230"
+    },
+    "android": {
+      "package": "br.com.favid.appartist",
+      "versionCode": 19,
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=br.com.favid.appartist"
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#FFFFFF"
+    },
+    "assetBundlePatterns": [
+      "src/assets/images/source/*",
+      "src/assets/icons/**/*.png",
+      "src/assets/fonts"
+    ],
+    "splash": {
+      "image": "src/assets/images/source/splash.png",
+      "resizeMode": "contain"
+    }
+  }
+}
