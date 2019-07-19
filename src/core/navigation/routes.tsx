@@ -1,14 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { useScreens } from 'react-native-screens';
-import { NavigationAction, createAppContainer, createBottomTabNavigator, createStackNavigator, NavigationContainer, NavigationRouteConfigMap, NavigationState } from 'react-navigation';
+import {
+  NavigationAction,
+  createAppContainer,
+  createBottomTabNavigator,
+  createStackNavigator,
+  NavigationContainer,
+  NavigationRouteConfigMap,
+  NavigationState,
+} from 'react-navigation';
 import { SocialNavigationOptions } from './options';
 
 import { MenuContainer } from '@src/containers/menu';
 import AccountContainer from '@src/containers/menu/account/AccountCointainer';
 import SignInContainer from '@src/containers/signin/SignInContainer';
 import ArtistDetailsContainer from '@src/containers/artistDetails/ArtistDetailsContainer';
-import ArtistsContainer from '@src/containers/menu/artists/ArtistsContainer';
+import OrdersContainer from '@src/containers/menu/orders/OrdersContainer';
 import * as BuyingProcess from '@src/containers/buyingProcess/index';
 import BookingContainer from '@src/containers/buyingProcess/booking/BookingContainer';
 import { AuthState } from '../model/authState.model';
@@ -53,7 +61,7 @@ const SignInNavigator: NavigationContainer = createStackNavigator(
 
 const ArtistsNavigator: NavigationContainer = createStackNavigator(
   {
-    // ['Artists']: ArtistsContainer,
+    ['Orders']: OrdersContainer,
     ['Artists']: BookingContainer,
   },
   {
@@ -66,7 +74,7 @@ const ArtistsNavigator: NavigationContainer = createStackNavigator(
 
 const MenuNavigator: NavigationContainer = createBottomTabNavigator(
   {
-    // ['Artists']: ArtistsNavigator,
+    ['Artists']: ArtistsNavigator,
     ['Account']: AccountNavigator,
   },
   {
@@ -98,7 +106,11 @@ const NavigationRouter: NavigationContainer = createAppRouter(AppNavigator);
 const AuthNavigationRouter: NavigationContainer = createAppRouter(SignInNavigator);
 interface ComponentProps {
   auth: any;
-  onNavigationStateChange: (prevNavigationState: NavigationState, nextNavigationState: NavigationState, action: NavigationAction) => void;
+  onNavigationStateChange: (
+    prevNavigationState: NavigationState,
+    nextNavigationState: NavigationState,
+    action: NavigationAction,
+  ) => void;
 }
 
 class Router extends React.Component<ComponentProps> {
