@@ -2,9 +2,10 @@ import { AsyncStorage } from 'react-native';
 import { SIGNIN, SIGNOUT, SIGNINSTARTED, SIGNINENDED, SIGNINERROR } from './ActionTypes';
 import * as config from '@src/core/config';
 import { storageKeys } from '@src/core/config';
-import { ArtistAccount as ArtistAccountModel } from '@src/core/model/artistAccount.model';
+import { ArtistModel } from '@favid-inc/api';
 import { AuthState as AuthStateModel } from '@src/core/model/authState.model';
 import * as firebase from 'firebase';
+import { Artist } from '@src/core/model';
 
 const storageKey = storageKeys.currentUser;
 
@@ -14,21 +15,21 @@ export const auth = authResult => {
     const credential = firebase.auth.GoogleAuthProvider.credential(authResult.idToken, authResult.accessToken);
     const authData = await firebase.auth().signInWithCredential(credential);
     const data = JSON.parse(JSON.stringify(authData)).user;
-    const artistAccount: ArtistAccountModel = {
-      uid: data.uid,
-      displayName: data.displayName,
-      photoURL: data.photoURL,
+    const artist: ArtistModel = {
+      id: data.uid,
+      name: data.displayName,
+      artisticName: data.displayName,
+      photo: data.photoURL,
       email: data.email,
-      lastLoginAt: data.lastLoginAt,
-      createdAt: data.createdAt,
+      about: '',
     };
     const authState: AuthStateModel = {
-      ...artistAccount,
+      ...data,
       redirectEventId: data.redirectEventId,
       lastLoginAt: data.lastLoginAt,
       createdAt: data.createdAt,
     };
-    dispatch(verifyArtistAccount(artistAccount));
+    dispatch(verifyArtistAccount(artist, data.uid));
     await AsyncStorage.setItem(storageKey, JSON.stringify(authState));
     dispatch(signIn(authState));
     dispatch(signInFinished());
@@ -68,10 +69,10 @@ export const loadAuthState = () => {
   };
 };
 
-export const verifyArtistAccount = (artistAccount: ArtistAccountModel) => {
+export const verifyArtistAccount = (artist: Artist, artistId: string) => {
   return async dispatch => {
     console.log('[AuthActions.tsx] verifyArtistAccount() => started');
-    const response = await fetch(`${config.firebase.databaseURL}/artistAccount/${artistAccount.uid}.json`);
+    const response = await fetch(`${config.firebase.databaseURL}/artist/${artistId}.json`);
     const data: any = await response.json();
 
     if (data) {
@@ -79,20 +80,20 @@ export const verifyArtistAccount = (artistAccount: ArtistAccountModel) => {
       return;
     }
     console.log('[AuthActions.tsx] verifyArtistAccount() => finished: register user');
-    dispatch(registerArtistAccount(artistAccount));
+    dispatch(registerArtistAccount(artist, artistId));
   };
 };
 
-const registerArtistAccount = (artistAccount: ArtistAccountModel) => {
+const registerArtistAccount = (artist: Artist, artistId: string) => {
   return async () => {
     console.log('[AuthActions.tsx] registerArtistAccount() => started');
-    await fetch(`${config.firebase.databaseURL}/artistAccount/${artistAccount.uid}.json`, {
+    await fetch(`${config.firebase.databaseURL}/artist/${artistId}.json`, {
       method: 'PUT',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(artistAccount),
+      body: JSON.stringify(artist),
     });
     console.log('[AuthActions.tsx] registerArtistAccount() => finished');
   };
