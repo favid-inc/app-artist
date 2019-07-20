@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { OrderModel } from '@favid-inc/api';
-import { List, Text, InputProps, Input, Button } from '@kitten/ui';
-import { ListRenderItemInfo, NativeScrollEvent, NativeSyntheticEvent, ScrollView, View, ViewProps } from 'react-native';
+import { Text, Button } from '@kitten/ui';
+import { View } from 'react-native';
 import { withStyles, ThemeType, ThemedComponentProps, StyleType } from '@kitten/theme';
-import { textStyle } from '@src/components/common';
+import { textStyle, SwiperComponent } from '@src/components/common';
+
 interface ComponentProps {
   orders: OrderModel[];
   onDetails: (order: OrderModel) => void;
@@ -27,9 +28,20 @@ class OrdersComponent extends Component<OrdersProps> {
         );
       });
     }
+
     return (
       <View style={themedStyle.container}>
-        <ScrollView contentContainerStyle={themedStyle.container}>{orders}</ScrollView>
+        <View style={themedStyle.swiperWrapper}>
+          <Text style={themedStyle.title}> 1 de 4</Text>
+          <SwiperComponent />
+        </View>
+        <View style={themedStyle.buttonsWrapper}>
+          <View style={themedStyle.buttons}>
+            <Button style={themedStyle.button}>OK</Button>
+            <Button style={themedStyle.button}>skip</Button>
+            <Button style={themedStyle.button}>Não</Button>
+          </View>
+        </View>
       </View>
     );
   }
@@ -37,38 +49,39 @@ class OrdersComponent extends Component<OrdersProps> {
 
 export const Orders = withStyles(OrdersComponent, (theme: ThemeType) => ({
   container: {
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-  },
-  pagerContainer: {
-    marginVertical: 8,
-  },
-  pagerLabel: {
-    marginVertical: 16,
-    ...textStyle.paragraph,
-  },
-  pagerCard: {
-    width: 226,
-  },
-  listCard: {
-    marginVertical: 8,
-  },
-  pagerCardMargin: {
-    marginRight: 16,
-  },
-  pagerIndicatorContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginVertical: 8,
-  },
-  pagerIndicatorSelected: {
+    display: 'flex',
+    flexDirection: 'column',
     backgroundColor: theme['background-basic-color-4'],
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    height: '100%',
   },
-  indicatorMarginRight: {
-    marginRight: 12,
+  swiperWrapper: {
+    flex: 1,
+    flexGrow: 5,
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
   },
-  input: {
-    marginHorizontal: 10,
+  buttonsWrapper: {
+    flex: 1,
+    flexGrow: 1,
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
+    height: 50,
+  },
+  title: {
+    ...textStyle.subtitle,
+    fontFamily: 'opensans-bold',
+    color: 'white',
+    textAlign: 'center',
+  },
+  buttons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    marginHorizontal: 30,
   },
 }));
