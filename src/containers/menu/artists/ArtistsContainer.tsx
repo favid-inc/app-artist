@@ -68,7 +68,13 @@ class ArtistsContainer extends Component<Props, State> {
   }
 
   public render(): React.ReactNode {
-    return <ArtistList onSearchStringChange={this.onSearchStringChange} categoryOfArtists={this.filteredArtists()} onDetails={artist => this.onDetails(artist)} />;
+    return (
+      <ArtistList
+        onSearchStringChange={this.onSearchStringChange}
+        categoryOfArtists={this.filteredArtists()}
+        onDetails={artist => this.onDetails(artist)}
+      />
+    );
   }
 }
 
