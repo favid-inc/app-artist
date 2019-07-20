@@ -20,6 +20,7 @@ import OrdersContainer from '@src/containers/menu/orders/OrdersContainer';
 import * as BuyingProcess from '@src/containers/buyingProcess/index';
 import BookingContainer from '@src/containers/buyingProcess/booking/BookingContainer';
 import { AuthState } from '../model/authState.model';
+import { OrdersNavigator } from '@src/containers/orders';
 
 const AccountNavigator: NavigationContainer = createStackNavigator(
   {
@@ -84,9 +85,10 @@ const MenuNavigator: NavigationContainer = createBottomTabNavigator(
 
 const AppNavigator: NavigationContainer = createStackNavigator(
   {
-    ['Home']: MenuNavigator,
-    ...ArtistNavigationMap,
-    ...BuyingProcessNavigationMap,
+    // ['Home']: MenuNavigator,
+    // ...ArtistNavigationMap,
+    // ...BuyingProcessNavigationMap,
+    ['Orders']: OrdersNavigator,
   },
   {
     headerMode: 'screen',
@@ -96,14 +98,18 @@ const AppNavigator: NavigationContainer = createStackNavigator(
   },
 );
 
-const createAppRouter = (container: NavigationContainer): NavigationContainer => {
+const createAppRouter = (
+  container: NavigationContainer,
+): NavigationContainer => {
   useScreens();
   return createAppContainer(container);
 };
 
 // const NavigationRouter: NavigationContainer = createAppRouter(AppNavigator);
 const NavigationRouter: NavigationContainer = createAppRouter(AppNavigator);
-const AuthNavigationRouter: NavigationContainer = createAppRouter(SignInNavigator);
+const AuthNavigationRouter: NavigationContainer = createAppRouter(
+  SignInNavigator,
+);
 interface ComponentProps {
   auth: any;
   onNavigationStateChange: (
@@ -115,9 +121,17 @@ interface ComponentProps {
 
 class Router extends React.Component<ComponentProps> {
   public render() {
-    let navigation = <AuthNavigationRouter onNavigationStateChange={this.props.onNavigationStateChange} />;
+    let navigation = (
+      <AuthNavigationRouter
+        onNavigationStateChange={this.props.onNavigationStateChange}
+      />
+    );
     if (this.props.auth.authState.uid) {
-      navigation = <NavigationRouter onNavigationStateChange={this.props.onNavigationStateChange} />;
+      navigation = (
+        <NavigationRouter
+          onNavigationStateChange={this.props.onNavigationStateChange}
+        />
+      );
     }
     return navigation;
   }
