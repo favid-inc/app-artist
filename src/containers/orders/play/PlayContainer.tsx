@@ -5,10 +5,7 @@ interface Props {}
 
 interface State {}
 
-export class PlayContainer extends Component<
-  NavigationScreenProps & Props,
-  State
-> {
+export class PlayContainer extends Component<NavigationScreenProps & Props, State> {
   public render(): React.ReactNode {
     return;
   }

@@ -6,10 +6,7 @@ interface Props {}
 
 interface State {}
 
-export class RecordContainer extends Component<
-  NavigationScreenProps & Props,
-  State
-> {
+export class RecordContainer extends Component<NavigationScreenProps & Props, State> {
   public render(): React.ReactNode {
     return <Text>Ola mundo</Text>;
   }

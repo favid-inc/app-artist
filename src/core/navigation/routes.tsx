@@ -88,7 +88,7 @@ const AppNavigator: NavigationContainer = createStackNavigator(
     // ['Home']: MenuNavigator,
     // ...ArtistNavigationMap,
     // ...BuyingProcessNavigationMap,
-    ['Orders']: OrdersNavigator,
+    OrdersNavigator,
   },
   {
     headerMode: 'screen',
