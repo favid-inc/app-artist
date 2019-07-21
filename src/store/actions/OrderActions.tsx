@@ -8,12 +8,12 @@ import {
   SET_CURRENT_ORDER,
   DELAY_ORDER,
 } from './ActionTypes';
-import { OrderModel, ORDER_FLOW_DECLINE } from '@favid-inc/api';
+import { OrderModel, ORDER_FLOW_DECLINE, ORDER } from '@favid-inc/api';
 
 export const postOrder = order => {
   return async dispatch => {
     dispatch(postOrderStarted());
-    await fetch(`${config.firebase.databaseURL}/order.json`, {
+    await fetch(`${config.firebase.databaseURL}/${ORDER}.json`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -31,7 +31,7 @@ export const listOrders = (artistId: string) => {
     dispatch(listOrdersStarted());
 
     const queryParams = `?orderBy="artistId"&equalTo="${artistId}"`;
-    const response = await fetch(`${config.firebase.databaseURL}/order.json${queryParams}`);
+    const response = await fetch(`${config.firebase.databaseURL}/${ORDER}.json${queryParams}`);
     const data = await response.json();
     let orders: OrderModel[];
 
@@ -40,7 +40,7 @@ export const listOrders = (artistId: string) => {
       return;
     }
 
-    orders = Object.keys(data)
+    const orders: OrderModel[] = Object.keys(data)
       .map(orderId => ({ id: orderId, ...data[orderId] }))
       .filter(order => order.status === 'OP');
 
