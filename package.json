@@ -2,7 +2,7 @@
   "name": "@favid-inc/app-artist",
   "version": "2.0.1",
   "private": true,
-  "author": "akveo",
+  "author": "Favid Team",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
