@@ -1,1 +1,0 @@
-export { RecordContainer } from './RecordContainer';

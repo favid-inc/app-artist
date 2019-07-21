@@ -5,7 +5,7 @@ interface Props {
   onDone: () => void;
 }
 
-export class Record extends Component<Props> {
+export class RecordOrderVideo extends Component<Props> {
   onCameraRecord = (uri) => {
     console.log(uri);
     this.props.onDone();

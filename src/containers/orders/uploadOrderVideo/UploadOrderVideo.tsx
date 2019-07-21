@@ -1,10 +1,6 @@
 import React, { Component } from 'react';
 
-interface Props {}
-
-interface State {}
-
-export class Play extends Component<Props, State> {
+export class UploadOrderVideo extends Component {
   public render(): React.ReactNode {
     return;
   }

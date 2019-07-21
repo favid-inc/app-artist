@@ -1,1 +1,0 @@
-export { UploadContainer } from './UploadContainer';

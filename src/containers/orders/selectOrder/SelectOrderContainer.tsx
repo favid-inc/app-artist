@@ -10,7 +10,7 @@ import { ContainerView } from '@src/components/common';
 import { ThemedComponentProps, ThemeType, withStyles } from 'react-native-ui-kitten/theme';
 import { Text } from 'react-native-ui-kitten/ui';
 
-interface OrdersContainerProps {
+interface ContainerProps {
   loading: boolean;
   artistId: string;
   onListOrders: (string) => void;
@@ -19,14 +19,14 @@ interface OrdersContainerProps {
   orders: OrderModel[];
 }
 
-type Props = NavigationScreenProps & OrdersContainerProps & ThemedComponentProps;
+type Props = NavigationScreenProps & ContainerProps & ThemedComponentProps;
 
-interface State {
+interface ContainerState {
   showDeclineModal: boolean;
 }
 
-class SelectOrderComponent extends Component<Props, State> {
-  public state: State = {
+class SelectOrderComponent extends Component<Props, ContainerState> {
+  public state: ContainerState = {
     showDeclineModal: true,
   };
 
