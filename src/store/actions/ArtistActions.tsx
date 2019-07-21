@@ -1,5 +1,5 @@
 import { AsyncStorage } from 'react-native';
-import { REMOVEARTIST, STOREARTIST, STOREARTISTS } from './ActionTypes';
+import { REMOVE_ARTIST, STORE_ARTIST, STORE_ARTISTS } from './ActionTypes';
 import * as config from '@src/core/config';
 import { ArtistSearchByMainCategoryResult, ARTIST_SEARCH_BY_MAIN_CATEGORY } from '@favid-inc/api';
 import { Artist, CategoryOfArtistModel } from '@src/core/model';
@@ -37,7 +37,7 @@ export const listArtists = () => {
     const storeArtists = await AsyncStorage.getItem('categoryOfArtists');
     if (storeArtists) {
       dispatch({
-        type: STOREARTISTS,
+        type: STORE_ARTISTS,
         payload: JSON.parse(storeArtists),
       });
     }
@@ -47,7 +47,7 @@ export const listArtists = () => {
     const categoryOfArtists: CategoryOfArtistModel[] = processArtistList(data);
     AsyncStorage.setItem('categoryOfArtists', JSON.stringify(categoryOfArtists));
     dispatch({
-      type: STOREARTISTS,
+      type: STORE_ARTISTS,
       payload: categoryOfArtists,
     });
   };
@@ -55,7 +55,7 @@ export const listArtists = () => {
 
 export const storeArtist = (artist: Artist) => {
   return {
-    type: STOREARTIST,
+    type: STORE_ARTIST,
     payload: artist,
   };
 };
@@ -63,6 +63,6 @@ export const storeArtist = (artist: Artist) => {
 export const removeArtist = () => {
   AsyncStorage.removeItem('artist');
   return {
-    type: REMOVEARTIST,
+    type: REMOVE_ARTIST,
   };
 };

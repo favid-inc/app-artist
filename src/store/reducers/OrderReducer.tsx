@@ -1,13 +1,13 @@
 import {
-  STOREORDERS,
-  POSTORDER,
-  POSTORDERSTARTED,
-  POSTORDERENDED,
-  POSTORDERERROR,
-  LISTORDERSSTARTED,
-  LISTORDERSENDED,
-  SETCURRENTORDER,
-  DELAYORDER,
+  STORE_ORDERS,
+  POST_ORDER,
+  POST_ORDER_STARTED,
+  POST_ORDER_ENDED,
+  POST_ORDER_ERROR,
+  LIST_ORDERS_STARTED,
+  LIST_ORDER_SENDED,
+  SET_CURRENT_ORDER,
+  DELAY_ORDER,
 } from '../actions/ActionTypes';
 
 const INITIAL_STATE = {
@@ -85,23 +85,23 @@ const delayOrder = (state, action) => {
 
 const orderReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case STOREORDERS:
+    case STORE_ORDERS:
       return storeOrders(state, action);
-    case POSTORDER:
+    case POST_ORDER:
       return postOrder(state, action);
-    case POSTORDERSTARTED:
+    case POST_ORDER_STARTED:
       return postOrderStarted(state);
-    case POSTORDERENDED:
+    case POST_ORDER_ENDED:
       return postOrderEnded(state);
-    case POSTORDERERROR:
+    case POST_ORDER_ERROR:
       return postOrderError(state, action);
-    case LISTORDERSSTARTED:
+    case LIST_ORDERS_STARTED:
       return listOrdersStarted(state);
-    case LISTORDERSENDED:
+    case LIST_ORDER_SENDED:
       return listOrdersEnded(state);
-    case SETCURRENTORDER:
+    case SET_CURRENT_ORDER:
       return setCurrentOrder(state, action);
-    case DELAYORDER:
+    case DELAY_ORDER:
       return delayOrder(state, action);
     default:
       return state;

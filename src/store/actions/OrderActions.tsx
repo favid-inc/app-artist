@@ -1,12 +1,12 @@
 import * as config from '@src/core/config';
 import {
-  LISTORDERSSTARTED,
-  LISTORDERSENDED,
-  POSTORDERSTARTED,
-  POSTORDERENDED,
-  STOREORDERS,
-  SETCURRENTORDER,
-  DELAYORDER,
+  LIST_ORDERS_STARTED,
+  LIST_ORDER_SENDED,
+  POST_ORDER_STARTED,
+  POST_ORDER_ENDED,
+  STORE_ORDERS,
+  SET_CURRENT_ORDER,
+  DELAY_ORDER,
 } from './ActionTypes';
 import { OrderModel, ORDER_FLOW_DECLINE } from '@favid-inc/api';
 
@@ -67,45 +67,45 @@ export const declineOrder = (orderId: string, artistId: string, refusedByArtistD
 
 export const delayOrder = (orderId: string) => {
   return {
-    type: DELAYORDER,
+    type: DELAY_ORDER,
     orderId,
   };
 };
 
 export const storeOrders = (orders: OrderModel[]) => {
   return {
-    type: STOREORDERS,
+    type: STORE_ORDERS,
     orders,
   };
 };
 
 export const setCurrentOrder = (order: OrderModel) => {
   return {
-    type: SETCURRENTORDER,
+    type: SET_CURRENT_ORDER,
     order,
   };
 };
 
 export const listOrdersStarted = () => {
   return {
-    type: LISTORDERSSTARTED,
+    type: LIST_ORDERS_STARTED,
   };
 };
 
 export const listOrdersEnded = () => {
   return {
-    type: LISTORDERSENDED,
+    type: LIST_ORDER_SENDED,
   };
 };
 
 export const postOrderStarted = () => {
   return {
-    type: POSTORDERSTARTED,
+    type: POST_ORDER_STARTED,
   };
 };
 
 export const postOrderEnded = () => {
   return {
-    type: POSTORDERENDED,
+    type: POST_ORDER_ENDED,
   };
 };

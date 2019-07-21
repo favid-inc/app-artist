@@ -1,4 +1,4 @@
-import { SIGNIN, SIGNOUT, SIGNINSTARTED, SIGNINENDED, SIGNINERROR } from '../actions/ActionTypes';
+import { SIGN_IN, SIGN_OUT, SIGN_IN_STARTED, SIGN_IN_ENDED, SIGN_IN_ERROR } from '../actions/ActionTypes';
 import { AuthState as AuthStateModel } from '@src/core/model/authState.model';
 
 const INITIAL_STATE = {
@@ -69,15 +69,15 @@ const signInError = (state, action) => {
 
 const authReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case SIGNIN:
+    case SIGN_IN:
       return signIn(state, action);
-    case SIGNOUT:
+    case SIGN_OUT:
       return signOut(state);
-    case SIGNINSTARTED:
+    case SIGN_IN_STARTED:
       return signInStarted(state);
-    case SIGNINENDED:
+    case SIGN_IN_ENDED:
       return signInEnded(state);
-    case SIGNINERROR:
+    case SIGN_IN_ERROR:
       return signInError(state, action);
     default:
       return state;

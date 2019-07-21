@@ -1,4 +1,4 @@
-import { STOREARTIST, REMOVEARTIST, STOREARTISTS } from '../actions/ActionTypes';
+import { STORE_ARTIST, REMOVE_ARTIST, STORE_ARTISTS } from '../actions/ActionTypes';
 
 const INITIAL_STATE = {
   artist: null,
@@ -33,11 +33,11 @@ const removeArtist = state => {
 
 const authReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case STOREARTIST:
+    case STORE_ARTIST:
       return storeArtist(state, action);
-    case REMOVEARTIST:
+    case REMOVE_ARTIST:
       return removeArtist(state);
-    case STOREARTISTS:
+    case STORE_ARTISTS:
       return storeArtists(state, action);
     default:
       return state;

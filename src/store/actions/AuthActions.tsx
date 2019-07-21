@@ -1,5 +1,5 @@
 import { AsyncStorage } from 'react-native';
-import { SIGNIN, SIGNOUT, SIGNINSTARTED, SIGNINENDED, SIGNINERROR } from './ActionTypes';
+import { SIGN_IN, SIGN_OUT, SIGN_IN_STARTED, SIGN_IN_ENDED, SIGN_IN_ERROR } from './ActionTypes';
 import * as config from '@src/core/config';
 import { storageKeys } from '@src/core/config';
 import { ArtistModel } from '@favid-inc/api';
@@ -38,26 +38,26 @@ export const auth = authResult => {
 
 export const signIn = (authState: AuthStateModel) => {
   return {
-    type: SIGNIN,
+    type: SIGN_IN,
     authState,
   };
 };
 
 export const signInStarted = () => {
   return {
-    type: SIGNINSTARTED,
+    type: SIGN_IN_STARTED,
   };
 };
 
 export const signInFinished = () => {
   return {
-    type: SIGNINENDED,
+    type: SIGN_IN_ENDED,
   };
 };
 
 export const signInError = error => {
   return {
-    type: SIGNINERROR,
+    type: SIGN_IN_ERROR,
     error,
   };
 };
@@ -103,6 +103,6 @@ export const signOut = () => {
   AsyncStorage.removeItem(storageKey);
   console.log('[AuthActions.tsx] signOut');
   return {
-    type: SIGNOUT,
+    type: SIGN_OUT,
   };
 };
