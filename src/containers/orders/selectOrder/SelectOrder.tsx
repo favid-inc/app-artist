@@ -28,17 +28,17 @@ class OrdersComponent extends Component<OrdersProps, State> {
     this.setState({ selectedOrder: i });
   }
 
-  private onDeclineOrder() {
+  private onDeclineOrder = () => {
     const order: OrderModel = this.props.orders[this.state.selectedOrder];
     this.props.onDeclineOrder(order);
   }
 
-  private onDelayOrder() {
+  private onDelayOrder = () => {
     const order: OrderModel = this.props.orders[this.state.selectedOrder];
     this.props.onDelayOrder(order.id);
   }
 
-  private onAcceptOrder() {
+  private onAcceptOrder = () => {
     // const order: OrderModel = this.props.orders[this.state.selectedOrder];
     // this.props.onAcceptOrder(order.id);
   }

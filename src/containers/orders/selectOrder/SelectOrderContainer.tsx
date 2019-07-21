@@ -5,7 +5,7 @@ import { OrderModel } from '@favid-inc/api';
 
 import { Orders } from './SelectOrder';
 import * as actions from '../../../store/actions';
-import { View, Alert } from 'react-native';
+import { ScrollView, RefreshControl, View, Alert } from 'react-native';
 import { ContainerView } from '@src/components/common';
 import { ThemedComponentProps, ThemeType, withStyles } from 'react-native-ui-kitten/theme';
 import { Text } from 'react-native-ui-kitten/ui';
@@ -30,16 +30,16 @@ class Container extends Component<Props, ContainerState> {
     showDeclineModal: true,
   };
 
-  public componentDidMount() {
+  public componentDidMount = () => {
     this.props.onListOrders(this.props.artistId);
-  }
+  };
 
-  public onDeclineOrder(order: OrderModel) {
+  public onDeclineOrder = (order: OrderModel) => {
     this.props.onSetCurrentOrder(order);
-    this.props.navigation.navigate({ routeName: 'DeclineOrder' });
+    this.props.navigation.navigate('DeclineOrder');
   }
 
-  public onDelayOrder(orderId: string) {
+  public onDelayOrder = (orderId: string) => {
     Alert.alert(
       'Adiar pedido?',
       'Esta ação não poderá ser desfeita.',
@@ -64,23 +64,24 @@ class Container extends Component<Props, ContainerState> {
   public render() {
     const { themedStyle } = this.props;
     return (
-      <View>
+      <ScrollView
+        contentContainerStyle={themedStyle.contentContainer}
+        refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.componentDidMount} />}
+      >
         {this.props.orders && this.props.orders.length ? (
           <Orders
             loading={this.props.loading}
             orders={this.props.orders}
-            onDeclineOrder={(order: OrderModel) => this.onDeclineOrder(order)}
-            onDelayOrder={orderId => this.onDelayOrder(orderId)}
-            onAcceptOrder={orderId => this.onAcceptOrder(orderId)}
+            onDeclineOrder={this.onDeclineOrder}
+            onDelayOrder={this.onDelayOrder}
+            onAcceptOrder={this.onAcceptOrder}
           />
         ) : (
-          <View style={themedStyle.contentContainer}>
-            <Text appearance='hint' style={themedStyle.text} category='h6'>
-              Nenhum pedido.
-            </Text>
-          </View>
+          <Text appearance='hint' style={themedStyle.text} category='h6'>
+            Nenhum pedido.
+          </Text>
         )}
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -99,10 +100,8 @@ const mapDispatchToProps = dispatch => ({
 
 const ContainerStyled = withStyles(Container, (theme: ThemeType) => ({
   contentContainer: {
+    flex: 1,
     backgroundColor: theme['background-basic-color-2'],
-    display: 'flex',
-    flexDirection: 'row',
-    height: '100%',
     paddingVertical: 30,
     paddingHorizontal: 20,
     justifyContent: 'center',
