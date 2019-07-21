@@ -10,7 +10,7 @@
     "start:prod": "npm run env:set -- prod && npm start -- -c",
     "env:set": "./scripts/environment/set-env.sh",
     "build": "tsc -p ./tsconfig.json",
-    "clean": "rimraf ./dist",
+    "clean": "rimraf ./dist && expo r -c",
     "lint": "tslint -p ./tsconfig.json",
     "lint:fix": "npm run lint -- --fix",
     "ci:install": "npm ci",
