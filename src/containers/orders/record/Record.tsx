@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
+import { Camera } from 'expo-camera';
 
-interface Props {}
-
-interface State {}
-
-export class Record extends Component<Props, State> {
+export class Record extends Component {
   public render(): React.ReactNode {
-    return;
+    return <Camera />;
   }
 }
