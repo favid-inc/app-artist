@@ -1,1 +1,1 @@
-export { OrdersNavigator } from './navigator';
+export * from './navigators';
