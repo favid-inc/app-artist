@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
-import { ThemedComponentProps, withStyles, ThemeType } from 'react-native-ui-kitten/theme';
-import { ContainerView, ValidationInput, textStyle } from '@src/components/common';
+import {
+  ThemedComponentProps,
+  withStyles,
+  ThemeType,
+} from 'react-native-ui-kitten/theme';
+import {
+  ContainerView,
+  ValidationInput,
+  textStyle,
+} from '@src/components/common';
 import { View, ViewProps, ActivityIndicator } from 'react-native';
 import { Toggle, Text, Button, Input } from 'react-native-ui-kitten/ui';
 import { NameValidator } from '@src/core/validators';
@@ -18,8 +26,6 @@ interface State {
   theirName?: string;
   message: string;
 }
-
-
 
 class BookingComponent extends Component<BookingProps, State> {
   public state: State = {
@@ -56,13 +62,24 @@ class BookingComponent extends Component<BookingProps, State> {
     }
 
     return (
-      <ContainerView style={themedStyle.container} contentContainerStyle={themedStyle.contentContainer}>
+      <ContainerView
+        style={themedStyle.container}
+        contentContainerStyle={themedStyle.contentContainer}
+      >
         <View style={themedStyle.formContainer}>
           <View style={themedStyle.middleContainer}>
-            <Text appearance='hint' category='s2' style={themedStyle.tittleLabel}>
+            <Text
+              appearance='hint'
+              category='s2'
+              style={themedStyle.tittleLabel}
+            >
               Para Presente?
             </Text>
-            <Toggle checked={this.state.gift} style={themedStyle.gift} onChange={gift => this.setState({ gift })} />
+            <Toggle
+              checked={this.state.gift}
+              style={themedStyle.gift}
+              onChange={gift => this.setState({ gift })}
+            />
           </View>
           <View style={themedStyle.middleContainer}>
             <ValidationInput
@@ -90,8 +107,14 @@ class BookingComponent extends Component<BookingProps, State> {
             />
           </View>
         </View>
-        <Button status='success' disabled={this.props.loading} size='giant' style={themedStyle.addButton} onPress={() => this.onSend}>
-          {this.props.loading ? 'Enviando Pedido...' : 'Enviar Pedido' } 
+        <Button
+          status='success'
+          disabled={this.props.loading}
+          size='giant'
+          style={themedStyle.addButton}
+          onPress={() => this.onSend}
+        >
+          {this.props.loading ? 'Enviando Pedido...' : 'Enviar Pedido'}
         </Button>
       </ContainerView>
     );
