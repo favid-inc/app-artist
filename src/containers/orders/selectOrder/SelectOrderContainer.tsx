@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { NavigationScreenProps } from 'react-navigation';
 import { OrderModel } from '@favid-inc/api';
 
-import { Orders } from './Orders';
+import { Orders } from './SelectOrder';
 import * as actions from '../../../store/actions';
 import { View, Alert } from 'react-native';
 import { ContainerView } from '@src/components/common';
@@ -25,7 +25,7 @@ interface State {
   showDeclineModal: boolean;
 }
 
-class OrdersContainerComponent extends Component<Props, State> {
+class SelectOrderComponent extends Component<Props, State> {
   public state: State = {
     showDeclineModal: true,
   };
@@ -97,7 +97,7 @@ const mapDispatchToProps = dispatch => ({
   onDelayOrder: (orderId: string) => dispatch(actions.delayOrder(orderId)),
 });
 
-const OrdersContainerStyled = withStyles(OrdersContainerComponent, (theme: ThemeType) => ({
+const SelectOrderContainer = withStyles(SelectOrderComponent, (theme: ThemeType) => ({
   contentContainer: {
     backgroundColor: theme['background-basic-color-2'],
     display: 'flex',
