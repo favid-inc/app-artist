@@ -46,55 +46,19 @@ class OrdersComponent extends Component<OrdersProps, State> {
   public render() {
     const { themedStyle } = this.props;
 
-    const ordersNavigationTitle: string = [
-      this.state.selectedOrder + 1,
-      'de',
-      this.props.orders ? this.props.orders.length : 0,
-    ].join(' ');
-
-    let orders: React.ReactNode = (
-      <View style={themedStyle.swiperWrapper}>
-        <Text style={themedStyle.title} appearance='hint'>
-          Carregando pedidos...
-        </Text>
-        <View style={themedStyle.loadingWrapper}>
-          <ActivityIndicator size='large' style={themedStyle.loading} />
-        </View>
-      </View>
+    const content = this.props.loading ? (
+      <LoadingOrders themedStyle={themedStyle} />
+    ) : (
+      <SwipeOrders
+        orders={this.props.orders}
+        themedStyle={themedStyle}
+        title={`${this.state.selectedOrder + 1} de ${(this.props.orders && this.props.orders.length) || 0}`}
+      />
     );
-    if (!this.props.loading && this.props.orders) {
-      orders = (
-        <View style={themedStyle.swiperWrapper}>
-          <Text style={themedStyle.title} appearance='hint'>
-            {ordersNavigationTitle}
-          </Text>
-          <SwiperComponent selectedOrderChanged={i => this.onSelectedOrderChanged(i)}>
-            {this.props.orders.map((order: OrderModel, index: number) => {
-              return (
-                <View key={order.id} style={themedStyle.slide}>
-                  <Text style={[themedStyle.price, themedStyle.text]} appearance='hint' category='h5'>
-                    {`R$ ${order.price}`}
-                  </Text>
-                  <Text style={[themedStyle.text, themedStyle.name]} appearance='hint' category='h4'>
-                    {`por ${order.myName}`}
-                  </Text>
-                  <Text style={[themedStyle.text, themedStyle.expiration]} appearance='hint' category='c1'>
-                    {`expira em ${new Date(order.creationDate)}`}
-                  </Text>
-                  <Text style={[themedStyle.text, themedStyle.instruction]} appearance='hint' category='h6'>
-                    {order.videoInstructions}
-                  </Text>
-                </View>
-              );
-            })}
-          </SwiperComponent>
-        </View>
-      );
-    }
 
     return (
       <View style={themedStyle.container}>
-        <View style={themedStyle.swiperWrapper}>{orders}</View>
+        <View style={themedStyle.swiperWrapper}>{content}</View>
         <View style={themedStyle.buttonsWrapper}>
           <View style={themedStyle.buttons}>
             <Button
@@ -104,7 +68,7 @@ class OrdersComponent extends Component<OrdersProps, State> {
               appearance='outline'
               icon={CloseIconOutline}
               disabled={this.props.loading}
-              onPress={() => this.onDeclineOrder()}
+              onPress={this.onDeclineOrder}
             />
             <Button
               style={themedStyle.button}
@@ -112,7 +76,7 @@ class OrdersComponent extends Component<OrdersProps, State> {
               size='large'
               appearance='outline'
               disabled={this.props.loading}
-              onPress={() => this.onDelayOrder()}
+              onPress={this.onDelayOrder}
             >
               adiar
             </Button>
@@ -123,7 +87,7 @@ class OrdersComponent extends Component<OrdersProps, State> {
               appearance='outline'
               icon={EvaCheckmarkOutline}
               disabled={this.props.loading}
-              onPress={() => this.onAcceptOrder()}
+              onPress={this.onAcceptOrder}
             />
           </View>
         </View>
@@ -131,6 +95,45 @@ class OrdersComponent extends Component<OrdersProps, State> {
     );
   }
 }
+
+const LoadingOrders = ({ themedStyle }) => (
+  <View style={themedStyle.swiperWrapper}>
+    <Text style={themedStyle.title} appearance='hint'>
+      Carregando pedidos...
+    </Text>
+    <View style={themedStyle.loadingWrapper}>
+      <ActivityIndicator size='large' style={themedStyle.loading} />
+    </View>
+  </View>
+);
+
+const SwipeOrders = ({ themedStyle, orders, title }) => (
+  <View style={themedStyle.swiperWrapper}>
+    <Text style={themedStyle.title} appearance='hint'>
+      {title}
+    </Text>
+    <SwiperComponent selectedOrderChanged={i => this.onSelectedOrderChanged(i)}>
+      {orders.map((order: OrderModel, index: number) => {
+        return (
+          <View key={order.id} style={themedStyle.slide}>
+            <Text style={[themedStyle.price, themedStyle.text]} appearance='hint' category='h5'>
+              {`R$ ${order.price}`}
+            </Text>
+            <Text style={[themedStyle.text, themedStyle.name]} appearance='hint' category='h4'>
+              {`por ${order.myName}`}
+            </Text>
+            <Text style={[themedStyle.text, themedStyle.expiration]} appearance='hint' category='c1'>
+              {`expira em ${new Date(order.creationDate)}`}
+            </Text>
+            <Text style={[themedStyle.text, themedStyle.instruction]} appearance='hint' category='h6'>
+              {order.videoInstructions}
+            </Text>
+          </View>
+        );
+      })}
+    </SwiperComponent>
+  </View>
+);
 
 export const Orders = withStyles(OrdersComponent, (theme: ThemeType) => ({
   container: {
