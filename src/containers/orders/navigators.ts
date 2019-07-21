@@ -4,8 +4,9 @@ import { DeclineOrderContainer } from './declineOrder';
 import { RecordOrderVideoContainer } from './recordOrderVideo';
 import { UploadOrderVideoContainer } from './uploadOrderVideo';
 import { PlayOrderVideoContainer } from './playOrderVideo';
+import { SelectOrderContainer } from './selectOrder';
 
-export const DeclineOrderNavigator: NavigationContainer = createStackNavigator(
+const DeclineOrderNavigator: NavigationContainer = createStackNavigator(
   { DeclineOrder: DeclineOrderContainer },
   {
     headerMode: 'screen',
@@ -13,7 +14,7 @@ export const DeclineOrderNavigator: NavigationContainer = createStackNavigator(
   },
 );
 
-export const AcceptOrderNavigator: NavigationContainer = createStackNavigator(
+const AcceptOrderNavigator: NavigationContainer = createStackNavigator(
   {
     RecordOrderVideo: RecordOrderVideoContainer,
     PlayOrderVideo: PlayOrderVideoContainer,
@@ -27,6 +28,7 @@ export const AcceptOrderNavigator: NavigationContainer = createStackNavigator(
 
 export const OrdersNavigator: NavigationContainer = createStackNavigator(
   {
+    SelectOrder: SelectOrderContainer,
     AcceptOrder: AcceptOrderNavigator,
     DeclineOrder: DeclineOrderNavigator,
   },

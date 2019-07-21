@@ -25,7 +25,7 @@ interface ContainerState {
   showDeclineModal: boolean;
 }
 
-class SelectOrderComponent extends Component<Props, ContainerState> {
+class Container extends Component<Props, ContainerState> {
   public state: ContainerState = {
     showDeclineModal: true,
   };
@@ -97,7 +97,7 @@ const mapDispatchToProps = dispatch => ({
   onDelayOrder: (orderId: string) => dispatch(actions.delayOrder(orderId)),
 });
 
-const SelectOrderContainer = withStyles(SelectOrderComponent, (theme: ThemeType) => ({
+const ContainerStyled = withStyles(Container, (theme: ThemeType) => ({
   contentContainer: {
     backgroundColor: theme['background-basic-color-2'],
     display: 'flex',
@@ -112,7 +112,7 @@ const SelectOrderContainer = withStyles(SelectOrderComponent, (theme: ThemeType)
   },
 }));
 
-export const OrdersContainer = connect(
+export const SelectOrderContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(OrdersContainerStyled);
+)(ContainerStyled);
