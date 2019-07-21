@@ -1,11 +1,14 @@
 import React, { useContext } from 'react';
 import { View, TouchableOpacity, Image, GestureResponderEvent, StyleSheet } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { Camera as NativeCamera } from 'expo-camera';
 
 import { styles } from './styles';
-import { FlashMode } from '../Camera';
 
 type EventHandler = (event: GestureResponderEvent) => void;
+const CameraType = NativeCamera.Constants.Type;
+const FlashMode = NativeCamera.Constants.FlashMode;
+
 
 interface Props {
   cameraType: any;

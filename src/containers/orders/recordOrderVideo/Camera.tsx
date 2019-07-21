@@ -4,8 +4,8 @@ import * as Permissions from 'expo-permissions';
 import { Camera as NativeCamera } from 'expo-camera';
 import { Toolbar } from './toolbar';
 
-export const CameraType = NativeCamera.Constants.Type;
-export const FlashMode = NativeCamera.Constants.FlashMode;
+const CameraType = NativeCamera.Constants.Type;
+const FlashMode = NativeCamera.Constants.FlashMode;
 
 interface Props {
   onRecord: (uri: string) => any;
