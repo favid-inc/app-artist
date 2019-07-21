@@ -2,41 +2,63 @@ import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { Camera as NativeCamera } from 'expo-camera';
-import { BottomBar } from './bottomBar';
+import { Toolbar } from './toolbar';
 
-const Type = NativeCamera.Constants.Type;
+export const CameraType = NativeCamera.Constants.Type;
+export const FlashMode = NativeCamera.Constants.FlashMode;
 
 interface Props {
-  onRecord: () => any;
+  onRecord: (uri: string) => any;
 }
 
 interface State {
+  cameraType: any;
+  flashMode: any;
   hasPermission: boolean;
-  isRecording: boolean;
-  type: any;
+  isCapturing: boolean;
 }
 
 export class Camera extends Component<Props, State> {
   private camera: NativeCamera;
 
   public state = {
+    cameraType: CameraType.front,
+    flashMode: FlashMode.off,
     hasPermission: null,
-    type: NativeCamera.Constants.Type.back,
-    isRecording: false,
+    isCapturing: false,
   };
 
   private setCamera = camera => (this.camera = camera);
 
-  private startRecording = async () => void this.camera.recordAsync();
-  private stopRecording = () => void this.camera.stopRecording();
-  private flipCamera = () =>
+  private handleCaptureIn = async () => {
+    this.setState({ isCapturing: true });
+    const result = await this.camera.recordAsync();
+
     this.setState({
-      type: this.state.type === Type.back ? Type.front : Type.back,
+      isCapturing: false,
     });
 
+    this.props.onRecord(result.uri);
+  };
+
+  private handleCaptureOut = () => {
+    this.setState({ isCapturing: false });
+    this.camera.stopRecording();
+  };
+
+  handleToggleCameraType = () =>
+    this.setState({ cameraType: this.state.cameraType === CameraType.front ? CameraType.back : CameraType.front });
+
+  handleToggleFlashMode = () =>
+    this.setState({ flashMode: this.state.flashMode === FlashMode.off ? FlashMode.on : FlashMode.off });
+
   async componentDidMount() {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    this.setState({ hasPermission: status === 'granted' });
+    const camera = await Permissions.askAsync(Permissions.CAMERA);
+    const audio = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
+
+    const hasPermission = camera.status + audio.status === 'grantedgranted';
+
+    this.setState({ hasPermission });
   }
 
   render() {
@@ -51,19 +73,17 @@ export class Camera extends Component<Props, State> {
     }
 
     return (
-      <View style={{ flex: 1 }}>
-        <NativeCamera
-          ref={this.setCamera}
-          style={{ flex: 1 }}
-          type={this.state.type}
-        >
-          <BottomBar
-            mode='recording'
-            onFlip={this.flipCamera}
-            onRecord={this.startRecording}
-            onStop={this.stopRecording}
-          />
-        </NativeCamera>
+      <View style={{ flex: 1, backgroundColor: 'transparent' }}>
+        <NativeCamera ref={this.setCamera} style={{ flex: 1 }} type={this.state.cameraType} flashMode={this.state.flashMode} ratio='16:9' />
+        <Toolbar
+          cameraType={this.state.cameraType}
+          flashMode={this.state.flashMode}
+          isCapturing={this.state.isCapturing}
+          onCaptureIn={this.handleCaptureIn}
+          onCaptureOut={this.handleCaptureOut}
+          toggleCameraType={this.handleToggleCameraType}
+          toggleFlashMode={this.handleToggleFlashMode}
+        />
       </View>
     );
   }
