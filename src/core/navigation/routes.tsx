@@ -16,11 +16,10 @@ import { MenuContainer } from '@src/containers/menu';
 import AccountContainer from '@src/containers/menu/account/AccountCointainer';
 import SignInContainer from '@src/containers/signin/SignInContainer';
 import ArtistDetailsContainer from '@src/containers/artistDetails/ArtistDetailsContainer';
-import OrdersContainer from '@src/containers/menu/orders/OrdersContainer';
+import { OrdersContainer } from '@src/containers/menu/orders/OrdersContainer';
 import * as BuyingProcess from '@src/containers/buyingProcess/index';
 import BookingContainer from '@src/containers/buyingProcess/booking/BookingContainer';
-import { AuthState } from '../model/authState.model';
-
+import { DeclineOrderContainer } from '@src/containers/orders/declineOrders';
 const AccountNavigator: NavigationContainer = createStackNavigator(
   {
     ['Account']: AccountContainer,
@@ -87,6 +86,7 @@ const AppNavigator: NavigationContainer = createStackNavigator(
     ['Home']: MenuNavigator,
     ...ArtistNavigationMap,
     ...BuyingProcessNavigationMap,
+    DeclineOrder: DeclineOrderContainer,
   },
   {
     headerMode: 'screen',
