@@ -29,3 +29,11 @@ export const CvvFormatter = (value: string): string => {
 export const CardholderNameFormatter = (value: string): string => {
   return value.toLocaleUpperCase();
 };
+
+export const currencyFormatter = value => {
+  if (!value) {
+    return 'R$ 0.00';
+  }
+  const num = parseFloat(value);
+  return 'R$ ' + num.toFixed(2);
+};
