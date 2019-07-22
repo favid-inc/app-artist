@@ -1,23 +1,48 @@
 import React from 'react';
 import { ButtonProps, View } from 'react-native';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
-import { Button } from '@kitten/ui';
+import { Button, Text } from '@kitten/ui';
 import { ProfileSetting } from './profileSetting.component';
 import { ProfilePhoto } from './profilePhoto.component';
 import { CameraIconFill } from '@src/assets/icons';
-import { Profile } from '@src/core/model';
-import { ContainerView, textStyle } from '@src/components/common';
+import { ContainerView, textStyle, ValidationInput } from '@src/components/common';
+import { ArtistModel } from '@favid-inc/api';
+import { NameValidator, StringValidator } from '@src/core/validators';
+import { LoadingAnimationComponent } from '@src/assets/icons';
+
 interface ComponentProps {
-  profile: Profile;
+  loading: boolean;
+  artist: ArtistModel;
   onUploadPhotoButtonPress: () => void;
-  onButtonPress: () => void;
+  onSave: (artist: ArtistModel, artistId: string) => void;
+  onSignOut: () => void;
 }
 
 export type AccountProps = ThemedComponentProps & ComponentProps;
 
-class Accountomponent extends React.Component<AccountProps> {
-  private onButtonPress = () => {
-    this.props.onButtonPress();
+export interface State {
+  artist: ArtistModel;
+}
+
+class Accountomponent extends React.Component<AccountProps, State> {
+  public state: State = {
+    artist: {
+      name: '',
+      artisticName: '',
+      price: 0,
+      about: '',
+      mainCategory: '',
+      location: '',
+      responseTime: 0,
+    },
+  };
+
+  private onSave = () => {
+    this.props.onSave(this.state.artist, this.state.artist.id);
+  };
+
+  private onSignOut = () => {
+    this.props.onSignOut();
   };
 
   private onPhotoButtonPress = () => {
@@ -37,22 +62,85 @@ class Accountomponent extends React.Component<AccountProps> {
     );
   };
 
-  public render(): React.ReactNode {
-    const { themedStyle, profile } = this.props;
+  public componentWillMount() {
+    this.setState({ artist: { ...this.props.artist } });
+  }
 
+  public render(): React.ReactNode {
+    const { themedStyle, artist } = this.props;
+    const imageSource = {
+      uri: artist.photo,
+      height: 100,
+      width: 100,
+    };
     return (
       <ContainerView style={themedStyle.container}>
         <View style={themedStyle.photoSection}>
-          <ProfilePhoto style={themedStyle.photo} source={profile.photo.imageSource} button={this.renderPhotoButton} />
+          <ProfilePhoto style={themedStyle.photo} source={imageSource} button={this.renderPhotoButton} />
         </View>
         <View style={themedStyle.infoSection}>
-          <ProfileSetting style={themedStyle.profileSetting} hint='First Name' value={profile.firstName} />
-          <ProfileSetting style={themedStyle.profileSetting} hint='Last Name' value={profile.lastName} />
+          <ProfileSetting style={themedStyle.profileSetting} hint='Id' value={artist.id} />
+          <ProfileSetting style={themedStyle.profileSetting} hint='Email' value={artist.email} />
+          <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
+            <ValidationInput
+              value={this.state.artist.artisticName}
+              style={themedStyle.input}
+              textStyle={textStyle.paragraph}
+              labelStyle={textStyle.label}
+              label='Nome Artistico'
+              placeholder='José'
+              validator={NameValidator}
+              onChangeText={artisticName => this.setState({ artist: { ...this.state.artist, artisticName } })}
+            />
+          </View>
+          <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
+            <ValidationInput
+              value={this.state.artist.price.toString()}
+              style={themedStyle.input}
+              textStyle={textStyle.paragraph}
+              labelStyle={textStyle.label}
+              label='Preço'
+              placeholder='50.00'
+              validator={StringValidator}
+              onChangeText={price => this.setState({ artist: { ...this.state.artist, price: parseFloat(price) } })}
+            />
+          </View>
+          <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
+            <ValidationInput
+              value={this.state.artist.mainCategory}
+              style={themedStyle.input}
+              textStyle={textStyle.paragraph}
+              labelStyle={textStyle.label}
+              label='Categorias'
+              placeholder='Artista'
+              validator={NameValidator}
+              onChangeText={mainCategory => this.setState({ artist: { ...this.state.artist, mainCategory } })}
+            />
+          </View>
+          {this.props.loading ? (
+            <Text appearance='hint' style={themedStyle.text}>
+              Enviar dados...
+            </Text>
+          ) : null}
+
+          <Button
+            style={themedStyle.button}
+            textStyle={textStyle.button}
+            size='large'
+            status='info'
+            onPress={this.onSave}
+            disabled={this.props.loading}
+          >
+            Save
+          </Button>
         </View>
-        <View style={themedStyle.contactSection}>
-          <ProfileSetting style={themedStyle.profileSetting} hint='Email' value={profile.email} />
-        </View>
-        <Button style={themedStyle.button} textStyle={textStyle.button} size='large' onPress={this.onButtonPress}>
+        <Button
+          style={themedStyle.button}
+          textStyle={textStyle.button}
+          size='large'
+          status='danger'
+          onPress={this.onSignOut}
+        >
           Logout
         </Button>
       </ContainerView>
@@ -80,6 +168,18 @@ export const Account = withStyles(Accountomponent, (theme: ThemeType) => ({
     borderBottomWidth: 1,
     borderBottomColor: theme['border-basic-color-2'],
   },
+  middleContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+  },
+  input: {
+    flexWrap: 'wrap',
+    flex: 1,
+    backgroundColor: theme['background-basic-color-1'],
+  },
   photo: {
     width: 124,
     height: 124,
@@ -96,5 +196,10 @@ export const Account = withStyles(Accountomponent, (theme: ThemeType) => ({
   button: {
     marginHorizontal: 24,
     marginVertical: 24,
+  },
+  text: {
+    width: '100%',
+    textAlign: 'center',
+    fontFamily: 'opensans-regular',
   },
 }));

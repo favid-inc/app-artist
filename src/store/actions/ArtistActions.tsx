@@ -1,7 +1,7 @@
 import { AsyncStorage } from 'react-native';
-import { REMOVEARTIST, STOREARTIST, STOREARTISTS } from './ActionTypes';
+import { REMOVEARTIST, STOREARTIST, STOREARTISTS, ARTISTSTARTEDLOADING, ARTISTENDEDLOADING } from './ActionTypes';
 import * as config from '@src/core/config';
-import { ArtistSearchByMainCategoryResult, ARTIST_SEARCH_BY_MAIN_CATEGORY } from '@favid-inc/api';
+import { ArtistSearchByMainCategoryResult, ARTIST_SEARCH_BY_MAIN_CATEGORY, ArtistModel } from '@favid-inc/api';
 import { Artist, CategoryOfArtistModel } from '@src/core/model';
 
 export const setArtist = (artist: Artist) => {
@@ -9,17 +9,18 @@ export const setArtist = (artist: Artist) => {
   return async dispatch => dispatch(storeArtist(artist));
 };
 
-export const getArtist = () => {
+export const getArtist = (artistId: string) => {
   return async dispatch => {
-    const artistString: string = await AsyncStorage.getItem('artist');
-    const artist: Artist = JSON.parse(artistString);
-    dispatch(storeArtist(artist));
+    const response = await fetch(`${config.firebase.databaseURL}/artist/${artistId}.json`);
+    const artist: ArtistModel = await response.json();
+
+    console.log('[ArtistActions.tsx] getArtist() => artist: ', artist);
+    dispatch(setArtist(artist));
   };
 };
 
 const processArtistList = (result: ArtistSearchByMainCategoryResult): CategoryOfArtistModel[] => {
   const categoryOfArtists: CategoryOfArtistModel[] = result.aggregations.mainCategory.buckets.map(bucket => {
-
     const artists: Artist[] = bucket.by_top_hit.hits.hits.map(a => a._source);
 
     const category: CategoryOfArtistModel = {
@@ -64,5 +65,29 @@ export const removeArtist = () => {
   AsyncStorage.removeItem('artist');
   return {
     type: REMOVEARTIST,
+  };
+};
+
+export const artistStartedLoading = () => ({
+  type: ARTISTSTARTEDLOADING,
+});
+
+export const artistEndedLoading = () => ({
+  type: ARTISTENDEDLOADING,
+});
+
+export const putArtist = (artist: Artist, artistId: string) => {
+  return async dispatch => {
+    dispatch(artistStartedLoading());
+    await fetch(`${config.firebase.databaseURL}/artist/${artistId}.json`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(artist),
+    });
+    dispatch(setArtist(artist));
+    dispatch(artistEndedLoading());
   };
 };

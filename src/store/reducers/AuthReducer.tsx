@@ -14,6 +14,7 @@ const INITIAL_STATE = {
     lastLoginAt: null,
     createdAt: null,
   },
+  artist: null,
   error: null,
   loading: false,
 };

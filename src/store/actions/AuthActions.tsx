@@ -1,4 +1,5 @@
 import { AsyncStorage } from 'react-native';
+import { getArtist, storeArtist, putArtist } from './ArtistActions';
 import { SIGNIN, SIGNOUT, SIGNINSTARTED, SIGNINENDED, SIGNINERROR } from './ActionTypes';
 import * as config from '@src/core/config';
 import { storageKeys } from '@src/core/config';
@@ -33,6 +34,7 @@ export const auth = authResult => {
     await AsyncStorage.setItem(storageKey, JSON.stringify(authState));
     dispatch(signIn(authState));
     dispatch(signInFinished());
+    dispatch(getArtist(data.uid));
   };
 };
 
@@ -65,7 +67,9 @@ export const signInError = error => {
 export const loadAuthState = () => {
   return async dispatch => {
     const authState = await AsyncStorage.getItem(storageKey);
+    const artist = await AsyncStorage.getItem('artist');
     dispatch(signIn(JSON.parse(authState)));
+    dispatch(storeArtist(JSON.parse(artist)));
   };
 };
 
@@ -80,22 +84,7 @@ export const verifyArtistAccount = (artist: Artist, artistId: string) => {
       return;
     }
     console.log('[AuthActions.tsx] verifyArtistAccount() => finished: register user');
-    dispatch(registerArtistAccount(artist, artistId));
-  };
-};
-
-const registerArtistAccount = (artist: Artist, artistId: string) => {
-  return async () => {
-    console.log('[AuthActions.tsx] registerArtistAccount() => started');
-    await fetch(`${config.firebase.databaseURL}/artist/${artistId}.json`, {
-      method: 'PUT',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(artist),
-    });
-    console.log('[AuthActions.tsx] registerArtistAccount() => finished');
+    dispatch(putArtist(artist, artistId));
   };
 };
 

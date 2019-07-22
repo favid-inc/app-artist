@@ -1,8 +1,15 @@
-import { STOREARTIST, REMOVEARTIST, STOREARTISTS } from '../actions/ActionTypes';
+import {
+  STOREARTIST,
+  REMOVEARTIST,
+  STOREARTISTS,
+  ARTISTSTARTEDLOADING,
+  ARTISTENDEDLOADING,
+} from '../actions/ActionTypes';
 
 const INITIAL_STATE = {
   artist: null,
   categoryOfArtists: null,
+  loading: false,
 };
 
 const storeArtist = (state, action) => {
@@ -31,6 +38,20 @@ const removeArtist = state => {
   };
 };
 
+const startedLoading = state => {
+  return {
+    ...state,
+    loading: true,
+  };
+};
+
+const endedLoading = state => {
+  return {
+    ...state,
+    loading: false,
+  };
+};
+
 const authReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case STOREARTIST:
@@ -39,6 +60,10 @@ const authReducer = (state = INITIAL_STATE, action) => {
       return removeArtist(state);
     case STOREARTISTS:
       return storeArtists(state, action);
+    case ARTISTSTARTEDLOADING:
+      return startedLoading(state);
+    case ARTISTENDEDLOADING:
+      return endedLoading(state);
     default:
       return state;
   }
