@@ -87,7 +87,7 @@ class Accountomponent extends React.Component<AccountProps, State> {
               style={themedStyle.input}
               textStyle={textStyle.paragraph}
               labelStyle={textStyle.label}
-              label='Nome Artistico'
+              label='Nome Artístico'
               placeholder='José'
               validator={NameValidator}
               onChangeText={artisticName => this.setState({ artist: { ...this.state.artist, artisticName } })}
