@@ -57,8 +57,9 @@ class Container extends Component<Props, ContainerState> {
     );
   }
 
-  public onAcceptOrder(orderId: string) {
-    console.log('abre a camera..');
+  public onAcceptOrder(order: OrderModel) {
+    this.props.onSetCurrentOrder(order);
+    this.props.navigation.navigate('AcceptOrder');
   }
 
   public render() {
