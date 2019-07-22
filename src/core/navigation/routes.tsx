@@ -16,10 +16,8 @@ import { MenuContainer } from '@src/containers/menu';
 import AccountContainer from '@src/containers/menu/account/AccountCointainer';
 import SignInContainer from '@src/containers/signin/SignInContainer';
 import ArtistDetailsContainer from '@src/containers/artistDetails/ArtistDetailsContainer';
-import { OrdersContainer } from '@src/containers/menu/orders/OrdersContainer';
 import * as BuyingProcess from '@src/containers/buyingProcess/index';
 import BookingContainer from '@src/containers/buyingProcess/booking/BookingContainer';
-import { DeclineOrderContainer } from '@src/containers/orders/declineOrders';
 import { OrdersNavigator } from '@src/containers/orders';
 
 const AccountNavigator: NavigationContainer = createStackNavigator(
@@ -62,7 +60,7 @@ const SignInNavigator: NavigationContainer = createStackNavigator(
 
 const ArtistsNavigator: NavigationContainer = createStackNavigator(
   {
-    ['Orders']: OrdersContainer,
+    ['Orders']: OrdersNavigator,
     ['Artists']: BookingContainer,
   },
   {
@@ -85,10 +83,9 @@ const MenuNavigator: NavigationContainer = createBottomTabNavigator(
 
 const AppNavigator: NavigationContainer = createStackNavigator(
   {
-    // ['Home']: MenuNavigator,
-    // ...ArtistNavigationMap,
-    // ...BuyingProcessNavigationMap,
-    DeclineOrder: DeclineOrderContainer,
+    ['Home']: MenuNavigator,
+    ...ArtistNavigationMap,
+    ...BuyingProcessNavigationMap,
     OrdersNavigator,
   },
   {
