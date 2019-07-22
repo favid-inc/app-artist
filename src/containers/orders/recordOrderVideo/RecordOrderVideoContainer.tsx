@@ -7,7 +7,7 @@ interface Props {
 }
 
 export class RecordOrderVideoContainer extends Component<NavigationScreenProps> {
-  onRecordDone = () => this.props.navigation.push('Play');
+  onRecordDone = () => this.props.navigation.push('PlayOrderVideo');
 
   public render() {
     return (
