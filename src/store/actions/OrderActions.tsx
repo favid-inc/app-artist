@@ -33,7 +33,6 @@ export const listOrders = (artistId: string) => {
     const queryParams = `?orderBy="artistId"&equalTo="${artistId}"`;
     const response = await fetch(`${config.firebase.databaseURL}/${ORDER}.json${queryParams}`);
     const data = await response.json();
-    let orders: OrderModel[];
 
     if (!data) {
       dispatch(listOrdersEnded());
