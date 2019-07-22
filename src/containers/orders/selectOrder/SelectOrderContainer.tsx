@@ -57,7 +57,7 @@ class Container extends Component<Props, ContainerState> {
     );
   }
 
-  public onAcceptOrder(order: OrderModel) {
+  public onAcceptOrder = (order: OrderModel) => {
     this.props.onSetCurrentOrder(order);
     this.props.navigation.navigate('AcceptOrder');
   }

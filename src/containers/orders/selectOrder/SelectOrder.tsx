@@ -10,7 +10,7 @@ interface ComponentProps {
   loading: boolean;
   onDeclineOrder: (order: OrderModel) => void;
   onDelayOrder: (orderId: string) => void;
-  onAcceptOrder: (orderId: string) => void;
+  onAcceptOrder: (order: OrderModel) => void;
 }
 
 interface State {
@@ -39,8 +39,8 @@ class OrdersComponent extends Component<OrdersProps, State> {
   }
 
   private onAcceptOrder = () => {
-    // const order: OrderModel = this.props.orders[this.state.selectedOrder];
-    // this.props.onAcceptOrder(order.id);
+    const order: OrderModel = this.props.orders[this.state.selectedOrder];
+    this.props.onAcceptOrder(order);
   }
 
   public render() {
