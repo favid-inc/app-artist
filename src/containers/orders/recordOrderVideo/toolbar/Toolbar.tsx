@@ -2,13 +2,13 @@ import React, { useContext } from 'react';
 import { View, TouchableOpacity, Image, GestureResponderEvent, StyleSheet } from 'react-native';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { Camera as NativeCamera } from 'expo-camera';
+import { Ionicons } from '@expo/vector-icons';
 
 import { styles } from './styles';
 
 type EventHandler = (event: GestureResponderEvent) => void;
 const CameraType = NativeCamera.Constants.Type;
 const FlashMode = NativeCamera.Constants.FlashMode;
-
 
 interface Props {
   cameraType: any;
@@ -33,9 +33,7 @@ export function Toolbar(props: Props) {
             onPressOut={props.onCaptureOut}
           />
         </Col>
-        <Col>
-        {!props.isCapturing && <CameraTypeButton onPress={props.toggleCameraType} />}
-        </Col>
+        <Col>{!props.isCapturing && <CameraTypeButton onPress={props.toggleCameraType} />}</Col>
       </Row>
     </View>
   );
@@ -47,7 +45,7 @@ const Col = ({ children }) => <View style={styles.col}>{children}</View>;
 
 const CameraTypeButton = ({ ...props }) => (
   <TouchableOpacity style={styles.button} {...props}>
-    <Image style={styles.buttonIcon} source={require('./toggle-camera-type.png')} />
+    <Ionicons name='md-reverse-camera' color='white' size={30} />
   </TouchableOpacity>
 );
 
@@ -59,6 +57,6 @@ const CaptureButton = ({ isCapturing, ...props }) => (
 
 const FlashModeButton = ({ flashMode, ...props }) => (
   <TouchableOpacity style={styles.button} {...props}>
-    <Image style={styles.buttonIcon} source={flashMode === FlashMode.on ? require('./flash-mode-on.png') : require('./flash-mode-off.png')} />
+    <Ionicons name={flashMode === FlashMode.on ? 'md-flash' : 'md-flash-off'} color='white' size={30} />
   </TouchableOpacity>
 );

@@ -1,17 +1,32 @@
 import React, { Component } from 'react';
-import { NavigationScreenProps } from 'react-navigation';
+import { View } from 'react-native';
+import { NavigationScreenProps, NavigationEventSubscription } from 'react-navigation';
 import { RecordOrderVideo } from './RecordOrderVideo';
 
-interface Props {
-  onRecord: () => any;
+interface State {
+  didFocusSubscription?: NavigationEventSubscription;
+  didBlurSubscription?: NavigationEventSubscription;
+  isFocused?: boolean;
 }
+export class RecordOrderVideoContainer extends Component<NavigationScreenProps, State> {
+  public state = {
+    isFocused: false,
+  };
 
-export class RecordOrderVideoContainer extends Component<NavigationScreenProps> {
-  onRecordDone = () => this.props.navigation.push('PlayOrderVideo');
+  private onRecordDone = () => this.props.navigation.push('PlayOrderVideo');
+
+  public componentDidMount = () => {
+    const { navigation } = this.props;
+    this.setState({
+      didFocusSubscription: navigation.addListener('didFocus', () => this.setState({ isFocused: true })),
+      didBlurSubscription: navigation.addListener('didBlur', () => this.setState({ isFocused: false })),
+    });
+  };
 
   public render() {
-    return (
-        <RecordOrderVideo onDone={this.onRecordDone} />
-    );
+    if (!this.state.isFocused) {
+      return <View />;
+    }
+    return <RecordOrderVideo onDone={this.onRecordDone} />;
   }
 }

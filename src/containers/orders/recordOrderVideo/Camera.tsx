@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Platform } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { Camera as NativeCamera } from 'expo-camera';
 import { Toolbar } from './toolbar';
@@ -16,7 +16,10 @@ interface State {
   flashMode: any;
   hasPermission: boolean;
   isCapturing: boolean;
+  ratio: string;
 }
+
+const DESIRED_RATIO = '16:9';
 
 export class Camera extends Component<Props, State> {
   private camera: NativeCamera;
@@ -26,9 +29,22 @@ export class Camera extends Component<Props, State> {
     flashMode: FlashMode.off,
     hasPermission: null,
     isCapturing: false,
+    ratio: DESIRED_RATIO,
   };
 
   private setCamera = camera => (this.camera = camera);
+
+  private prepareRatio = async () => {
+    if (Platform.OS === 'android' && this.camera) {
+      const ratios = await this.camera.getSupportedRatiosAsync();
+
+      // See if the current device has your desired ratio, otherwise get the maximum supported one
+      // Usually the last element of "ratios" is the maximum supported ratio
+      const ratio = ratios.find(r => r === DESIRED_RATIO) || ratios[ratios.length - 1];
+
+      this.setState({ ratio });
+    }
+  };
 
   private handleCaptureIn = async () => {
     this.setState({ isCapturing: true });
@@ -74,7 +90,14 @@ export class Camera extends Component<Props, State> {
 
     return (
       <View style={{ flex: 1, backgroundColor: 'transparent' }}>
-        <NativeCamera ref={this.setCamera} style={{ flex: 1 }} type={this.state.cameraType} flashMode={this.state.flashMode} ratio='16:9' />
+        <NativeCamera
+          ref={this.setCamera}
+          style={{ flex: 1 }}
+          type={this.state.cameraType}
+          flashMode={this.state.flashMode}
+          onCameraReady={this.prepareRatio}
+          ratio={this.state.ratio}
+        />
         <Toolbar
           cameraType={this.state.cameraType}
           flashMode={this.state.flashMode}
