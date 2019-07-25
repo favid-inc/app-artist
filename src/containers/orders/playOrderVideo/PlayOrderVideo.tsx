@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, Alert, Dimensions, View, StyleSheet, GestureResponderEvent } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, GestureResponderEvent, Text, View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { Video } from 'expo-av';
 import { OrderModel, OrderFlow } from '@favid-inc/api';
-import { Button, Modal } from 'react-native-ui-kitten';
+import { Button } from 'react-native-ui-kitten';
 import 'abort-controller/polyfill';
 import { AbortController } from 'abort-controller';
 
@@ -28,12 +28,12 @@ interface Props extends StoreState, StoreDispatch {
 }
 
 interface State {
-  isUploading: boolean;
+  isSending: boolean;
 }
 
 class AbstractPlayOrderVideo extends Component<Props, State> {
   public state: State = {
-    isUploading: false,
+    isSending: false,
   };
 
   private abortController: AbortController;
@@ -43,7 +43,7 @@ class AbstractPlayOrderVideo extends Component<Props, State> {
   };
 
   private handleSendClick = async () => {
-    this.setState({ isUploading: true });
+    this.setState({ isSending: true });
 
     try {
       const data = new FormData();
@@ -76,7 +76,7 @@ class AbstractPlayOrderVideo extends Component<Props, State> {
       console.error(e);
     }
 
-    this.setState({ isUploading: false });
+    this.setState({ isSending: false });
   };
 
   public componentDidMount() {
@@ -88,8 +88,8 @@ class AbstractPlayOrderVideo extends Component<Props, State> {
   }
 
   public render(): React.ReactNode {
-    return this.state.isUploading ? (
-      <LoadingIndicator />
+    return this.state.isSending ? (
+      <SendingIndicator />
     ) : (
       <VideoPlayerWithToolbar
         order={this.props.order}
@@ -100,9 +100,10 @@ class AbstractPlayOrderVideo extends Component<Props, State> {
   }
 }
 
-const LoadingIndicator = () => (
+const SendingIndicator = () => (
   <View style={styles.loading}>
     <ActivityIndicator size='large' color='#0000ff' />
+    <Text>Enviando vídeo</Text>
   </View>
 );
 
