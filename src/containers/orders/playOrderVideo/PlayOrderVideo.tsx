@@ -59,15 +59,15 @@ class AbstractPlayOrderVideo extends Component<Props, State> {
       this.abortController = new AbortController();
 
       // TODO: Add credentials
-      const result = await fetch(`${config.api.baseURL}/${OrderFlow.ACCEPT}/${this.props.order.id}`, {
+      const response = await fetch(`${config.api.baseURL}/${OrderFlow.ACCEPT}/${this.props.order.id}`, {
         method: 'PUT',
         body: data,
         // @ts-ignore
         signal: this.abortController.signal,
       });
 
-      if (!/^2\d\d/.test(result.status)) {
-        throw new Error(`Error during video upload. Server responded with an error status: "${result.status}"`);
+      if (!/^2\d\d/.test(response.status)) {
+        throw new Error(`Error during video upload. Server responded with an error status: "${response.status}"`);
       }
       this.props.onUpload();
     } catch (e) {
