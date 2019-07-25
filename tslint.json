@@ -11,34 +11,21 @@
     "arrow-return-shorthand": true,
     "callable-types": true,
     "class-name": true,
-    "comment-format": [
-      true,
-      "check-space"
-    ],
+    "comment-format": [true, "check-space"],
     "curly": true,
     "eofline": true,
     "forin": true,
-    "import-blacklist": [
-      true
-    ],
+    "import-blacklist": [true],
     "import-spacing": true,
     "indent": [true, "spaces", 2],
     "interface-over-type-literal": true,
     "label-position": true,
-    "max-line-length": [
-      true,
-      300
-    ],
+    "max-line-length": [true, 300],
     "member-access": false,
     "no-arg": true,
-    "no-console": [
-      "warning",
-      "debug",
-      "log",
-      "time",
-      "timeEnd",
-      "trace"
-    ],
+    "no-console": {
+      "severity": "warning"
+    },
     "no-construct": true,
     "no-debugger": true,
     "no-duplicate-super": true,
@@ -57,34 +44,20 @@
     "object-literal-sort-keys": false,
     "max-attributes-per-line": 4,
 
-    "one-line": [
-      true,
-      "check-catch",
-      "check-finally",
-      "check-else",
-      "check-open-brace",
-      "check-whitespace"
+    "one-line": [true, "check-catch", "check-finally", "check-else", "check-open-brace", "check-whitespace"],
+    "react/jsx-wrap-multilines": [
+      "error",
+      {
+        "declaration": false,
+        "assignment": false
+      }
     ],
-    "react/jsx-wrap-multilines": ["error", {
-      "declaration": false,
-      "assignment": false
-    }],
 
     "prefer-const": true,
-    "quotemark": [
-      true,
-      "single"
-    ],
+    "quotemark": [true, "single"],
     "radix": true,
-    "semicolon": [
-      true,
-      "always",
-      "ignore-bound-class-methods"
-    ],
-    "triple-equals": [
-      true,
-      "allow-null-check"
-    ],
+    "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "triple-equals": [true, "allow-null-check"],
     "typedef-whitespace": [
       true,
       {
@@ -104,14 +77,7 @@
     ],
     "unified-signatures": true,
     "variable-name": false,
-    "whitespace": [
-      true,
-      "check-branch",
-      "check-decl",
-      "check-operator",
-      "check-separator",
-      "check-type"
-    ],
+    "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-separator", "check-type"],
     "ban": [
       true,
       "eval",

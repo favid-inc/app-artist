@@ -10,10 +10,12 @@ interface State {
 }
 export class RecordOrderVideoContainer extends Component<NavigationScreenProps, State> {
   public state = {
+    didFocusSubscription: null,
+    didBlurSubscription: null,
     isFocused: false,
   };
 
-  private onRecordDone = () => this.props.navigation.push('PlayOrderVideo');
+  private onRecordDone = () => this.props.navigation.goBack();
 
   public componentDidMount = () => {
     const { navigation } = this.props;
@@ -21,6 +23,12 @@ export class RecordOrderVideoContainer extends Component<NavigationScreenProps, 
       didFocusSubscription: navigation.addListener('didFocus', () => this.setState({ isFocused: true })),
       didBlurSubscription: navigation.addListener('didBlur', () => this.setState({ isFocused: false })),
     });
+  };
+
+  public componentWillUnmount = () => {
+    const { didFocusSubscription, didBlurSubscription } = this.state;
+    didFocusSubscription && didFocusSubscription.remove();
+    didBlurSubscription && didBlurSubscription.remove();
   };
 
   public render() {

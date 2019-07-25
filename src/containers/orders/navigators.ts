@@ -16,8 +16,8 @@ const DeclineOrderNavigator: NavigationContainer = createStackNavigator(
 
 const AcceptOrderNavigator: NavigationContainer = createStackNavigator(
   {
-    RecordOrderVideo: RecordOrderVideoContainer,
     PlayOrderVideo: PlayOrderVideoContainer,
+    RecordOrderVideo: RecordOrderVideoContainer,
     UploadOrderVideo: UploadOrderVideoContainer,
   },
   {

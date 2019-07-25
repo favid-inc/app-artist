@@ -7,7 +7,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { styles } from './styles';
 
 type EventHandler = (event: GestureResponderEvent) => void;
-const CameraType = NativeCamera.Constants.Type;
 const FlashMode = NativeCamera.Constants.FlashMode;
 
 interface Props {

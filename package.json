@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@eva-design/eva": "^1.0.1",
-    "@favid-inc/api": "^2.4.2",
+    "@favid-inc/api": "^2.7.0",
     "@favid-inc/core": "^1.7.3",
     "@favid-inc/model": "^1.0.3",
     "expo": "^33.0.6",
@@ -51,6 +51,8 @@
     "@types/react": "^16.8.19",
     "@types/react-native": "^0.57.60",
     "@types/react-navigation": "^3.0.7",
+    "@types/react-redux": "^7.1.1",
+    "@types/redux": "^3.6.0",
     "babel-core": "^7.0.0-bridge.0",
     "babel-plugin-module-resolver": "^3.2.0",
     "conventional-changelog-cli": "^2.0.21",
