@@ -19,7 +19,7 @@ interface State {
 
 type OrdersProps = ComponentProps & ThemedComponentProps;
 
-class OrdersComponent extends Component<OrdersProps, State> {
+class AbstractSelectOrder extends Component<OrdersProps, State> {
   public state: State = {
     selectedOrder: 0,
   };
@@ -135,7 +135,7 @@ const SwipeOrders = ({ themedStyle, orders, title }) => (
   </View>
 );
 
-export const Orders = withStyles(OrdersComponent, (theme: ThemeType) => ({
+export const Orders = withStyles(AbstractSelectOrder, (theme: ThemeType) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
