@@ -42,7 +42,7 @@ class DeclineOrderComponent extends Component<ThemedComponentProps & Props, Stat
       <ContainerView style={themedStyle.container} contentContainerStyle={themedStyle.contentContainer}>
         <View style={themedStyle.contentContainer}>
           <View style={themedStyle.middleContainer}>
-            <Text aparence='hint' category='h4'>
+            <Text category='h4'>
               Recusar Pedido
             </Text>
           </View>
@@ -57,7 +57,7 @@ class DeclineOrderComponent extends Component<ThemedComponentProps & Props, Stat
           </View>
           <View style={themedStyle.middleContainer}>
             {this.refusedByArtistDescriptionError().map(error => (
-              <Text aparence='hint' style={themedStyle.error} category='label'>
+              <Text style={themedStyle.error} category='label'>
                 {error}
               </Text>
             ))}

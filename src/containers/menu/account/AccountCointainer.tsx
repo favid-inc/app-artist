@@ -8,27 +8,23 @@ import * as actions from '../../../store/actions';
 import { ImageSource } from '@src/assets/images';
 import { Text } from 'react-native';
 import { AuthState as AuthStateModel } from '@src/core/model/authState.model';
-
-interface State {
-  profile: Profile;
-}
+import { ArtistModel } from '@favid-inc/api';
 
 interface AccountContainerProps {
   auth: AuthStateModel;
+  artist: ArtistModel;
+  loading: boolean;
   onSignOut: () => void;
+  onPutArtist: (artist: ArtistModel, artistId: string) => void;
 }
 
 type Props = NavigationScreenProps & AccountContainerProps;
 
-class AccountContainer extends Component<Props, State> {
-  public state: State = {
-    profile: null,
-  };
-
+class AccountContainer extends Component<Props> {
   private onUploadPhotoButtonPress = () => {};
 
-  private onButtonPress = () => {
-    this.props.navigation.goBack();
+  private onSave = (artist: ArtistModel) => {
+    this.props.onPutArtist(artist, artist.id);
   };
 
   public componentDidMount() {
@@ -56,16 +52,25 @@ class AccountContainer extends Component<Props, State> {
   }
 
   public render(): React.ReactNode {
-    let account = <Text>Loading...</Text>;
-    if (this.state.profile) {
-      account = <Account profile={this.state.profile} onUploadPhotoButtonPress={this.onUploadPhotoButtonPress} onButtonPress={this.props.onSignOut} />;
-    }
-    return account;
+    return (
+      <Account
+        artist={this.props.artist}
+        onUploadPhotoButtonPress={this.onUploadPhotoButtonPress}
+        onSignOut={this.props.onSignOut}
+        onSave={this.onSave}
+        loading={this.props.loading}
+      />
+    );
   }
 }
 
-const mapStateToProps = ({ auth }) => ({ auth: auth.authState });
+const mapStateToProps = ({ auth, artist }) => ({
+  auth: auth.authState,
+  artist: artist.artist,
+  loading: artist.loading,
+});
 const mapDispatchToProps = dispatch => ({
+  onPutArtist: (artist: ArtistModel, artistId: string) => dispatch(actions.putArtist(artist, artistId)),
   onSignOut: () => dispatch(actions.signOut()),
 });
 
