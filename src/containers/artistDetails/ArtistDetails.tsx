@@ -3,14 +3,11 @@ import { View } from 'react-native';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Button, Text } from '@kitten/ui';
 import { ProfileInfo } from './profileInfo.component';
-import { EvaCheckmarkOutline, PersonAddIconFill } from '@src/assets/icons';
 import { Artist as ArtistModel, ProfileSocials as ProfileSocialsModel } from '@src/core/model';
 import { ContainerView, ImageOverlay, textStyle, Chips } from '@src/components/common';
 import { imageProfile7Bg, ImageSource } from '@src/assets/images';
 import { ShowcaseSection } from '@src/components/common/showcaseSection.component';
 import { ProfileSocials } from './profileSocials.component';
-import * as Artist from '@favid-inc/core/lib/entities/artist';
-import * as firebase from 'firebase';
 
 interface ComponentProps {
   artist: ArtistModel;
