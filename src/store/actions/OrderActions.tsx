@@ -8,7 +8,7 @@ import {
   SET_CURRENT_ORDER,
   DELAY_ORDER,
 } from './ActionTypes';
-import { OrderModel, ORDER_FLOW_DECLINE, ORDER } from '@favid-inc/api';
+import { OrderModel, OrderFlow, ORDER } from '@favid-inc/api';
 
 export const postOrder = order => {
   return async dispatch => {
@@ -105,7 +105,7 @@ export const listOrders = (artistId: string) => {
 export const declineOrder = (orderId: string, artistId: string, refusedByArtistDescription: string) => {
   return async dispatch => {
     dispatch(postOrderStarted());
-    await fetch(`${config.api.baseURL}/${ORDER_FLOW_DECLINE}/${orderId}`, {
+    await fetch(`${config.api.baseURL}/${OrderFlow.DECLINE}/${orderId}`, {
       method: 'PUT',
       headers: {
         Accept: 'application/json',
