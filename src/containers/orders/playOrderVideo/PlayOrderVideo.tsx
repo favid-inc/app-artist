@@ -1,150 +1,71 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, Alert, Dimensions, GestureResponderEvent, Text, View, StyleSheet } from 'react-native';
+import { Dimensions, View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { Video } from 'expo-av';
-import { OrderModel, OrderFlow } from '@favid-inc/api';
+import { OrderModel } from '@favid-inc/api';
 import { Button } from 'react-native-ui-kitten';
-import 'abort-controller/polyfill';
-import { AbortController } from 'abort-controller';
-
-import * as actions from '../../../store/actions';
-import * as config from '@src/core/config';
 
 import { VideoPlayer } from './videoPlayer';
-
-type EventHandler = (event: GestureResponderEvent) => void;
 
 interface StoreState {
   order: OrderModel;
 }
 
-interface StoreDispatch {
-  setCurrentOrder: (order: OrderModel) => void;
-}
-
-interface Props extends StoreState, StoreDispatch {
+interface Props extends StoreState {
   onRedo: () => void;
   onUpload: () => void;
 }
 
-interface State {
-  isSending: boolean;
-}
-
-class AbstractPlayOrderVideo extends Component<Props, State> {
-  public state: State = {
-    isSending: false,
-  };
-
-  private abortController: AbortController;
-
+class AbstractPlayOrderVideo extends Component<Props> {
   private handleRedoClick = () => {
     this.props.onRedo();
   };
 
-  private handleSendClick = async () => {
-    this.setState({ isSending: true });
-
-    try {
-      const data = new FormData();
-
-      data.append('video', {
-        name: 'mobile-video-upload',
-        type: 'video/mp4',
-        uri: this.props.order.video,
-      });
-
-      this.abortController && this.abortController.abort();
-
-      this.abortController = new AbortController();
-
-      // TODO: Add credentials
-      const response = await fetch(`${config.api.baseURL}/${OrderFlow.ACCEPT}/${this.props.order.id}`, {
-        method: 'PUT',
-        body: data,
-        // @ts-ignore
-        signal: this.abortController.signal,
-      });
-
-      if (!/^2\d\d/.test(response.status)) {
-        throw new Error(`Error during video upload. Server responded with an error status: "${response.status}"`);
-      }
-      this.props.onUpload();
-    } catch (e) {
-      Alert.alert('Erro', 'Erro ao fazer upload do vídeo. Tente novamente mais tarde.');
-      // tslint:disable-next-line: no-console
-      console.error(e);
-    }
-
-    this.setState({ isSending: false });
+  private handleUploadClick = async () => {
+    this.props.onUpload();
   };
 
   public componentDidMount() {
     this.props.order.video || this.props.onRedo();
   }
 
-  public componentWillUnmount() {
-    this.abortController && this.abortController.abort();
-  }
-
   public render(): React.ReactNode {
-    return this.state.isSending ? (
-      <SendingIndicator />
-    ) : (
-      <VideoPlayerWithToolbar
-        order={this.props.order}
-        onRedoClick={this.handleRedoClick}
-        onSendClick={this.handleSendClick}
-      />
+    return (
+      <View style={styles.container}>
+        <VideoPlayer
+          videoProps={{
+            shouldPlay: true,
+            resizeMode: Video.RESIZE_MODE_COVER,
+            source: {
+              uri: this.props.order.video,
+            },
+          }}
+          showControlsOnLoad={true}
+          showFullscreenButton={false}
+          isPortrait={true}
+        />
+        <View style={styles.toolbar}>
+          <Row>
+            <Col>
+              <Button onPress={this.handleRedoClick}>Refazer</Button>
+            </Col>
+            <Col>
+              <Button onPress={this.handleUploadClick}>Enviar</Button>
+            </Col>
+          </Row>
+        </View>
+      </View>
     );
   }
 }
-
-const SendingIndicator = () => (
-  <View style={styles.loading}>
-    <ActivityIndicator size='large' color='#0000ff' />
-    <Text>Enviando vídeo</Text>
-  </View>
-);
-
-const VideoPlayerWithToolbar = (props: { order: OrderModel; onRedoClick: EventHandler; onSendClick: EventHandler }) => (
-  <View style={styles.container}>
-    <VideoPlayer
-      videoProps={{
-        shouldPlay: true,
-        resizeMode: Video.RESIZE_MODE_COVER,
-        source: {
-          uri: props.order.video,
-        },
-      }}
-      showControlsOnLoad={true}
-      showFullscreenButton={false}
-      isPortrait={true}
-    />
-    <View style={styles.toolbar}>
-      <Row>
-        <Col>
-          <Button onPress={props.onRedoClick}>Refazer</Button>
-        </Col>
-        <Col>
-          <Button onPress={props.onSendClick}>Enviar</Button>
-        </Col>
-      </Row>
-    </View>
-  </View>
-);
 
 const mapStateToProps = ({ order }) =>
   ({
     order: order.currentOrder,
   } as StoreState);
 
-const mapDispatchToProps = dispatch =>
-  ({ setCurrentOrder: (order: OrderModel) => dispatch(actions.setCurrentOrder(order)) } as StoreDispatch);
-
 export const PlayOrderVideo = connect(
   mapStateToProps,
-  mapDispatchToProps,
 )(AbstractPlayOrderVideo);
 
 const Row = ({ children }) => <View style={styles.row}>{children}</View>;

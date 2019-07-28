@@ -8,7 +8,7 @@ export class PlayOrderVideoContainer extends Component<NavigationScreenProps> {
   };
 
   private handleOnUpload = () => {
-    this.props.navigation.goBack();
+    this.props.navigation.push('UploadOrderVideo');
   };
 
   public render(): React.ReactNode {
