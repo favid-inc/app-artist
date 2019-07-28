@@ -12,14 +12,14 @@ export class Fade extends React.Component<Props> {
     this.visibility = new Animated.Value(this.props.visible ? 1 : 0);
   }
 
-  componentWillReceiveProps(nextProps) {
+  public componentWillReceiveProps(nextProps) {
     Animated.timing(this.visibility, {
       toValue: nextProps.visible ? 1 : 0,
       duration: 300,
     });
   }
 
-  render() {
+  public render() {
     const { visible, children, ...rest } = this.props;
 
     const containerStyle = {
