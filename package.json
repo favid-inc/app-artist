@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@eva-design/eva": "^1.0.1",
-    "@favid-inc/api": "^2.7.0",
+    "@favid-inc/api": "^2.12.0",
     "expo": "^33.0.6",
     "expo-analytics": "^1.0.8",
     "expo-app-auth": "^5.0.1",
