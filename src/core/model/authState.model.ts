@@ -4,4 +4,5 @@ export interface AuthState extends ArtistAccount {
   accessToken?: string;
   expirationTime?: string;
   redirectEventId?: string;
+  idToken: string;
 }
