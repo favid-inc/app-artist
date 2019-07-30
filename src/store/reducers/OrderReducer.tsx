@@ -3,11 +3,11 @@ import {
   POST_ORDER,
   POST_ORDER_STARTED,
   POST_ORDER_ENDED,
-  POST_ORDER_ERROR,
   LIST_ORDERS_STARTED,
   LIST_ORDER_SENDED,
   SET_CURRENT_ORDER,
   DELAY_ORDER,
+  ORDER_ERROR,
 } from '../actions/ActionTypes';
 
 const INITIAL_STATE = {
@@ -59,7 +59,7 @@ const listOrdersEnded = state => {
   };
 };
 
-const postOrderError = (state, action) => {
+const orderError = (state, action) => {
   return {
     ...state,
     loading: false,
@@ -93,8 +93,8 @@ const orderReducer = (state = INITIAL_STATE, action) => {
       return postOrderStarted(state);
     case POST_ORDER_ENDED:
       return postOrderEnded(state);
-    case POST_ORDER_ERROR:
-      return postOrderError(state, action);
+    case ORDER_ERROR:
+      return orderError(state, action);
     case LIST_ORDERS_STARTED:
       return listOrdersStarted(state);
     case LIST_ORDER_SENDED:
