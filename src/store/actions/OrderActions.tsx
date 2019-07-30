@@ -123,7 +123,10 @@ export const delayOrder = (orderId: string) => {
     orderId,
   };
 };
-
+export const orderError = error => ({
+  type: ORDER_ERROR,
+  error,
+});
 export const storeOrders = (orders: OrderModel[]) => {
   return {
     type: STORE_ORDERS,
