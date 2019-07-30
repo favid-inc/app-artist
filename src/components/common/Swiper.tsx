@@ -1,8 +1,6 @@
 import React from 'react';
-import { Text, View } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { ThemeType, withStyles, ThemedComponentProps } from 'react-native-ui-kitten/theme';
-import { OrderModel } from '@favid-inc/api';
 
 interface SwiperBoxProps {
   selectedOrderChanged: (index: number) => void;
