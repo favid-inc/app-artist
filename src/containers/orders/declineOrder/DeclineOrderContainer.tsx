@@ -10,7 +10,11 @@ import { Alert } from 'react-native';
 
 interface DeclineOrderContainerProps {
   currentOrder: OrderModel;
-  onDeclineOrder: (orderId: string, artitId: string, message: string) => void;
+  idToken: string;
+  error: any;
+  onDeclineOrder: (order: OrderModel, idToken: string) => void;
+  onError: (error: any) => void;
+  onSignOut: () => void;
 }
 
 type Props = NavigationScreenProps & DeclineOrderContainerProps;
@@ -25,9 +29,11 @@ class DeclineOrderContainerClass extends Component<Props> {
           text: 'OK, cancelar pedido.',
           onPress: () => {
             this.props.onDeclineOrder(
-              this.props.currentOrder.id,
-              this.props.currentOrder.artistId,
-              refusedByArtistDescription,
+              {
+                ...this.props.currentOrder,
+                refusedByArtistDescription,
+              },
+              this.props.idToken,
             );
             this.onGoback();
           },
@@ -46,6 +52,20 @@ class DeclineOrderContainerClass extends Component<Props> {
   }
 
   public render() {
+    if (this.props.error) {
+      const action =
+        this.props.error.status === 403
+          ? [
+              {
+                text: 'Ok, efetuar login novamente.',
+                onPress: () => this.props.onSignOut(),
+              },
+            ]
+          : null;
+      Alert.alert(this.props.error.message, null, action, { cancelable: false });
+      this.props.onError(null);
+    }
+
     return (
       <DeclineOrder
         onDeclineOrder={refusedByArtistDescription => this.onSendDecline(refusedByArtistDescription)}
@@ -55,14 +75,17 @@ class DeclineOrderContainerClass extends Component<Props> {
   }
 }
 
-const mapStateToProps = ({ order }) => ({
+const mapStateToProps = ({ order, auth }) => ({
+  idToken: auth.idToken,
+  error: order.error,
   loading: order.loading,
   currentOrder: order.currentOrder,
 });
 
 const mapDispatchToProps = dispatch => ({
-  onDeclineOrder: (orderId: string, artistId: string, message: string) =>
-    dispatch(actions.declineOrder(orderId, artistId, message)),
+  onError: error => dispatch(actions.orderError(error)),
+  onDeclineOrder: (order: OrderModel, idToken: string) => dispatch(actions.declineOrder(order, idToken)),
+  onSignOut: () => dispatch(actions.signOut()),
 });
 
 export const DeclineOrderContainer = connect(

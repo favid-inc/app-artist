@@ -42,9 +42,7 @@ class DeclineOrderComponent extends Component<ThemedComponentProps & Props, Stat
       <ContainerView style={themedStyle.container} contentContainerStyle={themedStyle.contentContainer}>
         <View style={themedStyle.contentContainer}>
           <View style={themedStyle.middleContainer}>
-            <Text category='h4'>
-              Recusar Pedido
-            </Text>
+            <Text category='h4'>Recusar Pedido</Text>
           </View>
           <View style={themedStyle.middleContainer}>
             <TextInput
