@@ -34,10 +34,14 @@ class Container extends Component<Props, ContainerState> {
     this.props.onListOrders(this.props.artistId);
   };
 
+  public onRefresh() {
+    this.props.onListOrders(this.props.artistId);
+  }
+
   public onDeclineOrder = (order: OrderModel) => {
     this.props.onSetCurrentOrder(order);
     this.props.navigation.navigate('DeclineOrder');
-  }
+  };
 
   public onDelayOrder = (orderId: string) => {
     Alert.alert(
@@ -55,19 +59,19 @@ class Container extends Component<Props, ContainerState> {
       ],
       { cancelable: false },
     );
-  }
+  };
 
   public onAcceptOrder = (order: OrderModel) => {
     this.props.onSetCurrentOrder(order);
     this.props.navigation.navigate('AcceptOrder');
-  }
+  };
 
   public render() {
     const { themedStyle } = this.props;
     return (
       <ScrollView
         contentContainerStyle={themedStyle.contentContainer}
-        refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.componentDidMount} />}
+        refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh} />}
       >
         {this.props.orders && this.props.orders.length ? (
           <Orders

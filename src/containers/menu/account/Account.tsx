@@ -94,7 +94,7 @@ class Accountomponent extends React.Component<AccountProps, State> {
           </View>
           <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
             <ValidationInput
-              value={this.state.artist.price.toString()}
+              value={this.state.artist.price ? this.state.artist.price.toString() : this.state.artist.price}
               style={themedStyle.input}
               textStyle={textStyle.paragraph}
               labelStyle={textStyle.label}
