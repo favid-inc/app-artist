@@ -42,19 +42,26 @@ export const listOrders = (artistId: string) => {
   };
 };
 
-export const declineOrder = (orderId: string, artistId: string, refusedByArtistDescription: string) => {
+export const declineOrder = (order: OrderModel, idToken) => {
   return async dispatch => {
     dispatch(postOrderStarted());
-    await fetch(`${config.api.baseURL}/${ORDER_FLOW_DECLINE}/${orderId}`, {
+    const response = await fetch(`${config.api.baseURL}/${OrderFlow.DECLINE}`, {
       method: 'PUT',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${idToken}`,
       },
-      body: JSON.stringify({ refusedByArtistDescription }),
+
+      body: JSON.stringify(order),
     });
+    if (!response.ok) {
+      const message = response.status === 403 ? 'Sua sessão expirou.' : 'Erro interno do servidor.';
+      dispatch(orderError({ status: response.status, message }));
+    }
+
     dispatch(postOrderEnded());
-    dispatch(listOrders(artistId));
+    dispatch(listOrders(order.artistId));
   };
 };
 
