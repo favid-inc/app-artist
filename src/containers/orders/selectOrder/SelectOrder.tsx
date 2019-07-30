@@ -23,25 +23,23 @@ class AbstractSelectOrder extends Component<OrdersProps, State> {
   public state: State = {
     selectedOrder: 0,
   };
-
-  private onSelectedOrderChanged(i: number) {
-    this.setState({ selectedOrder: i });
-  }
-
-  private onDeclineOrder = () => {
+  public onDeclineOrder = () => {
     const order: OrderModel = this.props.orders[this.state.selectedOrder];
     this.props.onDeclineOrder(order);
-  }
+  };
 
-  private onDelayOrder = () => {
+  public onDelayOrder = () => {
     const order: OrderModel = this.props.orders[this.state.selectedOrder];
     this.props.onDelayOrder(order.id);
-  }
+  };
 
-  private onAcceptOrder = () => {
+  public onAcceptOrder = () => {
     const order: OrderModel = this.props.orders[this.state.selectedOrder];
     this.props.onAcceptOrder(order);
-  }
+  };
+  public onSelectedOrderChanged = (i: number) => {
+    this.setState({ selectedOrder: i });
+  };
 
   public render() {
     const { themedStyle } = this.props;
@@ -52,6 +50,7 @@ class AbstractSelectOrder extends Component<OrdersProps, State> {
       <SwipeOrders
         orders={this.props.orders}
         themedStyle={themedStyle}
+        onSelectedOrderChanged={this.onSelectedOrderChanged}
         title={`${this.state.selectedOrder + 1} de ${(this.props.orders && this.props.orders.length) || 0}`}
       />
     );
@@ -95,24 +94,12 @@ class AbstractSelectOrder extends Component<OrdersProps, State> {
     );
   }
 }
-
-const LoadingOrders = ({ themedStyle }) => (
-  <View style={themedStyle.swiperWrapper}>
-    <Text style={themedStyle.title} appearance='hint'>
-      Carregando pedidos...
-    </Text>
-    <View style={themedStyle.loadingWrapper}>
-      <ActivityIndicator size='large' style={themedStyle.loading} />
-    </View>
-  </View>
-);
-
-const SwipeOrders = ({ themedStyle, orders, title }) => (
+const SwipeOrders = ({ themedStyle, orders, title, onSelectedOrderChanged }) => (
   <View style={themedStyle.swiperWrapper}>
     <Text style={themedStyle.title} appearance='hint'>
       {title}
     </Text>
-    <SwiperComponent selectedOrderChanged={i => this.onSelectedOrderChanged(i)}>
+    <SwiperComponent selectedOrderChanged={i => onSelectedOrderChanged(i)}>
       {orders.map((order: OrderModel, index: number) => {
         return (
           <View key={order.id} style={themedStyle.slide}>
@@ -120,7 +107,7 @@ const SwipeOrders = ({ themedStyle, orders, title }) => (
               {`R$ ${order.price}`}
             </Text>
             <Text style={[themedStyle.text, themedStyle.name]} appearance='hint' category='h4'>
-              {`por ${order.myName}`}
+              {`por ${order.customerName}`}
             </Text>
             <Text style={[themedStyle.text, themedStyle.expiration]} appearance='hint' category='c1'>
               {`expira em ${new Date(order.creationDate)}`}
@@ -132,6 +119,16 @@ const SwipeOrders = ({ themedStyle, orders, title }) => (
         );
       })}
     </SwiperComponent>
+  </View>
+);
+const LoadingOrders = ({ themedStyle }) => (
+  <View style={themedStyle.swiperWrapper}>
+    <Text style={themedStyle.title} appearance='hint'>
+      Carregando pedidos...
+    </Text>
+    <View style={themedStyle.loadingWrapper}>
+      <ActivityIndicator size='large' style={themedStyle.loading} />
+    </View>
   </View>
 );
 

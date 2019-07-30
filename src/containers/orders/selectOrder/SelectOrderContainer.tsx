@@ -6,7 +6,6 @@ import { OrderModel } from '@favid-inc/api';
 import { Orders } from './SelectOrder';
 import * as actions from '../../../store/actions';
 import { ScrollView, RefreshControl, View, Alert } from 'react-native';
-import { ContainerView } from '@src/components/common';
 import { ThemedComponentProps, ThemeType, withStyles } from 'react-native-ui-kitten/theme';
 import { Text } from 'react-native-ui-kitten/ui';
 
