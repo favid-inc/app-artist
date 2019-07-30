@@ -24,11 +24,13 @@ export const auth = authResult => {
       email: data.email,
       about: '',
     };
+    const idToken = await firebase.auth().currentUser.getIdToken();
     const authState: AuthStateModel = {
       ...data,
       redirectEventId: data.redirectEventId,
       lastLoginAt: data.lastLoginAt,
       createdAt: data.createdAt,
+      idToken,
     };
     dispatch(verifyArtistAccount(artist, data.uid));
     await AsyncStorage.setItem(storageKey, JSON.stringify(authState));
