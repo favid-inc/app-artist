@@ -65,7 +65,6 @@ class DeclineOrderContainerClass extends Component<Props> {
       Alert.alert(this.props.error.message, null, action, { cancelable: false });
       this.props.onError(null);
     }
-
     return (
       <DeclineOrder
         onDeclineOrder={refusedByArtistDescription => this.onSendDecline(refusedByArtistDescription)}
@@ -76,7 +75,7 @@ class DeclineOrderContainerClass extends Component<Props> {
 }
 
 const mapStateToProps = ({ order, auth }) => ({
-  idToken: auth.idToken,
+  idToken: auth.authState.idToken,
   error: order.error,
   loading: order.loading,
   currentOrder: order.currentOrder,
