@@ -11,7 +11,7 @@ import {
 } from './ActionTypes';
 import { OrderModel, ORDER, OrderFlow, OrderStatus } from '@favid-inc/api';
 
-export const postOrder = order => {
+export const postOrder = (order: OrderModel) => {
   return async dispatch => {
     dispatch(postOrderStarted());
     await fetch(`${config.firebase.databaseURL}/${ORDER}.json`, {
@@ -52,7 +52,6 @@ export const declineOrder = (order: OrderModel, idToken) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${idToken}`,
       },
-
       body: JSON.stringify(order),
     });
     if (!response.ok) {
