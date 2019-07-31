@@ -48,7 +48,7 @@ export class Camera extends Component<Props, State> {
 
   private handleCaptureIn = async () => {
     this.setState({ isCapturing: true });
-    const result = await this.camera.recordAsync();
+    const result = await this.camera.recordAsync({ quality: NativeCamera.Constants.VideoQuality['480p']});
 
     this.setState({
       isCapturing: false,
