@@ -70,7 +70,7 @@ class Container extends Component<Props, ContainerState> {
     return (
       <ScrollView
         contentContainerStyle={themedStyle.contentContainer}
-        refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh} />}
+        refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh.bind(this)} />}
       >
         {this.props.orders && this.props.orders.length ? (
           <Orders
