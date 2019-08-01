@@ -22,9 +22,3 @@ export const auth = {
 export const storageKeys = {
   currentUser: 'current_user',
 };
-
-export const core = {
-  elasticsearch: {
-    node: 'http://user:UCBTrbP8hDCn@35.225.67.137/elasticsearch/',
-  },
-};
