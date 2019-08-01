@@ -9,34 +9,36 @@ import {
   DELAY_ORDER,
   ORDER_ERROR,
 } from './ActionTypes';
-import { OrderModel, ORDER, OrderFlow, OrderStatus } from '@favid-inc/api';
 
-export const postOrder = (order: OrderModel) => {
-  return async dispatch => {
-    dispatch(postOrderStarted());
-    await fetch(`${config.firebase.databaseURL}/${ORDER}.json`, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(order),
-    });
+import { OrderModel, ORDER, OrderFlow, OrderStatus, OrderFlowDeclineOrderArguments } from '@favid-inc/api';
 
-    dispatch(postOrderEnded());
-  };
-};
+// export const postOrder = (order: OrderModel) => {
+//   return async dispatch => {
+//     dispatch(postOrderStarted());
+//     await fetch(`${config.firebase.databaseURL}/${ORDER}.json`, {
+//       method: 'POST',
+//       headers: {
+//         Accept: 'application/json',
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(order),
+//     });
+
+//     dispatch(postOrderEnded());
+//   };
+// };
 
 export const listOrders = (artistId: string) => {
   return async dispatch => {
     dispatch(listOrdersStarted());
 
     const queryParams = `?orderBy="artistId"&equalTo="${artistId}"`;
-    const response = await fetch(`${config.firebase.databaseURL}/order.json${queryParams}`);
-    const data = await response.json();
-    const orders: OrderModel[] = Object.keys(data)
-      .map(orderId => ({ id: orderId, ...data[orderId] }))
-      .filter(o => o.status === OrderStatus.OPENED);
+    const response = await fetch(`${config.firebase.databaseURL}/${ORDER}.json${queryParams}`);
+
+    const data: { [key: string]: OrderModel } = await response.json();
+
+    const orders: OrderModel[] = Object.values(data).filter(o => o.status === OrderStatus.OPENED);
+
     dispatch(storeOrders(orders));
     dispatch(listOrdersEnded());
   };
@@ -45,6 +47,7 @@ export const listOrders = (artistId: string) => {
 export const declineOrder = (order: OrderModel, idToken) => {
   return async dispatch => {
     dispatch(postOrderStarted());
+
     const response = await fetch(`${config.api.baseURL}/${OrderFlow.DECLINE}/${order.id}`, {
       method: 'PUT',
       headers: {
@@ -52,8 +55,9 @@ export const declineOrder = (order: OrderModel, idToken) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${idToken}`,
       },
-      body: JSON.stringify(order),
+      body: JSON.stringify(order as OrderFlowDeclineOrderArguments),
     });
+
     if (!response.ok) {
       const message = response.status === 403 ? 'Sua sessão expirou.' : 'Erro interno do servidor.';
       dispatch(orderError({ status: response.status, message }));
