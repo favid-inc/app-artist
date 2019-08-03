@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
-import { Dimensions, View, StyleSheet } from 'react-native';
-import { connect } from 'react-redux';
 import { Video } from 'expo-av';
+import * as firebase from 'firebase';
+import { connect } from 'react-redux';
+import React, { Component } from 'react';
 import { OrderModel } from '@favid-inc/api';
 import { Button } from 'react-native-ui-kitten';
+import { Dimensions, View, StyleSheet } from 'react-native';
 
 import { VideoPlayer } from './videoPlayer';
 
@@ -32,18 +33,7 @@ class AbstractPlayOrderVideo extends Component<Props> {
   public render(): React.ReactNode {
     return (
       <View style={styles.container}>
-        <VideoPlayer
-          videoProps={{
-            shouldPlay: true,
-            resizeMode: Video.RESIZE_MODE_COVER,
-            source: {
-              uri: this.props.order.video,
-            },
-          }}
-          showControlsOnLoad={true}
-          showFullscreenButton={false}
-          isPortrait={true}
-        />
+        <OrderVideoPlayer order={this.props.order} />
         <View style={styles.toolbar}>
           <Row>
             <Col>
@@ -59,14 +49,48 @@ class AbstractPlayOrderVideo extends Component<Props> {
   }
 }
 
+function OrderVideoPlayer({ order }: { order: OrderModel }) {
+  const { video } = order;
+  const [uri, setUri] = React.useState<string>('');
+
+  const uriMemo = React.useMemo(async () => {
+    console.log('video', video);
+    if (!video || video.startsWith('file://')) {
+      return video;
+    }
+
+    const storage = firebase.storage();
+    return await storage.ref(video).getDownloadURL();
+  }, [video]);
+
+  React.useEffect(() => {
+    uriMemo.then(setUri);
+  }, [video]);
+
+  if (!uri) {
+    return null;
+  }
+
+  return (
+    <VideoPlayer
+      videoProps={{
+        shouldPlay: true,
+        resizeMode: Video.RESIZE_MODE_COVER,
+        source: { uri },
+      }}
+      showControlsOnLoad={true}
+      showFullscreenButton={false}
+      isPortrait={true}
+    />
+  );
+}
+
 const mapStateToProps = ({ order }) =>
   ({
     order: order.currentOrder,
   } as StoreState);
 
-export const PlayOrderVideo = connect(
-  mapStateToProps,
-)(AbstractPlayOrderVideo);
+export const PlayOrderVideo = connect(mapStateToProps)(AbstractPlayOrderVideo);
 
 const Row = ({ children }) => <View style={styles.row}>{children}</View>;
 

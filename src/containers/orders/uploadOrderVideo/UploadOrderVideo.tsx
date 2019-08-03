@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
-import { ActivityIndicator, Text, View, StyleSheet, Alert, Button } from 'react-native';
+import axios from 'axios';
 import { connect } from 'react-redux';
-import { OrderModel, OrderFlow, OrderStatus } from '@favid-inc/api';
-import * as actions from '../../../store/actions';
+import React, { Component } from 'react';
 import * as config from '@src/core/config';
+import { OrderModel, OrderFlow, OrderStatus } from '@favid-inc/api';
+import { ActivityIndicator, Text, View, Alert, Button } from 'react-native';
+
+import * as actions from '../../../store/actions';
 
 interface StoreState {
   order: OrderModel;
@@ -20,45 +22,55 @@ interface Props extends StoreState, StoreDispatch {
 
 interface State {
   isUploading: boolean;
+  uploadPercentage: number;
 }
 
 class AbstractUploadOrderVideo extends Component<Props, State> {
   public state: State = {
     isUploading: false,
+    uploadPercentage: 0,
   };
 
   public componentDidMount() {
     this.doUpload();
   }
 
-  private async doUpload() {
-    this.setState({ isUploading: true });
+  private doUpload = async () => {
+    this.setState({ isUploading: true, uploadPercentage: 0 });
+
+    const apiUrl = `${config.api.baseURL}/${OrderFlow.ACCEPT}/${this.props.order.id}`;
 
     try {
       const data = new FormData();
+
       data.append('video', {
         type: 'video/mp4',
         uri: this.props.order.video,
+        name: 'video.mp4',
       });
-      const response = await fetch(`${config.api.baseURL}/${OrderFlow.ACCEPT}/${this.props.order.id}`, {
-        method: 'PUT',
+
+      const response = await axios.put(apiUrl, data, {
         headers: {
+          'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${this.props.idToken}`,
         },
-        body: data,
+        onUploadProgress: progressEvent =>
+          this.setState({
+            uploadPercentage: Math.floor(Math.round((progressEvent.loaded / progressEvent.total) * 100)),
+          }),
       });
-      const order = (await response.json()) as OrderModel;
+
+      const { order } = response.data;
       this.props.setCurrentOrder(order);
     } catch (e) {
       Alert.alert('Erro', 'Não foi possível enviar o vídeo. Verifique sua conexão e tente novamente.');
-      console.error(e);
     }
     this.setState({ isUploading: false });
-  }
+  };
 
   public render(): React.ReactNode {
     if (this.state.isUploading) {
-      return <SendingIndicator />;
+      return <SendingIndicator percentage={this.state.uploadPercentage} />;
     }
 
     if (this.props.order.status !== OrderStatus.OPENED) {
@@ -69,10 +81,10 @@ class AbstractUploadOrderVideo extends Component<Props, State> {
   }
 }
 
-const SendingIndicator = () => (
+const SendingIndicator = (props: { percentage: number }) => (
   <View>
     <ActivityIndicator size='large' color='#0000ff' />
-    <Text>Enviando vídeo</Text>
+    <Text>Enviando vídeo: {props.percentage}%</Text>
   </View>
 );
 
