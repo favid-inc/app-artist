@@ -3,7 +3,7 @@ import { OrderModel } from '@favid-inc/api';
 import { Text, Button } from '@kitten/ui';
 import { View, ActivityIndicator } from 'react-native';
 import { withStyles, ThemeType, ThemedComponentProps, StyleType } from '@kitten/theme';
-import { textStyle, SwiperComponent, ActivityAuthoring } from '@src/components/common';
+import { textStyle, SwiperComponent , ActivityAuthoring } from '@src/components/common';
 import { EvaCheckmarkOutline, CloseIconOutline } from '@src/assets/icons';
 interface ComponentProps {
   orders: OrderModel[];
@@ -42,22 +42,22 @@ class AbstractSelectOrder extends Component<OrdersProps, State> {
   };
 
   public render() {
-    const { themedStyle } = this.props;
-
-    const content = this.props.loading ? (
-      <LoadingOrders themedStyle={themedStyle} />
-    ) : (
-      <SwipeOrders
-        orders={this.props.orders}
-        themedStyle={themedStyle}
-        onSelectedOrderChanged={this.onSelectedOrderChanged}
-        title={`${this.state.selectedOrder + 1} de ${(this.props.orders && this.props.orders.length) || 0}`}
-      />
-    );
+    const { themedStyle, loading, orders } = this.props;
 
     return (
       <View style={themedStyle.container}>
-        <View style={themedStyle.swiperWrapper}>{content}</View>
+        <View style={themedStyle.swiperWrapper}>
+        {
+          loading
+          ? <LoadingOrders themedStyle={themedStyle} />
+          : <SwipeOrders
+              orders={this.props.orders}
+              themedStyle={themedStyle}
+              onSelectedOrderChanged={this.onSelectedOrderChanged}
+              title={`${this.state.selectedOrder + 1} de ${(this.props.orders && this.props.orders.length) || 0}`}
+            />
+        }
+        </View>
         <View style={themedStyle.buttonsWrapper}>
           <View style={themedStyle.buttons}>
             <Button
@@ -155,6 +155,7 @@ export const Orders = withStyles(AbstractSelectOrder, (theme: ThemeType) => ({
     display: 'flex',
     justifyContent: 'center',
     flexDirection: 'column',
+    overflow: 'hidden',
   },
   buttonsWrapper: {
     flex: 1,
