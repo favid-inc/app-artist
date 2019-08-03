@@ -7,6 +7,7 @@ import * as config from '@src/core/config';
 
 interface StoreState {
   order: OrderModel;
+  idToken: string;
 }
 
 interface StoreDispatch {
@@ -22,6 +23,10 @@ interface State {
 }
 
 class AbstractUploadOrderVideo extends Component<Props, State> {
+  public state: State = {
+    isUploading: false,
+  };
+
   public componentDidMount() {
     this.doUpload();
   }
@@ -31,22 +36,22 @@ class AbstractUploadOrderVideo extends Component<Props, State> {
 
     try {
       const data = new FormData();
-
       data.append('video', {
         type: 'video/mp4',
         uri: this.props.order.video,
       });
-
-      const response = await fetch(`${config.api.baseURL}/${OrderFlow.PLACE}/${this.props.order.id}`, {
+      const response = await fetch(`${config.api.baseURL}/${OrderFlow.ACCEPT}/${this.props.order.id}`, {
         method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${this.props.idToken}`,
+        },
         body: data,
       });
-
       const order = (await response.json()) as OrderModel;
-
       this.props.setCurrentOrder(order);
     } catch (e) {
       Alert.alert('Erro', 'Não foi possível enviar o vídeo. Verifique sua conexão e tente novamente.');
+      console.error(e);
     }
     this.setState({ isUploading: false });
   }
@@ -71,23 +76,23 @@ const SendingIndicator = () => (
   </View>
 );
 
-const SendButton = (props) => (
+const SendButton = props => (
   <View>
     <Button title='Enviar Vídeo' {...props} />
   </View>
 );
 
-
-const SuccessMessage = (props) => (
+const SuccessMessage = props => (
   <View>
     <Text>Vídeo enviado com sucesso!</Text>
     <Button title='Voltar' {...props} />
   </View>
 );
 
-const mapStateToProps = ({ order }) =>
+const mapStateToProps = ({ order, auth }) =>
   ({
     order: order.currentOrder,
+    idToken: auth.authState.idToken,
   } as StoreState);
 
 const mapDispatchToProps = dispatch =>
