@@ -8,32 +8,23 @@ interface SwiperBoxProps {
 
 type Props = SwiperBoxProps & ThemedComponentProps;
 
-class SwiperBox extends React.Component<Props> {
+export class SwiperComponent extends React.Component<Props> {
   public updateSelectedOrder(i) {
     this.props.selectedOrderChanged(i);
   }
 
   public render(): React.ReactElement {
-    const { themedStyle } = this.props;
-
+    const { children } = this.props;
     return (
       <Swiper
-        style={themedStyle.wrapper}
         loop={false}
         showsButtons={false}
         showsPagination={false}
         index={0}
         onIndexChanged={i => this.updateSelectedOrder(i)}
       >
-        {this.props.children}
+        {children}
       </Swiper>
     );
   }
 }
-
-export const SwiperComponent = withStyles(SwiperBox, (theme: ThemeType) => ({
-  wrapper: {
-    flexDirection: 'row',
-    position: 'absolute',
-  },
-}));
