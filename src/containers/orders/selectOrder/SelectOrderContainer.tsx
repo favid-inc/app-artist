@@ -66,16 +66,17 @@ class Container extends Component<Props, ContainerState> {
   };
 
   public render() {
-    const { themedStyle } = this.props;
+    const { themedStyle, orders, loading } = this.props;
+
     return (
       <ScrollView
         contentContainerStyle={themedStyle.contentContainer}
-        refreshControl={<RefreshControl refreshing={this.props.loading} onRefresh={this.onRefresh.bind(this)} />}
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={this.onRefresh.bind(this)} />}
       >
-        {this.props.orders && this.props.orders.length ? (
+        {orders && orders.length ? (
           <Orders
-            loading={this.props.loading}
-            orders={this.props.orders}
+            loading={loading}
+            orders={orders}
             onDeclineOrder={this.onDeclineOrder}
             onDelayOrder={this.onDelayOrder}
             onAcceptOrder={this.onAcceptOrder}
