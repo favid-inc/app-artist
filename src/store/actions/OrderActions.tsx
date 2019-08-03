@@ -45,7 +45,7 @@ export const listOrders = (artistId: string) => {
 export const declineOrder = (order: OrderModel, idToken) => {
   return async dispatch => {
     dispatch(postOrderStarted());
-    const response = await fetch(`${config.api.baseURL}/${OrderFlow.DECLINE}`, {
+    const response = await fetch(`${config.api.baseURL}/${OrderFlow.DECLINE}/${order.id}`, {
       method: 'PUT',
       headers: {
         Accept: 'application/json',
