@@ -32,12 +32,14 @@ export const listOrders = (artistId: string) => {
   return async dispatch => {
     dispatch(listOrdersStarted());
 
-    const queryParams = `?orderBy="artistId"&equalTo="${artistId}"`;
-    const response = await fetch(`${config.firebase.databaseURL}/${ORDER}.json${queryParams}`);
+    // const queryParams = `?orderBy="artistId"&equalTo="${artistId}"`;
+    const response = await fetch(`${config.firebase.databaseURL}/${ORDER}.json`);
 
     const data: { [key: string]: OrderModel } = await response.json();
 
-    const orders: OrderModel[] = Object.values(data).filter(o => o.status === OrderStatus.OPENED);
+    const orders: OrderModel[] = Object.values(data).filter(
+      o => o.artistId === artistId && o.status === OrderStatus.OPENED,
+    );
 
     dispatch(storeOrders(orders));
     dispatch(listOrdersEnded());
