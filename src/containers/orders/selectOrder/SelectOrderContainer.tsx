@@ -33,9 +33,7 @@ class Container extends Component<Props, ContainerState> {
     this.props.onListOrders(this.props.artistId);
   };
 
-  public onRefresh() {
-    this.props.onListOrders(this.props.artistId);
-  }
+  private onRefresh = () => this.props.onListOrders(this.props.artistId);
 
   public onDeclineOrder = (order: OrderModel) => {
     this.props.onSetCurrentOrder(order);
@@ -71,7 +69,7 @@ class Container extends Component<Props, ContainerState> {
     return (
       <ScrollView
         contentContainerStyle={themedStyle.contentContainer}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={this.onRefresh.bind(this)} />}
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={this.onRefresh} />}
       >
         {orders && orders.length ? (
           <Orders

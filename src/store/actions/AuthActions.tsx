@@ -77,22 +77,22 @@ export const loadAuthState = () => {
 
 export const verifyArtistAccount = (artist: Artist, artistId: string) => {
   return async dispatch => {
-    console.log('[AuthActions.tsx] verifyArtistAccount() => started');
+    // console.log('[AuthActions.tsx] verifyArtistAccount() => started');
     const response = await fetch(`${config.firebase.databaseURL}/artist/${artistId}.json`);
     const data: any = await response.json();
 
     if (data) {
-      console.log('[AuthActions.tsx] verifyArtistAccount() => finished: user already registred');
+      // console.log('[AuthActions.tsx] verifyArtistAccount() => finished: user already registred');
       return;
     }
-    console.log('[AuthActions.tsx] verifyArtistAccount() => finished: register user');
+    // console.log('[AuthActions.tsx] verifyArtistAccount() => finished: register user');
     dispatch(putArtist(artist, artistId));
   };
 };
 
 export const signOut = () => {
   AsyncStorage.removeItem(storageKey);
-  console.log('[AuthActions.tsx] signOut');
+  // console.log('[AuthActions.tsx] signOut');
   return {
     type: SIGN_OUT,
   };

@@ -23,7 +23,7 @@ const mapStateToProps = ({order}) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onPostOrder: order => dispatch(actions.postOrder(order)),
+  onPostOrder: order => console.log('?????????'), // dispatch(actions.postOrder(order)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(BookingContainer);

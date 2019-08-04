@@ -20,7 +20,7 @@ interface DeclineOrderContainerProps {
 type Props = NavigationScreenProps & DeclineOrderContainerProps;
 
 class DeclineOrderContainerClass extends Component<Props> {
-  public onSendDecline(refusedByArtistDescription: string) {
+  public onSendDecline(declinedByArtistDescription: string) {
     Alert.alert(
       'Cancelar pedido?',
       'Esta ação não poderá ser desfeita.',
@@ -31,7 +31,7 @@ class DeclineOrderContainerClass extends Component<Props> {
             this.props.onDeclineOrder(
               {
                 ...this.props.currentOrder,
-                refusedByArtistDescription,
+                declinedByArtistDescription,
               },
               this.props.idToken,
             );
