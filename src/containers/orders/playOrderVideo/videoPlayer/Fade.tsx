@@ -1,26 +1,43 @@
 import React from 'react';
-import { Animated } from 'react-native';
+import { Animated, ViewStyle } from 'react-native';
 
 interface Props {
   visible: boolean;
+  style?: ViewStyle;
 }
 
-export class Fade extends React.Component<Props> {
+interface State {
+  visible: boolean;
+}
+
+export class Fade extends React.Component<Props, State> {
   private visibility: Animated.Value;
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      visible: props.visible,
+    };
+  }
 
   public componentWillMount() {
     this.visibility = new Animated.Value(this.props.visible ? 1 : 0);
   }
 
   public componentWillReceiveProps(nextProps) {
+    if (nextProps.visible) {
+      this.setState({ visible: true });
+    }
     Animated.timing(this.visibility, {
       toValue: nextProps.visible ? 1 : 0,
       duration: 300,
+    }).start(() => {
+      this.setState({ visible: nextProps.visible });
     });
   }
 
   public render() {
-    const { visible, children, ...rest } = this.props;
+    const { visible, style, children, ...rest } = this.props;
 
     const containerStyle = {
       opacity: this.visibility.interpolate({
@@ -37,10 +54,10 @@ export class Fade extends React.Component<Props> {
       ],
     };
 
-    const combinedStyle = [containerStyle];
+    const combinedStyle = [containerStyle, style];
     return (
-      <Animated.View style={combinedStyle} {...rest}>
-        {children}
+      <Animated.View style={this.state.visible ? combinedStyle : containerStyle} {...rest}>
+        {this.state.visible ? children : null}
       </Animated.View>
     );
   }
