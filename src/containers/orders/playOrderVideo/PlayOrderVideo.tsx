@@ -31,6 +31,12 @@ class AbstractPlayOrderVideo extends Component<Props> {
   }
 
   public render(): React.ReactNode {
+    const { order } = this.props;
+
+    if (!order) {
+      return <View />;
+    }
+
     return (
       <View style={styles.container}>
         <OrderVideoPlayer order={this.props.order} />
@@ -54,7 +60,6 @@ function OrderVideoPlayer({ order }: { order: OrderModel }) {
   const [uri, setUri] = React.useState<string>('');
 
   const uriMemo = React.useMemo(async () => {
-    console.log('video', video);
     if (!video || video.startsWith('file://')) {
       return video;
     }
