@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { Canceler } from 'axios';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import * as config from '@src/core/config';
@@ -24,6 +24,7 @@ interface State {
   isLive: boolean;
   isUploading: boolean;
   uploadPercentage: number;
+  canceler: Canceler;
 }
 
 class AbstractUploadOrderVideo extends Component<Props, State> {
@@ -31,10 +32,15 @@ class AbstractUploadOrderVideo extends Component<Props, State> {
     isLive: true,
     isUploading: false,
     uploadPercentage: 0,
+    canceler: null,
   };
 
   public componentDidMount() {
     this.doUpload();
+  }
+
+  public componentWillUnmount() {
+    this.state.canceler && this.state.canceler();
   }
 
   private doUpload = async () => {
@@ -57,7 +63,10 @@ class AbstractUploadOrderVideo extends Component<Props, State> {
 
       const url = `${config.api.baseURL}/${OrderFlow.ACCEPT}/${this.props.order.id}`;
 
+      const cancelToken = new axios.CancelToken(canceler => this.state.isLive && this.setState({ canceler }));
+
       const response = await axios.put(url, data, {
+        cancelToken,
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${this.props.idToken}`,
