@@ -2,7 +2,7 @@ import { Audio, Video } from 'expo-av';
 import { PlaybackStatus, PlaybackStatusToSet } from 'expo-av/build/AV';
 
 import React from 'react';
-import { View, StyleSheet, TouchableWithoutFeedback, Animated, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, TouchableWithoutFeedback, Dimensions, ActivityIndicator } from 'react-native';
 import { MainControlButton } from './MainContolButton';
 import { Fade } from './Fade';
 
@@ -58,6 +58,9 @@ export class VideoPlayer extends React.Component<Props, State> {
             shouldPlay={true}
             source={{ uri }}
             style={styles.fullScreen}
+            useNativeControls={true}
+            resizeMode={Video.RESIZE_MODE_CONTAIN}
+            isLooping={true}
           />
           <View style={styles.fullScreen}>
             {this.state.playbackStatus.isLoaded ? (
@@ -93,6 +96,7 @@ function setAudioMode() {
 
 const styles = StyleSheet.create({
   container: {
+    width: Dimensions.get('window').width,
     flex: 1,
     backgroundColor: 'black',
   },

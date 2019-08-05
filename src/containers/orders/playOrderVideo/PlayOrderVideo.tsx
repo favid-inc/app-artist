@@ -1,10 +1,9 @@
-import { Video } from 'expo-av';
 import * as firebase from 'firebase';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import { OrderModel } from '@favid-inc/api';
 import { Button } from 'react-native-ui-kitten';
-import { Dimensions, View, StyleSheet } from 'react-native';
+import { Dimensions, View, StyleSheet, Text } from 'react-native';
 
 import { VideoPlayer } from './videoPlayer';
 
@@ -22,7 +21,7 @@ class AbstractPlayOrderVideo extends Component<Props> {
     this.props.onRedo();
   };
 
-  private handleUploadClick = async () => {
+  private handleUploadClick = () => {
     this.props.onUpload();
   };
 
@@ -39,7 +38,11 @@ class AbstractPlayOrderVideo extends Component<Props> {
 
     return (
       <View style={styles.container}>
-        <OrderVideoPlayer order={this.props.order} />
+        <Row>
+          <Col>
+            <OrderVideoPlayer order={this.props.order} />
+          </Col>
+        </Row>
         <View style={styles.toolbar}>
           <Row>
             <Col>
@@ -56,38 +59,31 @@ class AbstractPlayOrderVideo extends Component<Props> {
 }
 
 function OrderVideoPlayer({ order }: { order: OrderModel }) {
-  const { video } = order;
-  const [uri, setUri] = React.useState<string>('');
-
-  const uriMemo = React.useMemo(async () => {
-    if (!video || video.startsWith('file://')) {
-      return video;
-    }
-
-    const storage = firebase.storage();
-    return await storage.ref(video).getDownloadURL();
-  }, [video]);
+  const video = `${order.video}`;
+  const [uri, setUri] = React.useState<string>(video);
 
   React.useEffect(() => {
-    uriMemo.then(setUri);
+    (async () => {
+      if (video.startsWith('file://')) {
+        return setUri(video);
+      }
+
+      try {
+        const storage = firebase.storage();
+        const downloadUrl = await storage.ref(video).getDownloadURL();
+
+        setUri(downloadUrl);
+      } catch (e) {
+        console.error(e);
+      }
+    })();
   }, [video]);
 
   if (!uri) {
-    return null;
+    return <View />;
   }
 
-  return (
-    <VideoPlayer
-      videoProps={{
-        shouldPlay: true,
-        resizeMode: Video.RESIZE_MODE_COVER,
-        source: { uri },
-      }}
-      showControlsOnLoad={true}
-      showFullscreenButton={false}
-      isPortrait={true}
-    />
-  );
+  return <VideoPlayer uri={uri} />;
 }
 
 const mapStateToProps = ({ order }) =>
@@ -104,18 +100,7 @@ const Col = ({ children }) => <View style={styles.col}>{children}</View>;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
-  },
-
-  // loading indicator
-  loading: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
+    width: Dimensions.get('window').width,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -123,9 +108,7 @@ const styles = StyleSheet.create({
   // video player
   toolbar: {
     position: 'absolute',
-    width: Dimensions.get('window').width,
-    height: 80,
-    bottom: 80,
+    bottom: 100,
   },
 
   // grid system
@@ -136,9 +119,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   row: {
-    alignItems: 'flex-end',
+    width: Dimensions.get('window').width,
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
