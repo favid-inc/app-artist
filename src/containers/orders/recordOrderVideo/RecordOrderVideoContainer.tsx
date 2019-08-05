@@ -15,7 +15,7 @@ export class RecordOrderVideoContainer extends Component<NavigationScreenProps, 
     isFocused: false,
   };
 
-  private onRecordDone = () => this.props.navigation.goBack();
+  private onRecordDone = () => this.props.navigation.navigate('PlayOrderVideo');
 
   public componentDidMount = () => {
     const { navigation } = this.props;

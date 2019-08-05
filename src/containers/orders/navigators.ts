@@ -1,4 +1,5 @@
-import { NavigationContainer, createStackNavigator, createSwitchNavigator } from 'react-navigation';
+import React from 'react';
+import { NavigationContainer, createStackNavigator } from 'react-navigation';
 
 import { DeclineOrderContainer } from './declineOrder';
 import { RecordOrderVideoContainer } from './recordOrderVideo';
@@ -6,34 +7,18 @@ import { UploadOrderVideoContainer } from './uploadOrderVideo';
 import { PlayOrderVideoContainer } from './playOrderVideo';
 import { SelectOrderContainer } from './selectOrder';
 
-const DeclineOrderNavigator: NavigationContainer = createStackNavigator(
-  { DeclineOrder: DeclineOrderContainer },
-  {
-    headerMode: 'screen',
-    defaultNavigationOptions: { header: null },
-  },
-);
-
-const AcceptOrderNavigator: NavigationContainer = createStackNavigator(
-  {
-    PlayOrderVideo: PlayOrderVideoContainer,
-    RecordOrderVideo: RecordOrderVideoContainer,
-    UploadOrderVideo: UploadOrderVideoContainer,
-  },
-  {
-    headerMode: 'screen',
-    defaultNavigationOptions: { header: null },
-  },
-);
-
 export const OrdersNavigator: NavigationContainer = createStackNavigator(
   {
     SelectOrder: SelectOrderContainer,
-    AcceptOrder: AcceptOrderNavigator,
-    DeclineOrder: DeclineOrderNavigator,
+    PlayOrderVideo: PlayOrderVideoContainer,
+    RecordOrderVideo: RecordOrderVideoContainer,
+    UploadOrderVideo: UploadOrderVideoContainer,
+    DeclineOrder: DeclineOrderContainer,
   },
   {
     headerMode: 'screen',
-    defaultNavigationOptions: { header: null },
+    defaultNavigationOptions: {
+      headerTransparent: true,
+    },
   },
 );

@@ -4,14 +4,14 @@ import { PlayOrderVideo } from './PlayOrderVideo';
 
 export class PlayOrderVideoContainer extends Component<NavigationScreenProps> {
   private handleOnRedo = () => {
-    this.props.navigation.push('RecordOrderVideo');
+    this.props.navigation.goBack();
   };
 
   private handleOnUpload = () => {
     this.props.navigation.push('UploadOrderVideo');
   };
 
-  public render(): React.ReactNode {
+  public render() {
     return <PlayOrderVideo onRedo={this.handleOnRedo} onUpload={this.handleOnUpload} />;
   }
 }
