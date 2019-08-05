@@ -5,13 +5,13 @@ import { StyleSheet, View } from 'react-native';
 
 export class UploadOrderVideoContainer extends Component<NavigationScreenProps> {
   private handleOnDone = () => {
-    this.props.navigation.goBack('SelectOrder');
+    this.props.navigation.navigate('SelectOrder');
   };
 
   public render(): React.ReactNode {
     return (
       <View style={styles.container}>
-        <UploadOrderVideo onUpload={this.handleOnDone} />
+        <UploadOrderVideo onDone={this.handleOnDone} />
       </View>
     );
   }
