@@ -2,7 +2,7 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import * as config from '@src/core/config';
-import { OrderModel, OrderFlow, OrderStatus } from '@favid-inc/api';
+import { OrderModel, OrderFlow, OrderStatus, OrderFlowPlaceOrderResponse } from '@favid-inc/api';
 import { ActivityIndicator, Text, View, Alert, Button } from 'react-native';
 
 import * as actions from '../../../store/actions';
@@ -21,12 +21,14 @@ interface Props extends StoreState, StoreDispatch {
 }
 
 interface State {
+  isLive: boolean;
   isUploading: boolean;
   uploadPercentage: number;
 }
 
 class AbstractUploadOrderVideo extends Component<Props, State> {
   public state: State = {
+    isLive: true,
     isUploading: false,
     uploadPercentage: 0,
   };
@@ -36,11 +38,15 @@ class AbstractUploadOrderVideo extends Component<Props, State> {
   }
 
   private doUpload = async () => {
-    this.setState({ isUploading: true, uploadPercentage: 0 });
-
-    const apiUrl = `${config.api.baseURL}/${OrderFlow.ACCEPT}/${this.props.order.id}`;
+    this.state.isLive && this.setState({ isUploading: true, uploadPercentage: 0 });
 
     try {
+      const { video } = this.props.order;
+
+      if (!video || !video.startsWith('file://') || !video.endsWith('.mp4')) {
+        throw new Error(`AbstractUploadOrderVideo: fideo format is invalid: "${video}"`);
+      }
+
       const data = new FormData();
 
       data.append('video', {
@@ -49,7 +55,9 @@ class AbstractUploadOrderVideo extends Component<Props, State> {
         name: 'video.mp4',
       });
 
-      const response = await axios.put(apiUrl, data, {
+      const url = `${config.api.baseURL}/${OrderFlow.ACCEPT}/${this.props.order.id}`;
+
+      const response = await axios.put(url, data, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${this.props.idToken}`,
@@ -61,11 +69,13 @@ class AbstractUploadOrderVideo extends Component<Props, State> {
       });
 
       const { order } = response.data;
-      this.props.setCurrentOrder(order);
+
+      this.state.isLive && this.props.setCurrentOrder(order);
     } catch (e) {
       Alert.alert('Erro', 'Não foi possível enviar o vídeo. Verifique sua conexão e tente novamente.');
+      // console.error(e);
     }
-    this.setState({ isUploading: false });
+    this.state.isLive && this.setState({ isUploading: false });
   };
 
   public render(): React.ReactNode {
