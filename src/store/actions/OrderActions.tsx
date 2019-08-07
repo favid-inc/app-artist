@@ -12,22 +12,6 @@ import {
 
 import { OrderModel, ORDER, OrderFlow, OrderStatus, OrderFlowDeclineOrderArguments } from '@favid-inc/api';
 
-// export const postOrder = (order: OrderModel) => {
-//   return async dispatch => {
-//     dispatch(postOrderStarted());
-//     await fetch(`${config.firebase.databaseURL}/${ORDER}.json`, {
-//       method: 'POST',
-//       headers: {
-//         Accept: 'application/json',
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify(order),
-//     });
-
-//     dispatch(postOrderEnded());
-//   };
-// };
-
 export const listOrders = (artistId: string) => {
   return async dispatch => {
     dispatch(listOrdersStarted());
@@ -36,7 +20,6 @@ export const listOrders = (artistId: string) => {
     const response = await fetch(`${config.firebase.databaseURL}/${ORDER}.json`);
 
     const data: { [key: string]: OrderModel } = await response.json();
-
     const orders: OrderModel[] = Object.values(data).filter(
       o => o.artistId === artistId && o.status === OrderStatus.OPENED,
     );
@@ -49,24 +32,30 @@ export const listOrders = (artistId: string) => {
 export const declineOrder = (order: OrderModel, idToken) => {
   return async dispatch => {
     dispatch(postOrderStarted());
+    try {
+      const response = await fetch(`${config.api.baseURL}/${OrderFlow.DECLINE}/${order.id}`, {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify(order as OrderFlowDeclineOrderArguments),
+      });
 
-    const response = await fetch(`${config.api.baseURL}/${OrderFlow.DECLINE}/${order.id}`, {
-      method: 'PUT',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${idToken}`,
-      },
-      body: JSON.stringify(order as OrderFlowDeclineOrderArguments),
-    });
+      if (!response.ok) {
+        console.log('[OrderActions.tsx] declineOrder() response:', response);
+        const errorMessage = response.status === 403 ? 'Sua sessão expirou.' : 'Erro interno do servidor.';
+        throw Error(errorMessage);
+      }
 
-    if (!response.ok) {
-      const message = response.status === 403 ? 'Sua sessão expirou.' : 'Erro interno do servidor.';
-      dispatch(orderError({ status: response.status, message }));
+      dispatch(postOrderEnded());
+      dispatch(listOrders(order.artistId));
+    } catch (error) {
+      dispatch(
+        orderError({ message: error ? error : 'Não foi possivel recusar o pedido, tente novamente mais tarde.' }),
+      );
     }
-
-    dispatch(postOrderEnded());
-    dispatch(listOrders(order.artistId));
   };
 };
 
