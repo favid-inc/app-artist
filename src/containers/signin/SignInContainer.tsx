@@ -3,13 +3,10 @@ import { connect } from 'react-redux';
 import * as actions from '../../store/actions';
 import { NavigationScreenProps } from 'react-navigation';
 import { Profile } from '@src/core/model';
-import { Text, View, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
-import * as config from '@src/core/config';
-import * as AppAuth from 'expo-app-auth';
+import { Text, View, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { googleImage, favidImage } from '@src/assets/images';
 import { AuthState as AuthStateModel } from '@src/core/model/authState.model';
 import { withStyles, ThemeType, ThemedComponentProps } from 'react-native-ui-kitten/theme';
-import { themes } from '@src/core/themes';
 
 interface State {
   profile: Profile;
@@ -18,7 +15,7 @@ interface State {
 interface SignInContainerProps {
   auth: AuthStateModel;
   loading: boolean;
-  onAuth: (any) => void;
+  onAuth: () => void;
   onLoadAuthState: () => void;
 }
 
@@ -33,8 +30,7 @@ class SignInContainerComponent extends React.Component<props, State> {
   }
 
   private auth = async () => {
-    const result = await AppAuth.authAsync(config.auth);
-    this.props.onAuth(result);
+    this.props.onAuth();
   };
 
   public render(): React.ReactNode {
@@ -73,10 +69,9 @@ const mapStateToProps = ({ auth }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onAuth: authResult => dispatch(actions.auth(authResult)),
+  onAuth: () => dispatch(actions.auth()),
   onLoadAuthState: () => dispatch(actions.loadAuthState()),
 });
-
 
 const SignInContainer = withStyles(SignInContainerComponent, (theme: ThemeType) => ({
   container: {
