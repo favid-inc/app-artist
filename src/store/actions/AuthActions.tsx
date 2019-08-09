@@ -1,49 +1,76 @@
 import { AsyncStorage } from 'react-native';
-import { getArtist, storeArtist, putArtist } from './ArtistActions';
+import * as AppAuth from 'expo-app-auth';
+import { getArtist, putArtist } from './ArtistActions';
 import { SIGN_IN, SIGN_OUT, SIGN_IN_STARTED, SIGN_IN_ENDED, SIGN_IN_ERROR } from './ActionTypes';
 import * as config from '@src/core/config';
 import { storageKeys } from '@src/core/config';
 import { ArtistModel } from '@favid-inc/api';
 import { AuthState as AuthStateModel } from '@src/core/model/authState.model';
 import * as firebase from 'firebase';
-import { Artist } from '@src/core/model';
 
 const storageKey = storageKeys.currentUser;
 
-export const auth = authResult => {
+export const auth = () => {
   return async dispatch => {
     dispatch(signInStarted());
-    const credential = firebase.auth.GoogleAuthProvider.credential(authResult.idToken, authResult.accessToken);
-    const authData = await firebase.auth().signInWithCredential(credential);
-    const data = JSON.parse(JSON.stringify(authData)).user;
+
+    const authState = await AppAuth.authAsync(config.auth);
+
+    const credential = firebase.auth.GoogleAuthProvider.credential(authState.idToken, authState.accessToken);
+    await firebase.auth().signInWithCredential(credential);
+    const { uid, displayName, photoURL, email } = await firebase.auth().currentUser;
+
     const artist: ArtistModel = {
-      id: data.uid,
-      name: data.displayName,
-      artisticName: data.displayName,
-      photo: data.photoURL,
-      email: data.email,
-      about: '',
+      id: uid,
+      name: displayName,
+      photo: photoURL,
+      email,
     };
-    const idToken = await firebase.auth().currentUser.getIdToken();
-    const authState: AuthStateModel = {
-      ...data,
-      redirectEventId: data.redirectEventId,
-      lastLoginAt: data.lastLoginAt,
-      createdAt: data.createdAt,
-      idToken,
-    };
-    dispatch(verifyArtistAccount(artist, data.uid));
-    await AsyncStorage.setItem(storageKey, JSON.stringify(authState));
-    dispatch(signIn(authState));
+
+    dispatch(verifyArtistAccount(artist, uid));
+    await AsyncStorage.setItem(storageKey, JSON.stringify({ authState }));
+    dispatch(signIn(authState, artist));
     dispatch(signInFinished());
-    dispatch(getArtist(data.uid));
+    dispatch(getArtist(uid));
   };
 };
 
-export const signIn = (authState: AuthStateModel) => {
+export const reAuth = ({ refreshToken }: AuthStateModel) => {
+  return async dispatch => {
+    const authState = await AppAuth.refreshAsync(config.auth, refreshToken);
+    const credential = firebase.auth.GoogleAuthProvider.credential(authState.idToken, authState.accessToken);
+    await firebase.auth().signInWithCredential(credential);
+
+    const { uid, displayName, photoURL, email } = await firebase.auth().currentUser;
+    const artist: ArtistModel = { id: uid, name: displayName, photo: photoURL, email };
+
+    await AsyncStorage.setItem(storageKey, JSON.stringify({ authState, artist }));
+    dispatch(signIn(authState, artist));
+  };
+};
+
+export const verifySession = (authState: AuthStateModel) => {
+  return async dispatch => {
+    const expirationTime = new Date(authState.accessTokenExpirationDate).getTime();
+    const currentTime = new Date().getTime();
+
+    console.log('[AuthActions.tsx] veridySession(): expirationTime: ', new Date(expirationTime).toString());
+    console.log('[AuthActions.tsx] veridySession(): currentTime: ', new Date(currentTime).toString());
+
+    if (expirationTime < currentTime) {
+      dispatch(reAuth(authState));
+      console.log('[AuthActions.tsx] verifySession() session expirated');
+    } else {
+      console.log('[AuthActions.tsx] veridySession() user authenticated');
+    }
+  };
+};
+
+export const signIn = (authState: AuthStateModel, artist: ArtistModel) => {
   return {
     type: SIGN_IN,
     authState,
+    artist,
   };
 };
 
@@ -68,14 +95,16 @@ export const signInError = error => {
 
 export const loadAuthState = () => {
   return async dispatch => {
-    const authState = await AsyncStorage.getItem(storageKey);
-    const artist = await AsyncStorage.getItem('artist');
-    dispatch(signIn(JSON.parse(authState)));
-    dispatch(storeArtist(JSON.parse(artist)));
+    const data = await AsyncStorage.getItem(storageKey);
+    if (!data) {
+      return;
+    }
+    const { authState, artist } = JSON.parse(data);
+    dispatch(signIn(authState, artist));
   };
 };
 
-export const verifyArtistAccount = (artist: Artist, artistId: string) => {
+export const verifyArtistAccount = (artist: ArtistModel, artistId: string) => {
   return async dispatch => {
     // console.log('[AuthActions.tsx] verifyArtistAccount() => started');
     const response = await fetch(`${config.firebase.databaseURL}/artist/${artistId}.json`);
@@ -90,10 +119,16 @@ export const verifyArtistAccount = (artist: Artist, artistId: string) => {
   };
 };
 
-export const signOut = () => {
-  AsyncStorage.removeItem(storageKey);
-  // console.log('[AuthActions.tsx] signOut');
+export const removeUser = () => {
   return {
     type: SIGN_OUT,
+  };
+};
+
+export const signOut = () => {
+  return async dispatch => {
+    await firebase.auth().signOut();
+    await AsyncStorage.removeItem(storageKey);
+    dispatch(removeUser());
   };
 };
