@@ -5,13 +5,11 @@ import { Profile } from '@src/core/model';
 
 import { Account } from '@src/containers/menu/account/Account';
 import * as actions from '../../../store/actions';
-import { ImageSource } from '@src/assets/images';
-import { Text } from 'react-native';
+
 import { AuthState as AuthStateModel } from '@src/core/model/authState.model';
 import { ArtistModel } from '@favid-inc/api';
 
 interface AccountContainerProps {
-  auth: AuthStateModel;
   artist: ArtistModel;
   loading: boolean;
   onSignOut: () => void;
@@ -28,21 +26,17 @@ class AccountContainer extends Component<Props> {
   };
 
   public componentDidMount() {
-    if (!this.props.auth.displayName) {
-      console.log('[AccountContainer.tsx] componentDidMount', this.props.auth);
-      return this.props.onSignOut();
-    }
     this.setState(prevState => {
       const imageSource = {
-        uri: this.props.auth.photoURL,
+        uri: this.props.artist.photo,
         height: 100,
         width: 100,
       };
       const profile: Profile = {
-        firstName: this.props.auth.displayName.split(' ')[0],
-        lastName: this.props.auth.displayName.split(' ')[1],
+        firstName: this.props.artist.name.split(' ')[0],
+        lastName: this.props.artist.name.split(' ')[1],
         photo: { imageSource },
-        email: this.props.auth.email,
+        email: this.props.artist.email,
       };
 
       return {
@@ -64,10 +58,8 @@ class AccountContainer extends Component<Props> {
   }
 }
 
-const mapStateToProps = ({ auth, artist }) => ({
-  auth: auth.authState,
+const mapStateToProps = ({ artist }) => ({
   artist: artist.artist,
-  loading: artist.loading,
 });
 const mapDispatchToProps = dispatch => ({
   onPutArtist: (artist: ArtistModel, artistId: string) => dispatch(actions.putArtist(artist, artistId)),
