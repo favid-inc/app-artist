@@ -11,6 +11,7 @@ import {
   NavigationState,
 } from 'react-navigation';
 import { SocialNavigationOptions } from './options';
+import * as actions from '../../store/actions';
 
 import { MenuContainer } from '@src/containers/menu';
 import AccountContainer from '@src/containers/menu/account/AccountCointainer';
@@ -19,6 +20,8 @@ import ArtistDetailsContainer from '@src/containers/artistDetails/ArtistDetailsC
 import * as BuyingProcess from '@src/containers/buyingProcess/index';
 import BookingContainer from '@src/containers/buyingProcess/booking/BookingContainer';
 import { OrdersNavigator } from '@src/containers/orders';
+import { Artist as ArtistModel } from '../../core/model/artist.model';
+import { AuthState as AuthStateModel } from '../../core/model/authState.model';
 
 const AccountNavigator: NavigationContainer = createStackNavigator(
   {
@@ -96,20 +99,20 @@ const AppNavigator: NavigationContainer = createStackNavigator(
   },
 );
 
-const createAppRouter = (
-  container: NavigationContainer,
-): NavigationContainer => {
+const createAppRouter = (container: NavigationContainer): NavigationContainer => {
   useScreens();
   return createAppContainer(container);
 };
 
 // const NavigationRouter: NavigationContainer = createAppRouter(AppNavigator);
 const NavigationRouter: NavigationContainer = createAppRouter(AppNavigator);
-const AuthNavigationRouter: NavigationContainer = createAppRouter(
-  SignInNavigator,
-);
+const AuthNavigationRouter: NavigationContainer = createAppRouter(SignInNavigator);
 interface ComponentProps {
-  auth: any;
+  artist: ArtistModel;
+  authState: AuthStateModel;
+  onLoadAuthState: () => void;
+  onLoadArtist: () => void;
+  onverifySession: (authState: AuthStateModel) => void;
   onNavigationStateChange: (
     prevNavigationState: NavigationState,
     nextNavigationState: NavigationState,
@@ -118,23 +121,33 @@ interface ComponentProps {
 }
 
 class Router extends React.Component<ComponentProps> {
+  componentWillMount() {
+    this.props.onLoadAuthState();
+    this.props.onLoadArtist();
+  }
+
+  componentDidUpdate() {
+    if (this.props.authState.refreshToken) {
+      this.props.onverifySession(this.props.authState);
+    }
+  }
   public render() {
-    let navigation = (
-      <AuthNavigationRouter
-        onNavigationStateChange={this.props.onNavigationStateChange}
-      />
-    );
-    if (this.props.auth.authState.uid) {
-      navigation = (
-        <NavigationRouter
-          onNavigationStateChange={this.props.onNavigationStateChange}
-        />
-      );
+    let navigation = <AuthNavigationRouter onNavigationStateChange={this.props.onNavigationStateChange} />;
+    if (this.props.authState.accessTokenExpirationDate) {
+      navigation = <NavigationRouter onNavigationStateChange={this.props.onNavigationStateChange} />;
     }
     return navigation;
   }
 }
 
-const mapStateToProps = ({ auth }) => ({ auth: auth });
+const mapStateToProps = ({ auth, artist }) => ({ authState: auth.authState, artist: artist.artist });
+const mapDispatchToProps = dispatch => ({
+  onLoadAuthState: () => dispatch(actions.loadAuthState()),
+  onLoadArtist: () => dispatch(actions.loadArtist()),
+  onverifySession: (authState: AuthStateModel) => dispatch(actions.verifySession(authState)),
+});
 
-export default connect(mapStateToProps)(Router);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Router);

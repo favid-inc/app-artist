@@ -89,10 +89,10 @@ class Container extends Component<Props, ContainerState> {
   }
 }
 
-const mapStateToProps = ({ order, auth }) => ({
+const mapStateToProps = ({ order, artist }) => ({
   loading: order.loading,
   orders: order.orders,
-  artistId: auth.authState.uid,
+  artistId: artist.artist.id,
 });
 
 const mapDispatchToProps = dispatch => ({

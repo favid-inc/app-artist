@@ -1,8 +1,8 @@
-import { ArtistAccount } from './artistAccount.model';
-export interface AuthState extends ArtistAccount {
-  refreshToken?: string;
-  accessToken?: string;
-  expirationTime?: string;
-  redirectEventId?: string;
+export interface AuthState {
+  accessToken: string;
+  accessTokenExpirationDate: string;
+  additionalParameters: object;
   idToken: string;
+  refreshToken: string;
+  tokenType: string;
 }

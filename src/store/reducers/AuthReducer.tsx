@@ -3,16 +3,12 @@ import { AuthState as AuthStateModel } from '@src/core/model/authState.model';
 
 const INITIAL_STATE = {
   authState: {
-    uid: null,
-    displayName: null,
-    photoURL: null,
-    email: null,
-    refreshToken: null,
     accessToken: null,
-    expirationTime: null,
-    redirectEventId: null,
-    lastLoginAt: null,
-    createdAt: null,
+    accessTokenExpirationDate: null,
+    additionalParameters: null,
+    idToken: null,
+    refreshToken: null,
+    tokenType: null,
   },
   artist: null,
   error: null,
@@ -24,6 +20,9 @@ const signIn = (state, action) => {
     ...state,
     authState: {
       ...action.authState,
+    },
+    artist: {
+      ...action.artist,
     },
   };
 };

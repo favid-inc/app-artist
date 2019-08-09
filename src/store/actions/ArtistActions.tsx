@@ -5,16 +5,23 @@ import { ArtistSearchByMainCategoryResult, ArtistModel, ArtistSearch, ARTIST, AR
 import { Artist, CategoryOfArtistModel } from '@src/core/model';
 
 export const setArtist = (artist: Artist) => {
-  AsyncStorage.setItem(ARTIST, JSON.stringify(artist));
-  return async dispatch => dispatch(storeArtist(artist));
+  return async dispatch => {
+    await AsyncStorage.setItem(ARTIST, JSON.stringify(artist));
+    dispatch(storeArtist(artist));
+  };
+};
+
+export const loadArtist = () => {
+  return async dispatch => {
+    const artist = await AsyncStorage.getItem(ARTIST);
+    dispatch(storeArtist(JSON.parse(artist)));
+  };
 };
 
 export const getArtist = (artistId: string) => {
   return async dispatch => {
     const response = await fetch(`${config.firebase.databaseURL}/${ARTIST}/${artistId}.json`);
     const artist: ArtistModel = await response.json();
-
-    // console.log('[ArtistActions.tsx] getArtist() => artist: ', artist);
     dispatch(setArtist(artist));
   };
 };
