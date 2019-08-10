@@ -31,7 +31,6 @@ const ContainerStyled = withStyles(SettingsContainerComponent, (theme: ThemeType
   contentContainer: {
     flex: 1,
     backgroundColor: theme['background-basic-color-2'],
-    justifyContent: 'start',
   },
   text: {
     textAlign: 'center',

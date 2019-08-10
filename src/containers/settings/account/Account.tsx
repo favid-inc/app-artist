@@ -116,10 +116,14 @@ class Accountomponent extends React.Component<AccountProps, State> {
               numberOfLines={4}
               placeholderTextColor='#8893ab'
               placeholder='Biografia'
+              maxLength={240}
               onChangeText={about => this.setState({ artist: { ...this.state.artist, about } })}
               value={this.state.artist.about}
             />
           </View>
+          <Text appearance='hint' style={themedStyle.text}>
+            {`${240 - this.state.artist.about.length} Caracteres restantes`}
+          </Text>
           {this.props.loading ? (
             <Text appearance='hint' style={themedStyle.text}>
               Enviar dados...
