@@ -8,11 +8,14 @@ import * as actions from '../../../store/actions';
 
 import { AuthState as AuthStateModel } from '@src/core/model/authState.model';
 import { ArtistModel } from '@favid-inc/api';
+import { Alert } from 'react-native';
 
 interface AccountContainerProps {
   artist: ArtistModel;
   loading: boolean;
+  error: Error;
   onPutArtist: (artist: ArtistModel, artistId: string) => void;
+  onRemoveArtistError: () => void;
 }
 
 type Props = NavigationScreenProps & AccountContainerProps;
@@ -45,6 +48,10 @@ class AccountContainerComponent extends Component<Props> {
   }
 
   public render(): React.ReactNode {
+    if (this.props.error) {
+      Alert.alert(this.props.error.message, null, null, { cancelable: false });
+      this.props.onRemoveArtistError();
+    }
     return (
       <Account
         artist={this.props.artist}
@@ -58,9 +65,12 @@ class AccountContainerComponent extends Component<Props> {
 
 const mapStateToProps = ({ artist }) => ({
   artist: artist.artist,
+  loading: artist.loading,
+  error: artist.error,
 });
 const mapDispatchToProps = dispatch => ({
   onPutArtist: (artist: ArtistModel, artistId: string) => dispatch(actions.putArtist(artist, artistId)),
+  onRemoveArtistError: () => dispatch(actions.artistError(null)),
 });
 
 export const AccountContainer = connect(

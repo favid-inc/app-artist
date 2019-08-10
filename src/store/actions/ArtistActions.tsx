@@ -1,5 +1,12 @@
 import { AsyncStorage } from 'react-native';
-import { REMOVE_ARTIST, STORE_ARTIST, STORE_ARTISTS } from './ActionTypes';
+import {
+  REMOVE_ARTIST,
+  STORE_ARTIST,
+  STORE_ARTISTS,
+  ARTIST_ERROR,
+  ARTIST_STARTED_LOADING,
+  ARTIST_ENDED_LOADING,
+} from './ActionTypes';
 import * as config from '@src/core/config';
 import { ArtistSearchByMainCategoryResult, ArtistModel, ArtistSearch, ARTIST, ARTIST_CATEGORY } from '@favid-inc/api';
 import { Artist, CategoryOfArtistModel } from '@src/core/model';
@@ -75,26 +82,41 @@ export const removeArtist = () => {
   };
 };
 
-export const ARTIST_STARTED_LOADING = () => ({
+export const startLoading = () => ({
   type: ARTIST_STARTED_LOADING,
 });
 
-export const ARTIST_ENDED_LOADING = () => ({
+export const stopLoading = () => ({
   type: ARTIST_ENDED_LOADING,
+});
+
+export const artistError = error => ({
+  type: ARTIST_ERROR,
+  error,
 });
 
 export const putArtist = (artist: Artist, artistId: string) => {
   return async dispatch => {
-    dispatch(ARTIST_STARTED_LOADING());
-    await fetch(`${config.firebase.databaseURL}/${ARTIST}/${artistId}.json`, {
-      method: 'PUT',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(artist),
-    });
-    dispatch(setArtist(artist));
-    dispatch(ARTIST_ENDED_LOADING());
+    try {
+      dispatch(startLoading());
+      const response = await fetch(`${config.firebase.databaseURL}/${ARTIST}/${artistId}.json`, {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(artist),
+      });
+
+      if (!response.ok) {
+        throw Error('Erro ao salvar dados');
+      }
+
+      dispatch(setArtist(artist));
+      dispatch(stopLoading());
+    } catch (error) {
+      dispatch(artistError({ message: 'Não foi possível salvar os dados.' }));
+      dispatch(stopLoading());
+    }
   };
 };
