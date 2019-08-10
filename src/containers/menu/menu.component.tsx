@@ -25,7 +25,7 @@ class MenuComponent extends React.Component<Props> {
         <ThemeProvider theme={{ ...this.props.theme, ...themes['App Theme'] }}>
           <BottomNavigation appearance='noIndicator' selectedIndex={selectedIndex} onSelect={this.onTabSelect}>
             <BottomNavigationTab title='Pedidos' icon={ListIconFill} />
-            <BottomNavigationTab title='Conta' icon={PersonIconFill} />
+            <BottomNavigationTab title='Configurações' icon={PersonIconFill} />
           </BottomNavigation>
         </ThemeProvider>
       </SafeAreaView>

@@ -13,8 +13,7 @@ import {
 import { SocialNavigationOptions } from './options';
 import * as actions from '../../store/actions';
 
-import { MenuContainer } from '@src/containers/menu';
-import AccountContainer from '@src/containers/menu/account/AccountCointainer';
+import { MenuNavigator } from '@src/containers/menu';
 import SignInContainer from '@src/containers/signin/SignInContainer';
 import ArtistDetailsContainer from '@src/containers/artistDetails/ArtistDetailsContainer';
 import * as BuyingProcess from '@src/containers/buyingProcess/index';
@@ -22,18 +21,7 @@ import BookingContainer from '@src/containers/buyingProcess/booking/BookingConta
 import { OrdersNavigator } from '@src/containers/orders';
 import { Artist as ArtistModel } from '../../core/model/artist.model';
 import { AuthState as AuthStateModel } from '../../core/model/authState.model';
-
-const AccountNavigator: NavigationContainer = createStackNavigator(
-  {
-    ['Account']: AccountContainer,
-  },
-  {
-    headerMode: 'screen',
-    defaultNavigationOptions: {
-      header: null,
-    },
-  },
-);
+import { SettingsNavigationMap } from '../../containers/settings';
 
 const BuyingProcessNavigationMap: NavigationRouteConfigMap = {
   ['Booking']: {
@@ -74,22 +62,13 @@ const ArtistsNavigator: NavigationContainer = createStackNavigator(
   },
 );
 
-const MenuNavigator: NavigationContainer = createBottomTabNavigator(
-  {
-    ['Artists']: ArtistsNavigator,
-    ['Account']: AccountNavigator,
-  },
-  {
-    tabBarComponent: MenuContainer,
-  },
-);
-
 const AppNavigator: NavigationContainer = createStackNavigator(
   {
     ['Home']: MenuNavigator,
     ...ArtistNavigationMap,
     ...BuyingProcessNavigationMap,
     OrdersNavigator,
+    ...SettingsNavigationMap,
   },
   {
     headerMode: 'screen',
