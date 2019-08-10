@@ -2,7 +2,7 @@ import React from 'react';
 import { Alert } from 'react-native';
 import { NavigationParams, NavigationScreenProps } from 'react-navigation';
 
-import { MenuContainer } from '@src/containers/menu';
+import { MenuContainer } from '@src/containers/menu/menu.container';
 import { ArrowIosBackFill } from '@src/assets/icons';
 import { TopNavigationBar } from './components/topNavigationBar.component';
 import { getCurrentRouteState, isRootRoute, NavigationRouteState, getCurrentRouteIndex } from './util';
@@ -48,6 +48,8 @@ export const MenuNavigationOptions: NavigationParams = {
   ...MenuTopNavigationParams,
   ...MenuBottomNavigationParams,
 };
+
+export const TopBarNavigationOptions: NavigationParams = MenuTopNavigationParams;
 
 export const SocialNavigationOptions: NavigationParams = MenuTopNavigationParams;
 

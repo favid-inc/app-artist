@@ -265,6 +265,14 @@ export const ComponentsIconText = (style: StyleProp<ImageStyle>): IconElement =>
   return Icon(source, style);
 };
 
+export const LogOutIconFill = (style: StyleProp<ImageStyle>): IconElement => {
+  const source: IconSource = {
+    imageSource: require('./eva/log-out-outline.png'),
+  };
+
+  return Icon(source, style);
+};
+
 export const ComponentsIconTextDark = (style: StyleProp<ImageStyle>): IconElement => {
   const source: IconSource = {
     imageSource: require('./icon-text-dark.png'),

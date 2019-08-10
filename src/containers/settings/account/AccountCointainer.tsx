@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { NavigationScreenProps } from 'react-navigation';
 import { Profile } from '@src/core/model';
 
-import { Account } from '@src/containers/menu/account/Account';
+import { Account } from './Account';
 import * as actions from '../../../store/actions';
 
 import { AuthState as AuthStateModel } from '@src/core/model/authState.model';
@@ -12,13 +12,12 @@ import { ArtistModel } from '@favid-inc/api';
 interface AccountContainerProps {
   artist: ArtistModel;
   loading: boolean;
-  onSignOut: () => void;
   onPutArtist: (artist: ArtistModel, artistId: string) => void;
 }
 
 type Props = NavigationScreenProps & AccountContainerProps;
 
-class AccountContainer extends Component<Props> {
+class AccountContainerComponent extends Component<Props> {
   private onUploadPhotoButtonPress = () => {};
 
   private onSave = (artist: ArtistModel) => {
@@ -50,7 +49,6 @@ class AccountContainer extends Component<Props> {
       <Account
         artist={this.props.artist}
         onUploadPhotoButtonPress={this.onUploadPhotoButtonPress}
-        onSignOut={this.props.onSignOut}
         onSave={this.onSave}
         loading={this.props.loading}
       />
@@ -63,10 +61,9 @@ const mapStateToProps = ({ artist }) => ({
 });
 const mapDispatchToProps = dispatch => ({
   onPutArtist: (artist: ArtistModel, artistId: string) => dispatch(actions.putArtist(artist, artistId)),
-  onSignOut: () => dispatch(actions.signOut()),
 });
 
-export default connect(
+export const AccountContainer = connect(
   mapStateToProps,
   mapDispatchToProps,
-)(AccountContainer);
+)(AccountContainerComponent);
