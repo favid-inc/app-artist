@@ -9,6 +9,7 @@ import { ContainerView, textStyle, ValidationInput } from '@src/components/commo
 import { ArtistModel } from '@favid-inc/api';
 import { NameValidator, StringValidator } from '@src/core/validators';
 import { TextInput } from 'react-native-gesture-handler';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 interface ComponentProps {
   loading: boolean;
@@ -69,79 +70,76 @@ class Accountomponent extends React.Component<AccountProps, State> {
       width: 100,
     };
     return (
-      <ContainerView style={themedStyle.container}>
-        <View style={themedStyle.photoSection}>
-          <ProfilePhoto style={themedStyle.photo} source={imageSource} button={this.renderPhotoButton} />
-        </View>
-        <View style={themedStyle.infoSection}>
-          <ProfileSetting style={themedStyle.profileSetting} hint='Email' value={artist.email} />
-          <ProfileSetting style={themedStyle.profileSetting} hint='Nome' value={artist.name} />
-          <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-            <ValidationInput
-              value={this.state.artist.artisticName}
-              style={themedStyle.input}
-              textStyle={[textStyle.paragraph, themedStyle.inputText]}
-              labelStyle={textStyle.label}
-              placeholder='Nome Artístico'
-              validator={NameValidator}
-              onChangeText={artisticName => this.setState({ artist: { ...this.state.artist, artisticName } })}
-            />
+      <KeyboardAwareScrollView>
+        <ContainerView style={themedStyle.container}>
+          <View style={themedStyle.photoSection}>
+            <ProfilePhoto style={themedStyle.photo} source={imageSource} button={this.renderPhotoButton} />
           </View>
-          <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-            <ValidationInput
-              value={`${this.state.artist.price}`}
-              style={themedStyle.input}
-              textStyle={[textStyle.paragraph, themedStyle.inputText]}
-              labelStyle={textStyle.label}
-              placeholder='Preço'
-              validator={StringValidator}
-              onChangeText={price => this.setState({ artist: { ...this.state.artist, price: parseFloat(price) } })}
-            />
-          </View>
-          <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-            <ValidationInput
-              value={this.state.artist.mainCategory}
-              style={themedStyle.input}
-              textStyle={[textStyle.paragraph, themedStyle.inputText]}
-              labelStyle={textStyle.label}
-              placeholder='Grupo'
-              validator={NameValidator}
-              onChangeText={mainCategory => this.setState({ artist: { ...this.state.artist, mainCategory } })}
-            />
-          </View>
-          <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-            <TextInput
-              style={themedStyle.inputMultiLine}
-              multiline={true}
-              numberOfLines={4}
-              placeholderTextColor='#8893ab'
-              placeholder='Biografia'
-              maxLength={240}
-              onChangeText={about => this.setState({ artist: { ...this.state.artist, about } })}
-              value={this.state.artist.about}
-            />
-          </View>
-          <Text appearance='hint' style={themedStyle.text}>
-            {`${240 - this.state.artist.about.length} Caracteres restantes`}
-          </Text>
-          {this.props.loading ? (
+          <View style={themedStyle.infoSection}>
+            <ProfileSetting style={themedStyle.profileSetting} hint='Email' value={artist.email} />
+            <ProfileSetting style={themedStyle.profileSetting} hint='Nome' value={artist.name} />
+            <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
+              <ValidationInput
+                value={this.state.artist.artisticName}
+                style={themedStyle.input}
+                textStyle={[textStyle.paragraph, themedStyle.inputText]}
+                labelStyle={textStyle.label}
+                placeholder='Nome Artístico'
+                validator={NameValidator}
+                onChangeText={artisticName => this.setState({ artist: { ...this.state.artist, artisticName } })}
+              />
+            </View>
+            <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
+              <ValidationInput
+                value={`${this.state.artist.price}`}
+                style={themedStyle.input}
+                textStyle={[textStyle.paragraph, themedStyle.inputText]}
+                labelStyle={textStyle.label}
+                placeholder='Preço'
+                validator={StringValidator}
+                onChangeText={price => this.setState({ artist: { ...this.state.artist, price: parseFloat(price) } })}
+              />
+            </View>
+            <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
+              <ValidationInput
+                value={this.state.artist.mainCategory}
+                style={themedStyle.input}
+                textStyle={[textStyle.paragraph, themedStyle.inputText]}
+                labelStyle={textStyle.label}
+                placeholder='Grupo'
+                validator={NameValidator}
+                onChangeText={mainCategory => this.setState({ artist: { ...this.state.artist, mainCategory } })}
+              />
+            </View>
+            <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
+              <TextInput
+                style={themedStyle.inputMultiLine}
+                multiline={true}
+                numberOfLines={4}
+                placeholderTextColor='#8893ab'
+                placeholder='Biografia'
+                maxLength={240}
+                onChangeText={about => this.setState({ artist: { ...this.state.artist, about } })}
+                value={this.state.artist.about}
+              />
+            </View>
             <Text appearance='hint' style={themedStyle.text}>
-              Enviar dados...
+              {`${240 - this.state.artist.about.length} Caracteres restantes`}
             </Text>
-          ) : null}
 
-          <Button
-            style={themedStyle.button}
-            textStyle={textStyle.button}
-            size='large'
-            status='info'
-            onPress={this.onSave}
-            disabled={this.props.loading}
-          >
-            Save
-          </Button>
-        </View>
-      </ContainerView>
+            <Button
+              style={themedStyle.button}
+              textStyle={textStyle.button}
+              size='large'
+              status='info'
+              onPress={this.onSave}
+              disabled={this.props.loading}
+            >
+              {this.props.loading ? 'Enviar dados...' : 'Salvar'}
+            </Button>
+          </View>
+        </ContainerView>
+      </KeyboardAwareScrollView>
     );
   }
 }
