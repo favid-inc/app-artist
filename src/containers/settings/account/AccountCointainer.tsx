@@ -7,14 +7,14 @@ import { Account } from './Account';
 import * as actions from '../../../store/actions';
 
 import { AuthState as AuthStateModel } from '@src/core/model/authState.model';
-import { ArtistModel } from '@favid-inc/api';
+import { Artist } from '@favid-inc/api';
 import { Alert } from 'react-native';
 
 interface AccountContainerProps {
-  artist: ArtistModel;
+  artist: Artist;
   loading: boolean;
   error: Error;
-  onPutArtist: (artist: ArtistModel, artistId: string) => void;
+  onPutArtist: (artist: Artist, artistId: string) => void;
   onRemoveArtistError: () => void;
 }
 
@@ -23,7 +23,7 @@ type Props = NavigationScreenProps & AccountContainerProps;
 class AccountContainerComponent extends Component<Props> {
   private onUploadPhotoButtonPress = () => {};
 
-  private onSave = (artist: ArtistModel) => {
+  private onSave = (artist: Artist) => {
     this.props.onPutArtist(artist, artist.id);
   };
 
@@ -69,7 +69,7 @@ const mapStateToProps = ({ artist }) => ({
   error: artist.error,
 });
 const mapDispatchToProps = dispatch => ({
-  onPutArtist: (artist: ArtistModel, artistId: string) => dispatch(actions.putArtist(artist, artistId)),
+  onPutArtist: (artist: Artist, artistId: string) => dispatch(actions.putArtist(artist, artistId)),
   onRemoveArtistError: () => dispatch(actions.artistError(null)),
 });
 

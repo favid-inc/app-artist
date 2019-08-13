@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { OrderModel } from '@favid-inc/api';
+import { Order } from '@favid-inc/api';
 import { Text, Button } from '@kitten/ui';
 import { View, ActivityIndicator } from 'react-native';
 import { withStyles, ThemeType, ThemedComponentProps, StyleType } from '@kitten/theme';
-import { textStyle, SwiperComponent , ActivityAuthoring } from '@src/components/common';
+import { textStyle, SwiperComponent, ActivityAuthoring } from '@src/components/common';
 import { EvaCheckmarkOutline, CloseIconOutline } from '@src/assets/icons';
 interface ComponentProps {
-  orders: OrderModel[];
+  orders: Order[];
   loading: boolean;
-  onDeclineOrder: (order: OrderModel) => void;
+  onDeclineOrder: (order: Order) => void;
   onDelayOrder: (orderId: string) => void;
-  onAcceptOrder: (order: OrderModel) => void;
+  onAcceptOrder: (order: Order) => void;
 }
 
 interface State {
@@ -24,17 +24,17 @@ class AbstractSelectOrder extends Component<OrdersProps, State> {
     selectedOrder: 0,
   };
   public onDeclineOrder = () => {
-    const order: OrderModel = this.props.orders[this.state.selectedOrder];
+    const order: Order = this.props.orders[this.state.selectedOrder];
     this.props.onDeclineOrder(order);
   };
 
   public onDelayOrder = () => {
-    const order: OrderModel = this.props.orders[this.state.selectedOrder];
+    const order: Order = this.props.orders[this.state.selectedOrder];
     this.props.onDelayOrder(order.id);
   };
 
   public onAcceptOrder = () => {
-    const order: OrderModel = this.props.orders[this.state.selectedOrder];
+    const order: Order = this.props.orders[this.state.selectedOrder];
     this.props.onAcceptOrder(order);
   };
   public onSelectedOrderChanged = (i: number) => {
@@ -47,16 +47,16 @@ class AbstractSelectOrder extends Component<OrdersProps, State> {
     return (
       <View style={themedStyle.container}>
         <View style={themedStyle.swiperWrapper}>
-        {
-          loading
-          ? <LoadingOrders themedStyle={themedStyle} />
-          : <SwipeOrders
+          {loading ? (
+            <LoadingOrders themedStyle={themedStyle} />
+          ) : (
+            <SwipeOrders
               orders={this.props.orders}
               themedStyle={themedStyle}
               onSelectedOrderChanged={this.onSelectedOrderChanged}
               title={`${this.state.selectedOrder + 1} de ${(this.props.orders && this.props.orders.length) || 0}`}
             />
-        }
+          )}
         </View>
         <View style={themedStyle.buttonsWrapper}>
           <View style={themedStyle.buttons}>
@@ -100,7 +100,7 @@ const SwipeOrders = ({ themedStyle, orders, title, onSelectedOrderChanged }) => 
       {title}
     </Text>
     <SwiperComponent selectedOrderChanged={i => onSelectedOrderChanged(i)}>
-      {orders.map((order: OrderModel, index: number) => {
+      {orders.map((order: Order, index: number) => {
         return (
           <View key={order.id} style={themedStyle.slide}>
             <Text style={[themedStyle.price, themedStyle.text]} appearance='hint' category='h5'>

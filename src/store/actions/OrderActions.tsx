@@ -10,7 +10,7 @@ import {
   ORDER_ERROR,
 } from './ActionTypes';
 
-import { OrderModel, ORDER, OrderFlow, OrderStatus, OrderFlowDeclineOrderArguments } from '@favid-inc/api';
+import { Order, ORDER, OrderFlow, OrderStatus, OrderFlowDeclineOrderArguments } from '@favid-inc/api';
 
 export const listOrders = (artistId: string) => {
   return async dispatch => {
@@ -19,17 +19,15 @@ export const listOrders = (artistId: string) => {
     const queryParams = `?orderBy="artistId"&equalTo="${artistId}"`;
     const response = await fetch(`${config.firebase.databaseURL}/${ORDER}.json${queryParams}`);
 
-    const data: { [key: string]: OrderModel } = await response.json();
-    const orders: OrderModel[] = Object.values(data).filter(
-      o => o.artistId === artistId && o.status === OrderStatus.OPENED,
-    );
+    const data: { [key: string]: Order } = await response.json();
+    const orders: Order[] = Object.values(data).filter(o => o.artistId === artistId && o.status === OrderStatus.OPENED);
 
     dispatch(storeOrders(orders));
     dispatch(listOrdersEnded());
   };
 };
 
-export const declineOrder = (order: OrderModel, idToken) => {
+export const declineOrder = (order: Order, idToken) => {
   return async dispatch => {
     dispatch(postOrderStarted());
     try {
@@ -69,14 +67,14 @@ export const orderError = error => ({
   type: ORDER_ERROR,
   error,
 });
-export const storeOrders = (orders: OrderModel[]) => {
+export const storeOrders = (orders: Order[]) => {
   return {
     type: STORE_ORDERS,
     orders,
   };
 };
 
-export const setCurrentOrder = (order: OrderModel) => {
+export const setCurrentOrder = (order: Order) => {
   return {
     type: SET_CURRENT_ORDER,
     order,

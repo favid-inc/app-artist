@@ -4,7 +4,7 @@ import { getArtist, putArtist } from './ArtistActions';
 import { SIGN_IN, SIGN_OUT, SIGN_IN_STARTED, SIGN_IN_ENDED, SIGN_IN_ERROR } from './ActionTypes';
 import * as config from '@src/core/config';
 import { storageKeys } from '@src/core/config';
-import { ArtistModel } from '@favid-inc/api';
+import { Artist } from '@favid-inc/api';
 import { AuthState as AuthStateModel } from '@src/core/model/authState.model';
 import * as firebase from 'firebase';
 
@@ -20,7 +20,7 @@ export const auth = () => {
     await firebase.auth().signInWithCredential(credential);
     const { uid, displayName, photoURL, email } = await firebase.auth().currentUser;
 
-    const artist: ArtistModel = {
+    const artist: Artist = {
       id: uid,
       name: displayName,
       photo: photoURL,
@@ -42,7 +42,7 @@ export const reAuth = ({ refreshToken }: AuthStateModel) => {
     await firebase.auth().signInWithCredential(credential);
 
     const { uid, displayName, photoURL, email } = await firebase.auth().currentUser;
-    const artist: ArtistModel = { id: uid, name: displayName, photo: photoURL, email };
+    const artist: Artist = { id: uid, name: displayName, photo: photoURL, email };
 
     await AsyncStorage.setItem(storageKey, JSON.stringify({ authState, artist }));
     dispatch(signIn(authState, artist));
@@ -66,7 +66,7 @@ export const verifySession = (authState: AuthStateModel) => {
   };
 };
 
-export const signIn = (authState: AuthStateModel, artist: ArtistModel) => {
+export const signIn = (authState: AuthStateModel, artist: Artist) => {
   return {
     type: SIGN_IN,
     authState,
@@ -104,7 +104,7 @@ export const loadAuthState = () => {
   };
 };
 
-export const verifyArtistAccount = (artist: ArtistModel, artistId: string) => {
+export const verifyArtistAccount = (artist: Artist, artistId: string) => {
   return async dispatch => {
     // console.log('[AuthActions.tsx] verifyArtistAccount() => started');
     const response = await fetch(`${config.firebase.databaseURL}/artist/${artistId}.json`);

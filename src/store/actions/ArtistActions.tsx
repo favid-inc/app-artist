@@ -8,8 +8,8 @@ import {
   ARTIST_ENDED_LOADING,
 } from './ActionTypes';
 import * as config from '@src/core/config';
-import { ArtistSearchByMainCategoryResult, ArtistModel, ArtistSearch, ARTIST, ARTIST_CATEGORY } from '@favid-inc/api';
-import { Artist, CategoryOfArtistModel } from '@src/core/model';
+import { ArtistSearchByMainCategoryResult, Artist, ArtistSearch, ARTIST, ARTIST_CATEGORY } from '@favid-inc/api';
+import { CategoryOfArtistModel } from '@src/core/model';
 
 export const setArtist = (artist: Artist) => {
   return async dispatch => {
@@ -28,7 +28,7 @@ export const loadArtist = () => {
 export const getArtist = (artistId: string) => {
   return async dispatch => {
     const response = await fetch(`${config.firebase.databaseURL}/${ARTIST}/${artistId}.json`);
-    const artist: ArtistModel = await response.json();
+    const artist: Artist = await response.json();
     dispatch(setArtist(artist));
   };
 };

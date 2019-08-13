@@ -2,18 +2,18 @@ import axios, { Canceler } from 'axios';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import * as config from '@src/core/config';
-import { OrderModel, OrderFlow, OrderStatus, OrderFlowPlaceOrderResponse } from '@favid-inc/api';
+import { Order, OrderFlow, OrderStatus, OrderFlowPlaceOrderResponse } from '@favid-inc/api';
 import { ActivityIndicator, Text, View, Alert, Button } from 'react-native';
 
 import * as actions from '../../../store/actions';
 
 interface StoreState {
-  order: OrderModel;
+  order: Order;
   idToken: string;
 }
 
 interface StoreDispatch {
-  setCurrentOrder: (order: OrderModel) => void;
+  setCurrentOrder: (order: Order) => void;
 }
 
 interface Props extends StoreState, StoreDispatch {
@@ -127,7 +127,7 @@ const mapStateToProps = ({ order, auth }) =>
   } as StoreState);
 
 const mapDispatchToProps = dispatch =>
-  ({ setCurrentOrder: (order: OrderModel) => dispatch(actions.setCurrentOrder(order)) } as StoreDispatch);
+  ({ setCurrentOrder: (order: Order) => dispatch(actions.setCurrentOrder(order)) } as StoreDispatch);
 
 export const UploadOrderVideo = connect(
   mapStateToProps,

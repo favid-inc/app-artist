@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Camera } from './Camera';
-import { OrderModel } from '@favid-inc/api';
+import { Order } from '@favid-inc/api';
 
 import * as actions from '../../../store/actions';
 
 interface StoreState {
-  order: OrderModel;
+  order: Order;
 }
 
 interface StoreDispatch {
-  setCurrentOrder: (order: OrderModel) => void;
+  setCurrentOrder: (order: Order) => void;
 }
 
 interface Props extends StoreState, StoreDispatch {
@@ -28,13 +28,15 @@ class AbstractRecordOrderVideo extends Component<Props> {
   }
 }
 
-const mapStateToProps = ({ order }) => ({
-  order: order.currentOrder,
-} as StoreState);
+const mapStateToProps = ({ order }) =>
+  ({
+    order: order.currentOrder,
+  } as StoreState);
 
-const mapDispatchToProps = dispatch => ({
-  setCurrentOrder: (order: OrderModel) => dispatch(actions.setCurrentOrder(order)),
-} as StoreDispatch);
+const mapDispatchToProps = dispatch =>
+  ({
+    setCurrentOrder: (order: Order) => dispatch(actions.setCurrentOrder(order)),
+  } as StoreDispatch);
 
 export const RecordOrderVideo = connect(
   mapStateToProps,

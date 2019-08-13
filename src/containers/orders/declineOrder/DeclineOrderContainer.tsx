@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NavigationScreenProps } from 'react-navigation';
-import { OrderModel } from '@favid-inc/api';
+import { Order } from '@favid-inc/api';
 
 import { DeclineOrder } from './DeclineOrder';
 import * as actions from '../../../store/actions';
@@ -9,10 +9,10 @@ import { KEY_NAVIGATION_BACK } from '@src/core/navigation/constants';
 import { Alert } from 'react-native';
 
 interface DeclineOrderContainerProps {
-  currentOrder: OrderModel;
+  currentOrder: Order;
   idToken: string;
   error: any;
-  onDeclineOrder: (order: OrderModel, idToken: string) => void;
+  onDeclineOrder: (order: Order, idToken: string) => void;
   onError: (error: any) => void;
   onSignOut: () => void;
 }
@@ -83,7 +83,7 @@ const mapStateToProps = ({ order, auth }) => ({
 
 const mapDispatchToProps = dispatch => ({
   onError: error => dispatch(actions.orderError(error)),
-  onDeclineOrder: (order: OrderModel, idToken: string) => dispatch(actions.declineOrder(order, idToken)),
+  onDeclineOrder: (order: Order, idToken: string) => dispatch(actions.declineOrder(order, idToken)),
   onSignOut: () => dispatch(actions.signOut()),
 });
 

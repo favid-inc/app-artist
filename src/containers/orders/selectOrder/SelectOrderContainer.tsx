@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { NavigationScreenProps } from 'react-navigation';
-import { OrderModel } from '@favid-inc/api';
+import { Order } from '@favid-inc/api';
 
 import { Orders } from './SelectOrder';
 import * as actions from '../../../store/actions';
@@ -13,9 +13,9 @@ interface ContainerProps {
   loading: boolean;
   artistId: string;
   onListOrders: (string) => void;
-  onSetCurrentOrder: (order: OrderModel) => void;
+  onSetCurrentOrder: (order: Order) => void;
   onDelayOrder: (orderId: string) => void;
-  orders: OrderModel[];
+  orders: Order[];
 }
 
 type Props = NavigationScreenProps & ContainerProps & ThemedComponentProps;
@@ -35,7 +35,7 @@ class Container extends Component<Props, ContainerState> {
 
   private onRefresh = () => this.props.onListOrders(this.props.artistId);
 
-  public onDeclineOrder = (order: OrderModel) => {
+  public onDeclineOrder = (order: Order) => {
     this.props.onSetCurrentOrder(order);
     this.props.navigation.navigate('DeclineOrder');
   };
@@ -58,7 +58,7 @@ class Container extends Component<Props, ContainerState> {
     );
   };
 
-  public onAcceptOrder = (order: OrderModel) => {
+  public onAcceptOrder = (order: Order) => {
     this.props.onSetCurrentOrder(order);
     this.props.navigation.navigate('RecordOrderVideo');
   };
@@ -97,7 +97,7 @@ const mapStateToProps = ({ order, artist }) => ({
 
 const mapDispatchToProps = dispatch => ({
   onListOrders: artistId => dispatch(actions.listOrders(artistId)),
-  onSetCurrentOrder: (order: OrderModel) => dispatch(actions.setCurrentOrder(order)),
+  onSetCurrentOrder: (order: Order) => dispatch(actions.setCurrentOrder(order)),
   onDelayOrder: (orderId: string) => dispatch(actions.delayOrder(orderId)),
 });
 
