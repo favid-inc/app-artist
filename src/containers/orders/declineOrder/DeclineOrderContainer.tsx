@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { NavigationScreenProps } from 'react-navigation';
 import { Order } from '@favid-inc/api';
+import React, { Component } from 'react';
+import { Alert } from 'react-native';
+import { NavigationScreenProps } from 'react-navigation';
+
+import { OrdersContext } from '../context';
 
 import { DeclineOrder } from './DeclineOrder';
-import * as actions from '../../../store/actions';
-import { KEY_NAVIGATION_BACK } from '@src/core/navigation/constants';
-import { Alert } from 'react-native';
+import { declineOrder } from './declineOrder';
 
 interface DeclineOrderContainerProps {
   currentOrder: Order;
@@ -19,75 +19,42 @@ interface DeclineOrderContainerProps {
 
 type Props = NavigationScreenProps & DeclineOrderContainerProps;
 
-class DeclineOrderContainerClass extends Component<Props> {
-  public onSendDecline(declinedByArtistDescription: string) {
-    Alert.alert(
-      'Cancelar pedido?',
-      'Esta ação não poderá ser desfeita.',
-      [
-        {
-          text: 'OK, cancelar pedido.',
-          onPress: () => {
-            this.props.onDeclineOrder(
-              {
-                ...this.props.currentOrder,
-                declinedByArtistDescription,
-              },
-              this.props.idToken,
-            );
-            this.onGoback();
-          },
-        },
-        {
-          text: 'Não',
-          style: 'cancel',
-        },
-      ],
-      { cancelable: false },
-    );
-  }
+export class DeclineOrderContainer extends Component<Props> {
+  static contextType = OrdersContext;
 
-  public onGoback() {
-    this.props.navigation.goBack(KEY_NAVIGATION_BACK);
-  }
+  public context: React.ContextType<typeof OrdersContext>;
 
   public render() {
     if (this.props.error) {
-      const action =
-        this.props.error.status === 403
-          ? [
-              {
-                text: 'Ok, efetuar login novamente.',
-                onPress: () => this.props.onSignOut(),
-              },
-            ]
-          : null;
-      Alert.alert(this.props.error.message, null, action, { cancelable: false });
       this.props.onError(null);
     }
-    return (
-      <DeclineOrder
-        onDeclineOrder={refusedByArtistDescription => this.onSendDecline(refusedByArtistDescription)}
-        onGoback={() => this.onGoback()}
-      />
-    );
+    return <DeclineOrder onDecline={this.handleDecline} onCancel={this.handleCancel} />;
   }
+  private handleCancel = () => {
+    this.props.navigation.goBack();
+  };
+
+  private handleDecline = (statusDeclinedDescription: string) => {
+    const handleOk = async () => {
+      try {
+        const order = await declineOrder({
+          ...this.context.orders[this.context.selectedOrder],
+          statusDeclinedDescription,
+        });
+
+        this.context.updateSelectedOrder(order);
+
+        this.props.navigation.goBack();
+      } catch {
+        Alert.alert('Erro ao enviar dados', 'tente novamente');
+      }
+    };
+
+    Alert.alert(
+      'Cancelar pedido?',
+      'Esta ação não poderá ser desfeita.',
+      [{ text: 'OK, cancelar pedido.', onPress: handleOk }, { text: 'Não', style: 'cancel' }],
+      { cancelable: false },
+    );
+  };
 }
-
-const mapStateToProps = ({ order, auth }) => ({
-  idToken: auth.authState.idToken,
-  error: order.error,
-  loading: order.loading,
-  currentOrder: order.currentOrder,
-});
-
-const mapDispatchToProps = dispatch => ({
-  onError: error => dispatch(actions.orderError(error)),
-  onDeclineOrder: (order: Order, idToken: string) => dispatch(actions.declineOrder(order, idToken)),
-  onSignOut: () => dispatch(actions.signOut()),
-});
-
-export const DeclineOrderContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(DeclineOrderContainerClass);
