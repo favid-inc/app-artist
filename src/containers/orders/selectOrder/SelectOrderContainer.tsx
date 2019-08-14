@@ -10,7 +10,7 @@ import { OrdersContext } from '../context';
 import { listOrders } from './listOrders';
 import { SelectOrder } from './SelectOrder';
 
-type Props = NavigationScreenProps & ContainerProps & ThemedComponentProps;
+type Props = NavigationScreenProps & ThemedComponentProps;
 
 interface State {
   loading: boolean;
@@ -18,30 +18,33 @@ interface State {
 
 class Container extends Component<Props, State> {
   static contextType = OrdersContext;
+
+  public context: React.ContextType<typeof OrdersContext>;
+
   public state: State = {
     loading: false,
   };
-
-  public context: React.ContextType<typeof OrdersContext>;
 
   public componentDidMount = () => {
     this.refresh();
   };
 
   public render() {
-    const { themedStyle, orders, loading } = this.props;
+    const { themedStyle } = this.props;
+    const { orders } = this.context;
+    const { loading } = this.state;
 
     return (
       <ScrollView
         contentContainerStyle={themedStyle.contentContainer}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={this.onRefresh} />}
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={this.handleRefresh} />}
       >
         {orders && orders.length ? (
           <SelectOrder
             loading={loading}
-            onDeclineOrder={this.declineOrder}
-            onDelayOrder={this.delayOrder}
-            onAcceptOrder={this.acceptOrder}
+            onDeclineOrder={this.handleDeclineOrder}
+            onDelayOrder={this.handleDelayOrder}
+            onAcceptOrder={this.handleAcceptOrder}
           />
         ) : (
           <Text appearance='hint' style={themedStyle.text} category='h6'>
@@ -52,7 +55,7 @@ class Container extends Component<Props, State> {
     );
   }
 
-  private delayOrder = () => {
+  private handleDelayOrder = () => {
     Alert.alert(
       'Adiar pedido?',
       'Esta ação não poderá ser desfeita.',
@@ -64,29 +67,32 @@ class Container extends Component<Props, State> {
     );
   };
 
-  private declineOrder = () => {
+  private handleDeclineOrder = () => {
     this.props.navigation.navigate('DeclineOrder');
   };
 
-  private acceptOrder = () => {
+  private handleAcceptOrder = () => {
     this.props.navigation.navigate('RecordOrderVideo');
   };
 
-  private refresh = async () => {
+  private handleRefresh = () => {};
+
+  private async refresh() {
     try {
+      this.context.setSelectedOrder(0);
+      this.context.setOrders([]);
       this.setState({ loading: true });
       const orders = await listOrders();
-      this.context.setSelectedOrder(0);
       this.context.setOrders(orders);
     } catch (e) {
       console.error(e);
     } finally {
       this.setState({ loading: false });
     }
-  };
+  }
 }
 
-export const SelectOrderContainer = withStyles<ContainerProps>(Container, (theme: ThemeType) => ({
+export const SelectOrderContainer = withStyles<{}>(Container, (theme: ThemeType) => ({
   contentContainer: {
     flex: 1,
     backgroundColor: theme['background-basic-color-2'],
