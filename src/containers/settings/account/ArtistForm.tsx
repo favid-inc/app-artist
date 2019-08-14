@@ -1,16 +1,13 @@
 import { Artist } from '@favid-inc/api';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
-import { Button, Text } from '@kitten/ui';
-import { CameraIconFill } from '@src/assets/icons';
+import { Text } from '@kitten/ui';
 import { NameValidator, StringValidator } from '@src/core/validators';
 import React from 'react';
-import { ButtonProps, View } from 'react-native';
+import { View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { ProfileSetting } from './ProfileInfo';
-import { ProfilePhoto } from './ProfilePhoto';
 
-import { ContainerView, textStyle, ValidationInput } from '@src/components/common';
+import { textStyle, ValidationInput } from '@src/components/common';
 
 interface ComponentProps {
   artist: Artist;
@@ -28,7 +25,7 @@ class AccountComponent extends React.Component<Props, State> {
   }
 
   public render(): React.ReactNode {
-    const { themedStyle, artist } = this.props;
+    const { themedStyle } = this.props;
 
     return (
       <KeyboardAwareScrollView>

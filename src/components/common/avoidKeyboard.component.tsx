@@ -58,6 +58,22 @@ export class AvoidKeyboard extends React.Component<AvoidKeyboardProps> {
     this.keyboardHideSubscription.remove();
   }
 
+  public render(): React.ReactElement<ViewProps> {
+    const { style, autoDismiss, ...restProps } = this.props;
+    const componentStyle: ViewStyle = this.getComponentStyle(style);
+
+    return (
+      <TouchableWithoutFeedback
+        onPress={this.onContainerPress}
+        disabled={!autoDismiss}>
+        <Animated.View
+          style={componentStyle}
+          {...restProps}
+        />
+      </TouchableWithoutFeedback>
+    );
+  }
+
   private onKeyboardShow = (event: KeyboardEvent) => {
     const offset: number = -this.props.offset(event.endCoordinates.height);
 
@@ -91,22 +107,6 @@ export class AvoidKeyboard extends React.Component<AvoidKeyboardProps> {
       easing: Easing.linear,
     });
   };
-
-  public render(): React.ReactElement<ViewProps> {
-    const { style, autoDismiss, ...restProps } = this.props;
-    const componentStyle: ViewStyle = this.getComponentStyle(style);
-
-    return (
-      <TouchableWithoutFeedback
-        onPress={this.onContainerPress}
-        disabled={!autoDismiss}>
-        <Animated.View
-          style={componentStyle}
-          {...restProps}
-        />
-      </TouchableWithoutFeedback>
-    );
-  }
 }
 
 const styles = StyleSheet.create({

@@ -7,7 +7,7 @@ export const apiClient = axiosRaw.create({
   baseURL: config.api.baseURL,
 });
 
-firebase.auth().onIdTokenChanged(async auth => {
+firebase.auth().onIdTokenChanged(async (auth) => {
   const idToken = await auth.getIdToken();
   apiClient.defaults.headers.commons.Authorization = `Bearer ${idToken}`;
 });

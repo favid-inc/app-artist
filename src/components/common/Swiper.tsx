@@ -1,6 +1,6 @@
+import { ThemedComponentProps } from '@kitten/theme';
 import React from 'react';
 import Swiper from 'react-native-swiper';
-import { ThemeType, withStyles, ThemedComponentProps } from '@kitten/theme';
 
 interface SwiperBoxProps {
   selectedOrderChanged: (index: number) => void;
@@ -21,7 +21,7 @@ export class SwiperComponent extends React.Component<Props> {
         showsButtons={false}
         showsPagination={false}
         index={0}
-        onIndexChanged={i => this.updateSelectedOrder(i)}
+        onIndexChanged={(i) => this.updateSelectedOrder(i)}
       >
         {children}
       </Swiper>

@@ -1,7 +1,7 @@
 import {
   Analytics,
-  ScreenHit,
   Event,
+  ScreenHit,
 } from 'expo-analytics';
 
 export interface AnalyticsEventConfig {

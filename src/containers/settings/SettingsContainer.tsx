@@ -1,7 +1,6 @@
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import React, { Component } from 'react';
 import { NavigationScreenProps } from 'react-navigation';
-import { connect } from 'react-redux';
 
 import { ContainerView } from '@src/components/common';
 import { Settings } from './Settings';

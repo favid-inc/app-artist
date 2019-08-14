@@ -1,12 +1,12 @@
-import React from 'react';
-import { ImageRequireSource } from 'react-native';
+import { LoadingAnimationComponent } from '@src/core/appLoader/loadingAnimation.component';
 import {
   AppLoading,
   SplashScreen,
 } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
-import { LoadingAnimationComponent } from '@src/core/appLoader/loadingAnimation.component';
+import React from 'react';
+import { ImageRequireSource } from 'react-native';
 
 export interface Assets {
   images: ImageRequireSource[];
@@ -29,14 +29,23 @@ type LoadingElement = React.ReactElement<{}>;
  */
 export class ApplicationLoader extends React.Component<Props, State> {
 
+  public state: State = {
+    loaded: false,
+  };
+
   constructor(props: Props) {
     super(props);
     SplashScreen.preventAutoHide();
   }
 
-  public state: State = {
-    loaded: false,
-  };
+  public render(): React.ReactNode {
+    return (
+      <React.Fragment>
+        {this.state.loaded ? this.props.children : this.renderLoading()}
+        <LoadingAnimationComponent isLoaded={this.state.loaded}/>
+      </React.Fragment>
+    );
+  }
 
   private onLoadSuccess = () => {
     this.setState({ loaded: true });
@@ -56,7 +65,7 @@ export class ApplicationLoader extends React.Component<Props, State> {
   };
 
   private loadImages = (images: ImageRequireSource[]): Promise<void[]> => {
-    const tasks: Promise<void>[] = images.map((image: ImageRequireSource): Promise<void> => {
+    const tasks: Array<Promise<void>> = images.map((image: ImageRequireSource): Promise<void> => {
       return Asset.fromModule(image).downloadAsync();
     });
 
@@ -83,13 +92,4 @@ export class ApplicationLoader extends React.Component<Props, State> {
       />
     );
   };
-
-  public render(): React.ReactNode {
-    return (
-      <React.Fragment>
-        {this.state.loaded ? this.props.children : this.renderLoading()}
-        <LoadingAnimationComponent isLoaded={this.state.loaded}/>
-      </React.Fragment>
-    );
-  }
 }

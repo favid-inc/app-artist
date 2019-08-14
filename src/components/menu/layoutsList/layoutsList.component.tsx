@@ -1,8 +1,3 @@
-import React from 'react';
-import {
-  Dimensions,
-  ListRenderItemInfo,
-} from 'react-native';
 import {
   ThemedComponentProps,
   ThemeType,
@@ -12,6 +7,11 @@ import {
   List,
   ListProps,
 } from '@kitten/ui';
+import React from 'react';
+import {
+  Dimensions,
+  ListRenderItemInfo,
+} from 'react-native';
 import {
   LayoutsListItem,
   LayoutsListItemProps,
@@ -35,6 +35,19 @@ type ListItemElementInfo = ListRenderItemInfo<LayoutsListItemData>;
 
 class LayoutsListComponent extends React.Component<LayoutsListProps> {
 
+  public render(): React.ReactNode {
+    const { themedStyle, ...restProps } = this.props;
+
+    return (
+      <List
+        style={themedStyle.container}
+        numColumns={2}
+        renderItem={this.renderItem}
+        {...restProps}
+      />
+    );
+  }
+
   private onItemPress = (index: number) => {
     this.props.onItemPress(index);
   };
@@ -48,19 +61,6 @@ class LayoutsListComponent extends React.Component<LayoutsListProps> {
       />
     );
   };
-
-  public render(): React.ReactNode {
-    const { themedStyle, ...restProps } = this.props;
-
-    return (
-      <List
-        style={themedStyle.container}
-        numColumns={2}
-        renderItem={this.renderItem}
-        {...restProps}
-      />
-    );
-  }
 }
 
 export const LayoutsList = withStyles(LayoutsListComponent, (theme: ThemeType) => ({

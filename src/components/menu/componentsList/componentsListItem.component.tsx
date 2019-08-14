@@ -1,5 +1,3 @@
-import React from 'react';
-import { ImageProps } from 'react-native';
 import {
   StyleType,
   ThemedComponentProps,
@@ -16,6 +14,8 @@ import {
   ThemeContext,
   ThemeKey,
 } from '@src/core/themes';
+import React from 'react';
+import { ImageProps } from 'react-native';
 import { ComponentsListItemData } from './type';
 
 interface ComponentProps {
@@ -25,14 +25,6 @@ interface ComponentProps {
 export type ComponentsListItemProps = ThemedComponentProps & ListItemProps & ComponentProps;
 
 class ComponentsListItemComponent extends React.Component<ComponentsListItemProps> {
-
-  private renderShowcaseElement = (style: StyleType, theme: ThemeKey): React.ReactElement<ImageProps> => {
-    const showcaseElement: React.ReactElement<ImageProps> = this.props.data.icon(style, theme);
-
-    return React.cloneElement(showcaseElement, {
-      style: [style, showcaseElement.props.style],
-    });
-  };
 
   public render(): React.ReactNode {
     const { style, themedStyle, data, ...restProps } = this.props;
@@ -52,6 +44,14 @@ class ComponentsListItemComponent extends React.Component<ComponentsListItemProp
       )}</ThemeContext.Consumer>
     );
   }
+
+  private renderShowcaseElement = (style: StyleType, theme: ThemeKey): React.ReactElement<ImageProps> => {
+    const showcaseElement: React.ReactElement<ImageProps> = this.props.data.icon(style, theme);
+
+    return React.cloneElement(showcaseElement, {
+      style: [style, showcaseElement.props.style],
+    });
+  };
 }
 
 export const ComponentsListItem = withStyles(ComponentsListItemComponent, (theme: ThemeType) => ({

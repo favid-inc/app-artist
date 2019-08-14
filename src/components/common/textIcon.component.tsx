@@ -1,3 +1,10 @@
+import {
+  StyleType,
+  ThemedComponentProps,
+  ThemeType,
+  withStyles,
+} from '@kitten/theme';
+import { Text } from '@kitten/ui';
 import React from 'react';
 import {
   ImageProps,
@@ -7,13 +14,6 @@ import {
   View,
   ViewProps,
 } from 'react-native';
-import {
-  StyleType,
-  ThemedComponentProps,
-  ThemeType,
-  withStyles,
-} from '@kitten/theme';
-import { Text } from '@kitten/ui';
 import { textStyle } from './style';
 
 type IconProp = (style: StyleType) => React.ReactElement<ImageProps>;
@@ -29,14 +29,6 @@ export type TextIconProps = ThemedComponentProps & ViewProps & ComponentProps;
 
 class TextIconComponent extends React.Component<TextIconProps> {
 
-  private renderIconElement = (icon: IconProp, style: StyleProp<ImageStyle>): React.ReactElement<ImageProps> => {
-    const iconElement: React.ReactElement<ImageProps> = icon(style);
-
-    return React.cloneElement(iconElement, {
-      style: [style, iconElement.props.style],
-    });
-  };
-
   public render(): React.ReactNode {
     const { style, themedStyle, textStyle: derivedTextStyle, iconStyle, icon, children } = this.props;
 
@@ -51,6 +43,14 @@ class TextIconComponent extends React.Component<TextIconProps> {
       </View>
     );
   }
+
+  private renderIconElement = (icon: IconProp, style: StyleProp<ImageStyle>): React.ReactElement<ImageProps> => {
+    const iconElement: React.ReactElement<ImageProps> = icon(style);
+
+    return React.cloneElement(iconElement, {
+      style: [style, iconElement.props.style],
+    });
+  };
 }
 
 export const TextIcon = withStyles(TextIconComponent, (theme: ThemeType) => ({

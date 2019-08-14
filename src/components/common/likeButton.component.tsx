@@ -1,10 +1,3 @@
-import React from 'react';
-import {
-  StyleProp,
-  TextStyle,
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from 'react-native';
 import {
   ThemedComponentProps,
   ThemeType,
@@ -12,6 +5,13 @@ import {
 } from '@kitten/theme';
 import { Text } from '@kitten/ui';
 import { HeartIconFill } from '@src/assets/icons';
+import React from 'react';
+import {
+  StyleProp,
+  TextStyle,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from 'react-native';
 
 interface ComponentProps {
   textStyle?: StyleProp<TextStyle>;

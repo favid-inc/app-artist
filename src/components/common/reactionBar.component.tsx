@@ -1,13 +1,13 @@
-import React from 'react';
-import {
-  View,
-  ViewProps,
-} from 'react-native';
 import {
   ThemedComponentProps,
   ThemeType,
   withStyles,
 } from '@kitten/theme';
+import React from 'react';
+import {
+  View,
+  ViewProps,
+} from 'react-native';
 
 type ChildElement = React.ReactElement<any>;
 

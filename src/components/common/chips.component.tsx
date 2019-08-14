@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, TextProps, ImageProps, ViewProps } from 'react-native';
 import { StyleType, ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
+import React from 'react';
+import { ImageProps, TextProps, View, ViewProps } from 'react-native';
 
 interface ComponentProps {
   icon?: (style: StyleType) => React.ReactElement<ImageProps>;
@@ -10,11 +10,6 @@ interface ComponentProps {
 export type ChipsProps = ThemedComponentProps & ViewProps & ComponentProps;
 
 class ChipsComponent extends React.Component<ChipsProps> {
-  private renderIcon = (): React.ReactElement<ImageProps> | null => {
-    const { icon, themedStyle } = this.props;
-
-    return icon ? icon(themedStyle.icon) : null;
-  };
 
   public render(): React.ReactNode {
     const { themedStyle, children, style } = this.props;
@@ -26,6 +21,11 @@ class ChipsComponent extends React.Component<ChipsProps> {
       </View>
     );
   }
+  private renderIcon = (): React.ReactElement<ImageProps> | null => {
+    const { icon, themedStyle } = this.props;
+
+    return icon ? icon(themedStyle.icon) : null;
+  };
 }
 
 export const Chips = withStyles(ChipsComponent, (theme: ThemeType) => ({

@@ -6,7 +6,6 @@ import { NavigationScreenProps } from 'react-navigation';
 import { OrdersContext } from '../context';
 
 import { DeclineOrder } from './DeclineOrder';
-import { declineOrder } from './declineOrder';
 
 interface DeclineOrderContainerProps {
   currentOrder: Order;
