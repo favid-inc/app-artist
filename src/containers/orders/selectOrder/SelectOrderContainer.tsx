@@ -1,4 +1,3 @@
-import { Order } from '@favid-inc/api';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Text } from '@kitten/ui';
 import React, { Component } from 'react';
