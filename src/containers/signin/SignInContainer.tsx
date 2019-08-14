@@ -1,80 +1,73 @@
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import React from 'react';
-import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, Text, TouchableOpacity, View } from 'react-native';
 import { NavigationScreenProps } from 'react-navigation';
-import { connect } from 'react-redux';
 
 import { favidImage, googleImage } from '@src/assets/images';
-import { Profile } from '@src/core/model';
-import { AuthState as AuthStateModel } from '@src/core/model/authState.model';
-import * as actions from '@src/store/actions';
+import { AuthContext } from '@src/core/auth';
+import * as config from '@src/core/config';
+
+// tslint:disable-next-line: no-empty-interface
+interface ComponentProps {}
+
+type Props = ThemedComponentProps & NavigationScreenProps & ComponentProps;
 
 interface State {
-  profile: Profile;
-}
-
-interface SignInContainerProps {
-  auth: AuthStateModel;
   loading: boolean;
-  onAuth: () => void;
-  onLoadAuthState: () => void;
 }
 
-type props = ThemedComponentProps & NavigationScreenProps & SignInContainerProps;
-class SignInContainerComponent extends React.Component<props, State> {
+class SignInContainerComponent extends React.Component<Props, State> {
+  static contextType = AuthContext;
+  public context: React.ContextType<typeof AuthContext>;
+
   public state: State = {
-    profile: null,
+    loading: false,
   };
 
-  public componentWillMount() {
-    this.props.onLoadAuthState();
-  }
-
-  public render(): React.ReactNode {
+  public render() {
     const { themedStyle } = this.props;
 
-    let signInContent = (
-      <View style={themedStyle.container}>
-        <Image source={favidImage.imageSource} style={themedStyle.ImageLogoStyle} />
-        <Text style={themedStyle.WelcomeText}>Bem vindo ao</Text>
-        <Text style={[themedStyle.WelcomeText, themedStyle.WelcomeTextBold]}>Favid Artista!</Text>
-        <View style={themedStyle.contentContainer}>
-          <TouchableOpacity style={themedStyle.GooglePlusStyle} onPress={() => this.auth()}>
-            <Image source={googleImage.imageSource} style={themedStyle.ImageIconStyle} />
-            <Text style={themedStyle.TextStyle}> Continue com Google </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-
-    if (this.props.loading) {
-      signInContent = (
+    if (this.state.loading) {
+      return (
         <View style={themedStyle.container}>
-          <Text style={themedStyle.TextStyle}>Autenticando usuário...</Text>
+          <Text style={themedStyle.TextStyle}>Autenticando...</Text>
           <ActivityIndicator size='large' />
         </View>
       );
     }
 
-    return signInContent;
+    return (
+      <View style={themedStyle.container}>
+        <Image source={favidImage.imageSource} style={themedStyle.ImageLogoStyle} />
+        <Text style={themedStyle.WelcomeText}>Bem vindo ao</Text>
+        <Text style={[themedStyle.WelcomeText, themedStyle.WelcomeTextBold]}>Favid!</Text>
+        <View style={themedStyle.contentContainer}>
+          <TouchableOpacity style={themedStyle.GooglePlusStyle} onPress={this.handleGoogleAuthClick}>
+            <Image source={googleImage.imageSource} style={themedStyle.ImageIconStyle} />
+            <Text style={themedStyle.TextStyle}>Continue com Google</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
   }
 
-  private auth = async () => {
-    this.props.onAuth();
+  private async signIn(provider: 'google') {
+    try {
+      this.setState({ loading: true });
+      this.context.signIn(config.auth[provider]);
+    } catch (e) {
+      Alert.alert('Desculpe', 'Infelizmente a não pude verificar seus dados.');
+    } finally {
+      this.setState({ loading: false });
+    }
+  }
+
+  private handleGoogleAuthClick = async () => {
+    await this.signIn('google');
   };
 }
 
-const mapStateToProps = ({ auth }) => ({
-  auth: auth.authState,
-  loading: auth.loading,
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  onAuth: () => dispatch(actions.auth()),
-  onLoadAuthState: () => dispatch(actions.loadAuthState()),
-});
-
-const SignInContainer = withStyles(SignInContainerComponent, (theme: ThemeType) => ({
+export const SignInContainer = withStyles<ComponentProps>(SignInContainerComponent, (theme: ThemeType) => ({
   container: {
     flex: 1,
     backgroundColor: theme['background-basic-color-2'],
@@ -131,8 +124,3 @@ const SignInContainer = withStyles(SignInContainerComponent, (theme: ThemeType) 
     width: 300,
   },
 }));
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SignInContainer);
