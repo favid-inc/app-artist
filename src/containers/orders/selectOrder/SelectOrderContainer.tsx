@@ -1,66 +1,31 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { NavigationScreenProps } from 'react-navigation';
 import { Order } from '@favid-inc/api';
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
+import { Text } from '@kitten/ui';
+import React, { Component } from 'react';
+import { Alert, RefreshControl, ScrollView } from 'react-native';
+import { NavigationScreenProps } from 'react-navigation';
 
-import { Orders } from './SelectOrder';
-import * as actions from '../../../store/actions';
-import { ScrollView, RefreshControl, View, Alert } from 'react-native';
-import { ThemedComponentProps, ThemeType, withStyles } from 'react-native-ui-kitten/theme';
-import { Text } from 'react-native-ui-kitten/ui';
+import { OrdersContext } from '../context';
 
-interface ContainerProps {
-  loading: boolean;
-  artistId: string;
-  onListOrders: (string) => void;
-  onSetCurrentOrder: (order: Order) => void;
-  onDelayOrder: (orderId: number) => void;
-  orders: Order[];
-}
+import { listOrders } from './listOrders';
+import { SelectOrder } from './SelectOrder';
 
 type Props = NavigationScreenProps & ContainerProps & ThemedComponentProps;
 
-interface ContainerState {
-  showDeclineModal: boolean;
+interface State {
+  loading: boolean;
 }
 
-class Container extends Component<Props, ContainerState> {
-  public state: ContainerState = {
-    showDeclineModal: true,
+class Container extends Component<Props, State> {
+  static contextType = OrdersContext;
+  public state: State = {
+    loading: false,
   };
+
+  public context: React.ContextType<typeof OrdersContext>;
 
   public componentDidMount = () => {
-    this.props.onListOrders(this.props.artistId);
-  };
-
-  private onRefresh = () => this.props.onListOrders(this.props.artistId);
-
-  public onDeclineOrder = (order: Order) => {
-    this.props.onSetCurrentOrder(order);
-    this.props.navigation.navigate('DeclineOrder');
-  };
-
-  public onDelayOrder = (orderId: number) => {
-    Alert.alert(
-      'Adiar pedido?',
-      'Esta ação não poderá ser desfeita.',
-      [
-        {
-          text: 'OK, adiar pedido.',
-          onPress: () => this.props.onDelayOrder(orderId),
-        },
-        {
-          text: 'Não',
-          style: 'cancel',
-        },
-      ],
-      { cancelable: false },
-    );
-  };
-
-  public onAcceptOrder = (order: Order) => {
-    this.props.onSetCurrentOrder(order);
-    this.props.navigation.navigate('RecordOrderVideo');
+    this.refresh();
   };
 
   public render() {
@@ -72,12 +37,11 @@ class Container extends Component<Props, ContainerState> {
         refreshControl={<RefreshControl refreshing={loading} onRefresh={this.onRefresh} />}
       >
         {orders && orders.length ? (
-          <Orders
+          <SelectOrder
             loading={loading}
-            orders={orders}
-            onDeclineOrder={this.onDeclineOrder}
-            onDelayOrder={this.onDelayOrder}
-            onAcceptOrder={this.onAcceptOrder}
+            onDeclineOrder={this.declineOrder}
+            onDelayOrder={this.delayOrder}
+            onAcceptOrder={this.acceptOrder}
           />
         ) : (
           <Text appearance='hint' style={themedStyle.text} category='h6'>
@@ -87,21 +51,42 @@ class Container extends Component<Props, ContainerState> {
       </ScrollView>
     );
   }
+
+  private delayOrder = () => {
+    Alert.alert(
+      'Adiar pedido?',
+      'Esta ação não poderá ser desfeita.',
+      [
+        { text: 'OK, adiar pedido.', onPress: () => this.context.removeSelectedOrder() },
+        { text: 'Não', style: 'cancel' },
+      ],
+      { cancelable: false },
+    );
+  };
+
+  private declineOrder = () => {
+    this.props.navigation.navigate('DeclineOrder');
+  };
+
+  private acceptOrder = () => {
+    this.props.navigation.navigate('RecordOrderVideo');
+  };
+
+  private refresh = async () => {
+    try {
+      this.setState({ loading: true });
+      const orders = await listOrders();
+      this.context.setSelectedOrder(0);
+      this.context.setOrders(orders);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      this.setState({ loading: false });
+    }
+  };
 }
 
-const mapStateToProps = ({ order, artist }) => ({
-  loading: order.loading,
-  orders: order.orders,
-  artistId: artist.artist.id,
-});
-
-const mapDispatchToProps = dispatch => ({
-  onListOrders: artistId => dispatch(actions.listOrders(artistId)),
-  onSetCurrentOrder: (order: Order) => dispatch(actions.setCurrentOrder(order)),
-  onDelayOrder: (orderId: string) => dispatch(actions.delayOrder(orderId)),
-});
-
-const ContainerStyled = withStyles(Container, (theme: ThemeType) => ({
+export const SelectOrderContainer = withStyles<ContainerProps>(Container, (theme: ThemeType) => ({
   contentContainer: {
     flex: 1,
     backgroundColor: theme['background-basic-color-2'],
@@ -113,8 +98,3 @@ const ContainerStyled = withStyles(Container, (theme: ThemeType) => ({
     textAlign: 'center',
   },
 }));
-
-export const SelectOrderContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ContainerStyled);
