@@ -17,11 +17,7 @@ export class RecordOrderVideo extends Component<Props> {
   }
 
   private handleCameraRecord = (videoUri: string) => {
-    const order = {
-      ...this.context.orders[this.context.selectedOrder],
-      videoUri,
-    };
-    this.context.updateSelectedOrder(order);
+    this.context.patchOrder({ videoUri });
     this.props.onDone();
   };
 }

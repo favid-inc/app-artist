@@ -11,14 +11,11 @@ interface State {
 }
 
 export class Fade extends React.Component<Props, State> {
-  private visibility: Animated.Value;
+  public state = {
+    visible: this.props.visible,
+  };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      visible: props.visible,
-    };
-  }
+  private visibility: Animated.Value;
 
   public componentWillMount() {
     this.visibility = new Animated.Value(this.props.visible ? 1 : 0);

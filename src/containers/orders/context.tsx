@@ -5,10 +5,13 @@ import { NavigationContainer, NavigationScreenProps } from 'react-navigation';
 export interface OrdersContextType {
   selectedOrder?: number;
   setSelectedOrder?: (index: number) => void;
+  removeSelectedOrder?: () => void;
+
+  order?: Order;
+  patchOrder?: (order: Order) => void;
+
   orders?: Order[];
   setOrders?: (orders: Order[]) => void;
-  removeSelectedOrder?: () => void;
-  updateSelectedOrder?: (order: Order) => void;
 }
 
 type State = OrdersContextType;
@@ -22,28 +25,35 @@ export function connect(Navigator: NavigationContainer) {
     static navigationOptions = Navigator.navigationOptions;
 
     public state: State = {
-      orders: [],
       selectedOrder: 0,
-      setOrders: (orders) => this.setState({ orders }),
-      setSelectedOrder: (selectedOrder) => this.setState({ selectedOrder }),
+      setSelectedOrder: (selectedOrder) => {
+        this.setState({ selectedOrder });
+      },
       removeSelectedOrder: () => {
         const { selectedOrder } = this.state;
 
         const orders = [...this.state.orders];
         orders.splice(selectedOrder, 1);
+
         this.setState({
+          order: orders[selectedOrder] || {},
           orders,
           selectedOrder: Math.max(0, Math.min(selectedOrder, orders.length - 1)),
         });
       },
-      updateSelectedOrder: (order: Order) => {
-        const { selectedOrder } = this.state;
 
-        const orders = [...this.state.orders];
-        orders[selectedOrder] = order;
-
-        this.setState({ orders });
+      order: {},
+      patchOrder: (order: Order) => {
+        this.setState({
+          order: {
+            ...this.state.order,
+            ...order,
+          },
+        });
       },
+
+      orders: [],
+      setOrders: (orders) => this.setState({ orders }),
     };
 
     public render() {

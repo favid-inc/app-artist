@@ -5,34 +5,26 @@ import { NavigationEventSubscription, NavigationScreenProps } from 'react-naviga
 import { RecordOrderVideo } from './RecordOrderVideo';
 
 interface State {
-  didFocusSubscription?: NavigationEventSubscription;
-  didBlurSubscription?: NavigationEventSubscription;
-  isFocused?: boolean;
+  isFocused: boolean;
 }
+
 export class RecordOrderVideoContainer extends Component<NavigationScreenProps, State> {
-  public state = {
-    didFocusSubscription: null,
-    didBlurSubscription: null,
-    isFocused: false,
-  };
+  private didFocusSubscription: NavigationEventSubscription;
+  private didBlurSubscription: NavigationEventSubscription;
 
   public componentDidMount() {
     const { navigation } = this.props;
-    this.setState({
-      didFocusSubscription: navigation.addListener('didFocus', () => this.setState({ isFocused: true })),
-      didBlurSubscription: navigation.addListener('didBlur', () => this.setState({ isFocused: false })),
-    });
+    this.didFocusSubscription = navigation.addListener('didFocus', () => this.setState({ isFocused: true }));
+    this.didBlurSubscription = navigation.addListener('didBlur', () => this.setState({ isFocused: false }));
   }
 
   public componentWillUnmount() {
-    const { didFocusSubscription, didBlurSubscription } = this.state;
-
-    if (didFocusSubscription) {
-      didFocusSubscription.remove();
+    if (this.didFocusSubscription) {
+      this.didFocusSubscription.remove();
     }
 
-    if (didBlurSubscription) {
-      didBlurSubscription.remove();
+    if (this.didBlurSubscription) {
+      this.didBlurSubscription.remove();
     }
   }
 

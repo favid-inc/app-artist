@@ -30,6 +30,7 @@ export class DeclineOrderContainer extends Component<Props> {
     }
     return <DeclineOrder onDecline={this.handleDecline} onCancel={this.handleCancel} />;
   }
+
   private handleCancel = () => {
     this.props.navigation.goBack();
   };
@@ -37,12 +38,7 @@ export class DeclineOrderContainer extends Component<Props> {
   private handleDecline = (statusDeclinedDescription: string) => {
     const handleOk = async () => {
       try {
-        const order = await declineOrder({
-          ...this.context.orders[this.context.selectedOrder],
-          statusDeclinedDescription,
-        });
-
-        this.context.updateSelectedOrder(order);
+        this.context.patchOrder({ statusDeclinedDescription });
 
         this.props.navigation.goBack();
       } catch {

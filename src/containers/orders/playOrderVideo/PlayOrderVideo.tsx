@@ -4,7 +4,7 @@ import * as firebase from 'firebase';
 import React, { Component } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 
-import {OrdersContext} from '../context';
+import { OrdersContext } from '../context';
 
 import { VideoPlayer } from './videoPlayer';
 
@@ -18,13 +18,13 @@ export class PlayOrderVideo extends Component<Props> {
   public context: React.ContextType<typeof OrdersContext>;
 
   public render() {
-    const { order } =  ;
+    const { order } = this.context;
 
     return (
       <View style={styles.container}>
         <Row>
           <Col>
-            <OrderVideoPlayer order={this.context.order} />
+            <OrderVideoPlayer order={order} />
           </Col>
         </Row>
         <View style={styles.toolbar}>
