@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
-import { View, TouchableOpacity, Image, GestureResponderEvent, StyleSheet } from 'react-native';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { Camera as NativeCamera } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
+import { Camera as NativeCamera } from 'expo-camera';
+import React from 'react';
+import { GestureResponderEvent, TouchableOpacity, View } from 'react-native';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 import { styles } from './styles';
 
@@ -18,6 +18,7 @@ interface Props {
   toggleCameraType: EventHandler;
   toggleFlashMode: EventHandler;
 }
+
 export function Toolbar(props: Props) {
   return (
     <View style={styles.toolbar}>
