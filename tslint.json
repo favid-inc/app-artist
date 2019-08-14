@@ -1,14 +1,17 @@
 {
+  "extends": ["tslint:recommended"],
   "rules": {
-    "trailing-comma": [
+    "arrow-return-shorthand": true,
+    "ban": [
       true,
+      "eval",
+      "fit",
+      "fdescribe",
       {
-        "multiline": "always",
-        "singleline": "never",
-        "esSpecCompliant": true
+        "message": "please don't",
+        "name": "$"
       }
     ],
-    "arrow-return-shorthand": true,
     "callable-types": true,
     "class-name": true,
     "comment-format": [true, "check-space"],
@@ -18,8 +21,11 @@
     "import-blacklist": [true],
     "import-spacing": true,
     "indent": [true, "spaces", 2],
+    "interface-name": [true, "never-prefix"],
     "interface-over-type-literal": true,
     "label-position": true,
+    "max-attributes-per-line": 4,
+    "max-classes-per-file": false,
     "max-line-length": [true, 300],
     "member-access": false,
     "no-arg": true,
@@ -33,6 +39,7 @@
     "no-empty-interface": true,
     "no-eval": true,
     "no-misused-new": true,
+    "no-namespace": [true, "allow-declarations"],
     "no-non-null-assertion": true,
     "no-shadowed-variable": true,
     "no-string-literal": true,
@@ -42,21 +49,26 @@
     "no-unnecessary-initializer": true,
     "no-var-keyword": true,
     "object-literal-sort-keys": false,
-    "max-attributes-per-line": 4,
-
     "one-line": [true, "check-catch", "check-finally", "check-else", "check-open-brace", "check-whitespace"],
-    "react/jsx-wrap-multilines": [
-      "error",
-      {
-        "declaration": false,
-        "assignment": false
-      }
-    ],
-
     "prefer-const": true,
     "quotemark": [true, "single"],
     "radix": true,
+    "react/jsx-wrap-multilines": [
+      "error",
+      {
+        "assignment": false,
+        "declaration": false
+      }
+    ],
     "semicolon": [true, "always", "ignore-bound-class-methods"],
+    "trailing-comma": [
+      true,
+      {
+        "esSpecCompliant": true,
+        "multiline": "always",
+        "singleline": "never"
+      }
+    ],
     "triple-equals": [true, "allow-null-check"],
     "typedef-whitespace": [
       true,
@@ -77,16 +89,6 @@
     ],
     "unified-signatures": true,
     "variable-name": false,
-    "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-separator", "check-type"],
-    "ban": [
-      true,
-      "eval",
-      "fit",
-      "fdescribe",
-      {
-        "name": "$",
-        "message": "please don't"
-      }
-    ]
+    "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-separator", "check-type"]
   }
 }
