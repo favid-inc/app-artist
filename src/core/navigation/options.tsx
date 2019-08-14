@@ -2,11 +2,11 @@ import React from 'react';
 import { Alert } from 'react-native';
 import { NavigationParams, NavigationScreenProps } from 'react-navigation';
 
-import { MenuContainer } from '@src/containers/menu/menu.container';
 import { ArrowIosBackFill } from '@src/assets/icons';
+import { MenuContainer } from '@src/containers/menu/MenuContainer';
 import { TopNavigationBar } from './components/topNavigationBar.component';
-import { getCurrentRouteState, isRootRoute, NavigationRouteState, getCurrentRouteIndex } from './util';
 import { KEY_NAVIGATION_BACK } from './constants';
+import { getCurrentRouteIndex, getCurrentRouteState, isRootRoute, NavigationRouteState } from './util';
 
 export type TopNavigationElement = React.ReactElement<any>;
 export type BottomNavigationElement = React.ReactElement<any>;
