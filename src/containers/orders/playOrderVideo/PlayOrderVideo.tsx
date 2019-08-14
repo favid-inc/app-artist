@@ -1,46 +1,30 @@
-import * as firebase from 'firebase';
-import { connect } from 'react-redux';
-import React, { Component } from 'react';
 import { Order } from '@favid-inc/api';
-import { Button } from 'react-native-ui-kitten';
-import { Dimensions, View, StyleSheet, Text } from 'react-native';
+import { Button } from '@kitten/ui';
+import * as firebase from 'firebase';
+import React, { Component } from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
+
+import {OrdersContext} from '../context';
 
 import { VideoPlayer } from './videoPlayer';
 
-interface StoreState {
-  order: Order;
-}
-
-interface Props extends StoreState {
+interface Props {
   onRedo: () => void;
   onUpload: () => void;
 }
 
-class AbstractPlayOrderVideo extends Component<Props> {
-  private handleRedoClick = () => {
-    this.props.onRedo();
-  };
+export class PlayOrderVideo extends Component<Props> {
+  static contextType = OrdersContext;
+  public context: React.ContextType<typeof OrdersContext>;
 
-  private handleUploadClick = () => {
-    this.props.onUpload();
-  };
-
-  public componentDidMount() {
-    this.props.order.videoUri || this.props.onRedo();
-  }
-
-  public render(): React.ReactNode {
-    const { order } = this.props;
-
-    if (!order) {
-      return <View />;
-    }
+  public render() {
+    const { order } =  ;
 
     return (
       <View style={styles.container}>
         <Row>
           <Col>
-            <OrderVideoPlayer order={this.props.order} />
+            <OrderVideoPlayer order={this.context.order} />
           </Col>
         </Row>
         <View style={styles.toolbar}>
@@ -56,6 +40,13 @@ class AbstractPlayOrderVideo extends Component<Props> {
       </View>
     );
   }
+  private handleRedoClick = () => {
+    this.props.onRedo();
+  };
+
+  private handleUploadClick = () => {
+    this.props.onUpload();
+  };
 }
 
 function OrderVideoPlayer({ order }: { order: Order }) {
@@ -85,13 +76,6 @@ function OrderVideoPlayer({ order }: { order: Order }) {
 
   return <VideoPlayer uri={uri} />;
 }
-
-const mapStateToProps = ({ order }) =>
-  ({
-    order: order.currentOrder,
-  } as StoreState);
-
-export const PlayOrderVideo = connect(mapStateToProps)(AbstractPlayOrderVideo);
 
 const Row = ({ children }) => <View style={styles.row}>{children}</View>;
 

@@ -1,7 +1,7 @@
+import { MaterialIcons } from '@expo/vector-icons';
 import { PlaybackStatus, PlaybackStatusToSet } from 'expo-av/build/AV';
 import React, { useCallback } from 'react';
-import { MaterialIcons } from '@expo/vector-icons';
-import { StyleSheet, View, GestureResponderEvent, TouchableOpacity } from 'react-native';
+import { GestureResponderEvent, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface Props {
   playbackStatus: PlaybackStatus | null;
