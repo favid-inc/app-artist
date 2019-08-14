@@ -1,20 +1,19 @@
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { NavigationScreenProps } from 'react-navigation';
-import { Settings } from './Settings';
-import * as actions from '../../store/actions';
+import { connect } from 'react-redux';
+
 import { ContainerView } from '@src/components/common';
-import { withStyles, ThemeType, ThemedComponentProps } from 'react-native-ui-kitten';
+
+import * as actions from '../../store/actions';
+
+import { Settings } from './Settings';
 
 interface Props {
   onSignOut: () => void;
 }
 
 export class SettingsContainerComponent extends Component<NavigationScreenProps & Props & ThemedComponentProps> {
-  private onNavigate = (pathName: string): void => {
-    this.props.navigation.navigate(pathName);
-  };
-
   public render(): React.ReactNode {
     const { themedStyle } = this.props;
     return (
@@ -26,6 +25,9 @@ export class SettingsContainerComponent extends Component<NavigationScreenProps 
       </ContainerView>
     );
   }
+  private onNavigate = (pathName: string): void => {
+    this.props.navigation.navigate(pathName);
+  };
 }
 const ContainerStyled = withStyles(SettingsContainerComponent, (theme: ThemeType) => ({
   contentContainer: {
@@ -37,7 +39,7 @@ const ContainerStyled = withStyles(SettingsContainerComponent, (theme: ThemeType
   },
 }));
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   onSignOut: () => dispatch(actions.signOut()),
 });
 

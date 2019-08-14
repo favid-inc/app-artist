@@ -1,8 +1,8 @@
 import { Audio, Video } from 'expo-av';
 import { PlaybackStatus, PlaybackStatusToSet } from 'expo-av/build/AV';
-
 import React from 'react';
 import { ActivityIndicator, Dimensions, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+
 import { Fade } from './Fade';
 import { MainControlButton } from './MainContolButton';
 

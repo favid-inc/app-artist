@@ -1,4 +1,3 @@
-import { Order } from '@favid-inc/api';
 import React, { Component } from 'react';
 
 import { OrdersContext } from '../context';

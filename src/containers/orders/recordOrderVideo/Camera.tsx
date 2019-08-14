@@ -2,6 +2,7 @@ import { Camera as NativeCamera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import React, { Component } from 'react';
 import { Platform, Text, View } from 'react-native';
+
 import { Toolbar } from './toolbar';
 
 const CameraType = NativeCamera.Constants.Type;

@@ -1,8 +1,9 @@
-import { ContainerView } from '@src/components/common';
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
+import { Button, Text } from '@kitten/ui';
 import React, { Component } from 'react';
 import { TextInput, View } from 'react-native';
-import { ThemedComponentProps, ThemeType, withStyles } from 'react-native-ui-kitten/theme';
-import { Button, Text } from 'react-native-ui-kitten/ui';
+
+import { ContainerView } from '@src/components/common';
 
 interface State {
   description: string;

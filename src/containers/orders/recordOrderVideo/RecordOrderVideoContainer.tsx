@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import { NavigationEventSubscription, NavigationScreenProps } from 'react-navigation';
+
 import { RecordOrderVideo } from './RecordOrderVideo';
 
 interface State {

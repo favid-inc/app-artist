@@ -1,12 +1,13 @@
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import React from 'react';
-import { connect } from 'react-redux';
-import * as actions from '../../store/actions';
+import { ActivityIndicator, Image, Text, TouchableOpacity, View } from 'react-native';
 import { NavigationScreenProps } from 'react-navigation';
+import { connect } from 'react-redux';
+
+import { favidImage, googleImage } from '@src/assets/images';
 import { Profile } from '@src/core/model';
-import { Text, View, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { googleImage, favidImage } from '@src/assets/images';
 import { AuthState as AuthStateModel } from '@src/core/model/authState.model';
-import { withStyles, ThemeType, ThemedComponentProps } from 'react-native-ui-kitten/theme';
+import * as actions from '@src/store/actions';
 
 interface State {
   profile: Profile;
@@ -28,10 +29,6 @@ class SignInContainerComponent extends React.Component<props, State> {
   public componentWillMount() {
     this.props.onLoadAuthState();
   }
-
-  private auth = async () => {
-    this.props.onAuth();
-  };
 
   public render(): React.ReactNode {
     const { themedStyle } = this.props;
@@ -61,6 +58,10 @@ class SignInContainerComponent extends React.Component<props, State> {
 
     return signInContent;
   }
+
+  private auth = async () => {
+    this.props.onAuth();
+  };
 }
 
 const mapStateToProps = ({ auth }) => ({
@@ -68,7 +69,7 @@ const mapStateToProps = ({ auth }) => ({
   loading: auth.loading,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   onAuth: () => dispatch(actions.auth()),
   onLoadAuthState: () => dispatch(actions.loadAuthState()),
 });

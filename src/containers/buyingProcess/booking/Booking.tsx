@@ -3,14 +3,14 @@ import {
   ThemedComponentProps,
   withStyles,
   ThemeType,
-} from 'react-native-ui-kitten/theme';
+} from '@kitten/theme';
 import {
   ContainerView,
   ValidationInput,
   textStyle,
 } from '@src/components/common';
 import { View, ViewProps, ActivityIndicator } from 'react-native';
-import { Toggle, Text, Button, Input } from 'react-native-ui-kitten/ui';
+import { Toggle, Text, Button, Input } from '@kitten/ui';
 import { NameValidator } from '@src/core/validators';
 
 interface ComponentProps {

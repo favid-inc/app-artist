@@ -1,6 +1,6 @@
 import React from 'react';
 import Swiper from 'react-native-swiper';
-import { ThemeType, withStyles, ThemedComponentProps } from 'react-native-ui-kitten/theme';
+import { ThemeType, withStyles, ThemedComponentProps } from '@kitten/theme';
 
 interface SwiperBoxProps {
   selectedOrderChanged: (index: number) => void;
