@@ -47,17 +47,17 @@ class AbstractUploadOrderVideo extends Component<Props, State> {
     this.state.isLive && this.setState({ isUploading: true, uploadPercentage: 0 });
 
     try {
-      const { video } = this.props.order;
+      const { videoUri } = this.props.order;
 
-      if (!video || !video.startsWith('file://') || !video.endsWith('.mp4')) {
-        throw new Error(`AbstractUploadOrderVideo: fideo format is invalid: "${video}"`);
+      if (!videoUri || !videoUri.startsWith('file://') || !videoUri.endsWith('.mp4')) {
+        throw new Error(`AbstractUploadOrderVideo: fideo format is invalid: "${videoUri}"`);
       }
 
       const data = new FormData();
 
       data.append('video', {
         type: 'video/mp4',
-        uri: this.props.order.video,
+        uri: this.props.order.videoUri,
         name: 'video.mp4',
       });
 

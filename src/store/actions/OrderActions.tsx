@@ -12,7 +12,7 @@ import {
 
 import { Order, ORDER, OrderFlow, OrderStatus, OrderFlowDeclineOrderArguments } from '@favid-inc/api';
 
-export const listOrders = (artistId: string) => {
+export const listOrders = (artistId: number) => {
   return async dispatch => {
     dispatch(listOrdersStarted());
 

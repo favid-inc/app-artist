@@ -1,14 +1,14 @@
 import * as firebase from 'firebase';
 import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import { OrderModel } from '@favid-inc/api';
+import { Order } from '@favid-inc/api';
 import { Button } from 'react-native-ui-kitten';
 import { Dimensions, View, StyleSheet, Text } from 'react-native';
 
 import { VideoPlayer } from './videoPlayer';
 
 interface StoreState {
-  order: OrderModel;
+  order: Order;
 }
 
 interface Props extends StoreState {
@@ -26,7 +26,7 @@ class AbstractPlayOrderVideo extends Component<Props> {
   };
 
   public componentDidMount() {
-    this.props.order.video || this.props.onRedo();
+    this.props.order.videoUri || this.props.onRedo();
   }
 
   public render(): React.ReactNode {
@@ -58,8 +58,8 @@ class AbstractPlayOrderVideo extends Component<Props> {
   }
 }
 
-function OrderVideoPlayer({ order }: { order: OrderModel }) {
-  const video = `${order.video}`;
+function OrderVideoPlayer({ order }: { order: Order }) {
+  const video = `${order.videoUri}`;
   const [uri, setUri] = React.useState<string>(video);
 
   React.useEffect(() => {

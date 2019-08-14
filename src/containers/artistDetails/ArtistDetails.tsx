@@ -83,19 +83,38 @@ class ArtistDetailsComponent extends React.Component<Profile7Props> {
     return (
       <ContainerView style={themedStyle.container}>
         <ImageOverlay style={themedStyle.profileInfoContainer} source={this.backgroundImage.imageSource}>
-          <ProfileInfo photo={artistImage} name={artist.artisticName} mainCategory={artist.mainCategory} location={artist.location} />
+          <ProfileInfo
+            photo={artistImage}
+            name={artist.artisticName}
+            mainCategory={artist.mainCategory}
+            location={artist.location}
+          />
           <View style={themedStyle.actionContainer}>
             <View style={themedStyle.price}>
               <Text category='h6' style={themedStyle.priceText}>{`R$ ${artist.price}`}</Text>
               <Text appearance='hint' category='s2' style={themedStyle.priceDescription}>
-                {`Responde normalmente em até ${artist.responseTime === 1 ? 'artist.responseTime dia' : artist.responseTime + ' dias'}.`}
+                {/* {`Responde normalmente em até ${artist.responseTime === 1 ? 'artist.responseTime dia' : artist.responseTime + ' dias'}.`} */}
               </Text>
             </View>
-            <Button size='giant' style={themedStyle.orderButton} status={cameoOrderedStatus} onPress={this.onOrderPress}>
+            <Button
+              size='giant'
+              style={themedStyle.orderButton}
+              status={cameoOrderedStatus}
+              onPress={this.onOrderPress}
+            >
               {this.props.cameoOrdered ? 'Pendente' : 'Pedir'}
             </Button>
           </View>
-          <ProfileSocials style={themedStyle.profileSocials} textStyle={themedStyle.socialsLabel} followers={socials.followers} following={socials.following} posts={socials.posts} onFollowersPress={this.onFollowersPress} onFollowingPress={this.onFollowingPress} onPostsPress={this.onPostsPress} />
+          <ProfileSocials
+            style={themedStyle.profileSocials}
+            textStyle={themedStyle.socialsLabel}
+            followers={socials.followers}
+            following={socials.following}
+            posts={socials.posts}
+            onFollowersPress={this.onFollowersPress}
+            onFollowingPress={this.onFollowingPress}
+            onPostsPress={this.onPostsPress}
+          />
         </ImageOverlay>
         <View style={[themedStyle.profileSection, themedStyle.aboutSection]}>
           <ShowcaseSection title='Tags' style={themedStyle.section}>
@@ -103,7 +122,7 @@ class ArtistDetailsComponent extends React.Component<Profile7Props> {
           </ShowcaseSection>
           <ShowcaseSection title='Sobre' style={themedStyle.section}>
             <Text style={[themedStyle.profileSectionContent, themedStyle.profileAboutLabel]} appearance='hint'>
-              {artist.about}
+              {artist.biography}
             </Text>
           </ShowcaseSection>
         </View>

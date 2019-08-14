@@ -21,10 +21,10 @@ export const auth = () => {
     const { uid, displayName, photoURL, email } = await firebase.auth().currentUser;
 
     const artist: Artist = {
-      id: uid,
       name: displayName,
       photo: photoURL,
       email,
+      userUid: uid,
     };
 
     dispatch(verifyArtistAccount(artist, uid));
@@ -42,7 +42,7 @@ export const reAuth = ({ refreshToken }: AuthStateModel) => {
     await firebase.auth().signInWithCredential(credential);
 
     const { uid, displayName, photoURL, email } = await firebase.auth().currentUser;
-    const artist: Artist = { id: uid, name: displayName, photo: photoURL, email };
+    const artist: Artist = { userUid: uid, name: displayName, photo: photoURL, email };
 
     await AsyncStorage.setItem(storageKey, JSON.stringify({ authState, artist }));
     dispatch(signIn(authState, artist));

@@ -14,7 +14,7 @@ interface ContainerProps {
   artistId: string;
   onListOrders: (string) => void;
   onSetCurrentOrder: (order: Order) => void;
-  onDelayOrder: (orderId: string) => void;
+  onDelayOrder: (orderId: number) => void;
   orders: Order[];
 }
 
@@ -40,7 +40,7 @@ class Container extends Component<Props, ContainerState> {
     this.props.navigation.navigate('DeclineOrder');
   };
 
-  public onDelayOrder = (orderId: string) => {
+  public onDelayOrder = (orderId: number) => {
     Alert.alert(
       'Adiar pedido?',
       'Esta ação não poderá ser desfeita.',

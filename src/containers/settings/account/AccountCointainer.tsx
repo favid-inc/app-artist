@@ -24,7 +24,7 @@ class AccountContainerComponent extends Component<Props> {
   private onUploadPhotoButtonPress = () => {};
 
   private onSave = (artist: Artist) => {
-    this.props.onPutArtist(artist, artist.id);
+    this.props.onPutArtist(artist, artist.userUid);
   };
 
   public componentDidMount() {

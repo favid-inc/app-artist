@@ -18,8 +18,8 @@ interface Props extends StoreState, StoreDispatch {
 }
 
 class AbstractRecordOrderVideo extends Component<Props> {
-  onCameraRecord = video => {
-    this.props.setCurrentOrder({ ...this.props.order, video });
+  onCameraRecord = videoUri => {
+    this.props.setCurrentOrder({ ...this.props.order, videoUri });
     this.props.onDone();
   };
 

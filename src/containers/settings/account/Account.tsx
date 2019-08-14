@@ -6,22 +6,22 @@ import { ProfileSetting } from './profileSetting.component';
 import { ProfilePhoto } from './profilePhoto.component';
 import { CameraIconFill } from '@src/assets/icons';
 import { ContainerView, textStyle, ValidationInput } from '@src/components/common';
-import { ArtistModel } from '@favid-inc/api';
+import { Artist } from '@favid-inc/api';
 import { NameValidator, StringValidator } from '@src/core/validators';
 import { TextInput } from 'react-native-gesture-handler';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 interface ComponentProps {
   loading: boolean;
-  artist: ArtistModel;
+  artist: Artist;
   onUploadPhotoButtonPress: () => void;
-  onSave: (artist: ArtistModel, artistId: string) => void;
+  onSave: (artist: Artist, artistId: string) => void;
 }
 
 export type AccountProps = ThemedComponentProps & ComponentProps;
 
 export interface State {
-  artist: ArtistModel;
+  artist: Artist;
 }
 
 class Accountomponent extends React.Component<AccountProps, State> {
@@ -30,15 +30,15 @@ class Accountomponent extends React.Component<AccountProps, State> {
       name: '',
       artisticName: '',
       price: 0,
-      about: '',
+      biography: '',
       mainCategory: '',
       location: '',
-      responseTime: 0,
+      // responseTime: 0,
     },
   };
 
   private onSave = () => {
-    this.props.onSave(this.state.artist, this.state.artist.id);
+    this.props.onSave(this.state.artist, this.state.artist.userUid);
   };
 
   private onPhotoButtonPress = () => {
@@ -119,12 +119,12 @@ class Accountomponent extends React.Component<AccountProps, State> {
                 placeholderTextColor='#8893ab'
                 placeholder='Biografia'
                 maxLength={240}
-                onChangeText={about => this.setState({ artist: { ...this.state.artist, about } })}
-                value={this.state.artist.about}
+                onChangeText={biography => this.setState({ artist: { ...this.state.artist, biography } })}
+                value={this.state.artist.biography}
               />
             </View>
             <Text appearance='hint' style={themedStyle.text}>
-              {`${240 - this.state.artist.about.length} Caracteres restantes`}
+              {`${240 - this.state.artist.biography.length} Caracteres restantes`}
             </Text>
 
             <Button

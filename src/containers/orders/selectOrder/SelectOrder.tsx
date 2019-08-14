@@ -9,7 +9,7 @@ interface ComponentProps {
   orders: Order[];
   loading: boolean;
   onDeclineOrder: (order: Order) => void;
-  onDelayOrder: (orderId: string) => void;
+  onDelayOrder: (orderId: number) => void;
   onAcceptOrder: (order: Order) => void;
 }
 
@@ -110,10 +110,10 @@ const SwipeOrders = ({ themedStyle, orders, title, onSelectedOrderChanged }) => 
               {`por ${order.customerName}`}
             </Text>
             <Text style={[themedStyle.text, themedStyle.expiration]} appearance='hint' category='c1'>
-              {`expira em ${new Date(order.creationDate)}`}
+              {`expira em ${new Date(order.statusPlacedDate)}`}
             </Text>
             <Text style={[themedStyle.text, themedStyle.instruction]} appearance='hint' category='h6'>
-              {order.videoInstructions}
+              {order.instructions}
             </Text>
           </View>
         );
