@@ -9,7 +9,6 @@ import thunk from 'redux-thunk';
 
 import AuthReducer from './store/reducers/AuthReducer';
 import ArtistReducer from './store/reducers/ArtistReducer';
-import OrderReducer from './store/reducers/OrderReducer';
 
 import { ImageRequireSource } from 'react-native';
 import { NavigationState } from 'react-navigation';
@@ -30,7 +29,10 @@ if (!firebase.firestore) {
 }
 firebase.initializeApp(config.firebase);
 
-const images: ImageRequireSource[] = [require('./assets/images/source/favid-logo.png'), require('./assets/images/source/google.png')];
+const images: ImageRequireSource[] = [
+  require('./assets/images/source/favid-logo.png'),
+  require('./assets/images/source/google.png'),
+];
 
 const fonts: { [key: string]: number } = {
   'opensans-semibold': require('./assets/fonts/opensans-semibold.ttf'),
@@ -76,7 +78,6 @@ class App extends React.Component<{}, State> {
   private rootReducer = combineReducers({
     auth: AuthReducer,
     artist: ArtistReducer,
-    order: OrderReducer,
   });
 
   private store = createStore(this.rootReducer, /* preloadedState, */ compose(applyMiddleware(thunk)));
