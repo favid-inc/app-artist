@@ -49,7 +49,7 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
   }
 
   public async componentWillMount() {
-    const { tokens, oAuthProps } = JSON.parse(await AsyncStorage.getItem(this.storageKey));
+    const { tokens, oAuthProps } = JSON.parse((await AsyncStorage.getItem(this.storageKey)) || '{}');
 
     this.setState({ tokens, oAuthProps });
 
@@ -64,10 +64,11 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
   }
 
   private async signOut() {
+    const { tokens, oAuthProps } = this.state;
     this.setState({ oAuthProps: null, tokens: null, isSignedIn: false });
     await AsyncStorage.setItem(this.storageKey, JSON.stringify(this.state));
-    await AppAuth.revokeAsync(this.state.oAuthProps, {
-      token: this.state.tokens.accessToken,
+    await AppAuth.revokeAsync(oAuthProps, {
+      token: tokens.accessToken,
       isClientIdProvided: true,
     });
   }
@@ -78,8 +79,9 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
     }
 
     if (Date.now() < new Date(this.state.tokens.accessTokenExpirationDate).getTime()) {
-      const tokens = await AppAuth.refreshAsync(this.state.oAuthProps, this.state.tokens.refreshToken);
-      this.setState({ tokens });
+      const { refreshToken } = this.state.tokens;
+      const tokens = await AppAuth.refreshAsync(this.state.oAuthProps, refreshToken);
+      this.setState({ tokens: { ...tokens, refreshToken } });
     }
 
     await this.siginWithCredentials();
