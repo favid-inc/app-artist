@@ -12,22 +12,14 @@ interface ComponentProps {}
 
 type Props = ThemedComponentProps & NavigationScreenProps & ComponentProps;
 
-interface State {
-  loading: boolean;
-}
-
-class SignInContainerComponent extends React.Component<Props, State> {
+class SignInContainerComponent extends React.Component<Props> {
   static contextType = AuthContext;
   public context: React.ContextType<typeof AuthContext>;
-
-  public state: State = {
-    loading: false,
-  };
 
   public render() {
     const { themedStyle } = this.props;
 
-    if (this.state.loading) {
+    if (this.context.isSigningIn) {
       return (
         <View style={themedStyle.container}>
           <Text style={themedStyle.TextStyle}>Autenticando...</Text>
@@ -53,12 +45,9 @@ class SignInContainerComponent extends React.Component<Props, State> {
 
   private async signIn(provider: 'google') {
     try {
-      this.setState({ loading: true });
       this.context.signIn(config.auth[provider]);
     } catch (e) {
-      Alert.alert('Desculpe', 'Infelizmente a não pude verificar seus dados.');
-    } finally {
-      this.setState({ loading: false });
+      Alert.alert('Desculpe', 'Infelizmente suas credenciais não puderam ser validadas.');
     }
   }
 

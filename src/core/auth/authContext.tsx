@@ -3,22 +3,15 @@ import * as firebase from 'firebase';
 import React from 'react';
 import { AsyncStorage } from 'react-native';
 
-export interface AuthState {
-  accessToken: string;
-  accessTokenExpirationDate: string;
-  additionalParameters: object;
-  idToken: string;
-  refreshToken: string;
-  tokenType: string;
-}
-
 interface AuthContext {
+  isSigningIn: boolean;
   isSignedIn: boolean;
   signIn: (props: AppAuth.OAuthProps) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
 export const AuthContext = React.createContext<AuthContext>({
+  isSigningIn: false,
   isSignedIn: false,
   signIn: () => null,
   signOut: () => null,
@@ -35,6 +28,7 @@ interface FirebaseAuthState extends AuthContext {
 
 export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAuthState> {
   public state: FirebaseAuthState = {
+    isSigningIn: false,
     isSignedIn: false,
     oAuthProps: null,
     tokens: null,
@@ -42,10 +36,14 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
     signOut: () => this.signOut(),
   };
 
-  private storageKey = '@src:core:auth:FirebaseAuth';
+  private storageKey = '@app-artist:core:auth:FirebaseAuth';
 
   public render() {
-    return <AuthContext.Provider value={this.state}>{this.props.children}</AuthContext.Provider>;
+    return (
+      <AuthContext.Provider value={this.state}>
+        <AuthContext.Consumer>{() => this.props.children}</AuthContext.Consumer>
+      </AuthContext.Provider>
+    );
   }
 
   public async componentWillMount() {
@@ -58,9 +56,14 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
   }
 
   private async signIn(oAuthProps: AppAuth.OAuthProps) {
-    const tokens = await AppAuth.authAsync(oAuthProps);
-    this.setState({ tokens, oAuthProps });
-    await this.siginWithCredentials();
+    try {
+      this.setState({ isSigningIn: true });
+      const tokens = await AppAuth.authAsync(oAuthProps);
+      this.setState({ tokens, oAuthProps });
+      await this.siginWithCredentials();
+    } finally {
+      this.setState({ isSigningIn: false });
+    }
   }
 
   private async signOut() {
@@ -79,9 +82,14 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
     }
 
     if (Date.now() < new Date(this.state.tokens.accessTokenExpirationDate).getTime()) {
-      const { refreshToken } = this.state.tokens;
-      const tokens = await AppAuth.refreshAsync(this.state.oAuthProps, refreshToken);
-      this.setState({ tokens: { ...tokens, refreshToken } });
+      try {
+        this.setState({ isSigningIn: true });
+        const { refreshToken } = this.state.tokens;
+        const tokens = await AppAuth.refreshAsync(this.state.oAuthProps, refreshToken);
+        this.setState({ tokens: { ...tokens, refreshToken } });
+      } finally {
+        this.setState({ isSigningIn: false });
+      }
     }
 
     await this.siginWithCredentials();

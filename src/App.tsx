@@ -11,8 +11,9 @@ import { NavigationState } from 'react-navigation';
 
 // import { getCurrentStateName } from '@src/core/navigation/util';
 // import { trackScreenTransition } from '@src/core/utils/analytics';
+import { ApplicationLoader, Assets } from '@src/core/appLoader/applicationLoader.component';
 import { FirebaseAuth } from '@src/core/auth';
-import { ApplicationLoader, Assets } from './core/appLoader/applicationLoader.component';
+import { apiClient } from '@src/core/utils/apiClient';
 
 import { DynamicStatusBar } from '@src/components/common';
 import { ThemeContext, ThemeContextType, ThemeKey, themes, ThemeStore } from '@src/core/themes';
@@ -38,6 +39,16 @@ const assets: Assets = {
 interface State {
   theme: ThemeKey;
 }
+
+firebase.auth().onIdTokenChanged(async (auth) => {
+  const headers = apiClient.defaults.headers.common;
+  try {
+    const idToken = await auth.getIdToken();
+    headers.Authorization = `Bearer ${idToken}`;
+  } catch (e) {
+    delete headers.Authorization;
+  }
+});
 
 export class App extends React.Component<{}, State> {
   public state: State = {
