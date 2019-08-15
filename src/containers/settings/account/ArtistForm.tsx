@@ -4,7 +4,6 @@ import { Text } from '@kitten/ui';
 import { NameValidator, StringValidator } from '@src/core/validators';
 import React from 'react';
 import { View } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { textStyle, ValidationInput } from '@src/components/common';
@@ -32,61 +31,61 @@ class AccountComponent extends React.Component<Props, State> {
         <View style={themedStyle.container}>
           <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
             <ValidationInput
-              value={this.state.artisticName}
-              style={themedStyle.input}
-              textStyle={[textStyle.paragraph, themedStyle.inputText]}
+              label='Nome Artístico'
               labelStyle={textStyle.label}
-              placeholder='Nome Artístico'
-              validator={NameValidator}
               onChangeText={this.handleArtisticNameChange}
-            />
-          </View>
-          <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-            <ValidationInput
-              value={`${this.state.price}`}
               style={themedStyle.input}
               textStyle={[textStyle.paragraph, themedStyle.inputText]}
-              labelStyle={textStyle.label}
-              placeholder='Preço'
-              validator={StringValidator}
-              onChangeText={this.handlePriceChange}
-            />
-          </View>
-          <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-            <ValidationInput
-              value={this.state.mainCategory}
-              style={themedStyle.input}
-              textStyle={[textStyle.paragraph, themedStyle.inputText]}
-              labelStyle={textStyle.label}
-              placeholder='Grupo'
               validator={NameValidator}
-              onChangeText={this.handleMainCategoryChange}
+              value={this.state.artisticName}
             />
           </View>
           <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-            <TextInput
-              style={themedStyle.inputMultiLine}
-              multiline={true}
-              numberOfLines={4}
-              placeholderTextColor='#8893ab'
-              placeholder='Biografia'
+            <ValidationInput
+              keyboardType='numeric'
+              label='Preço'
+              labelStyle={textStyle.label}
+              onChangeText={this.handlePriceChange}
+              style={themedStyle.input}
+              textStyle={[textStyle.paragraph, themedStyle.inputText]}
+              validator={StringValidator}
+              value={`${this.state.price}`}
+            />
+          </View>
+          <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
+            <ValidationInput
+              label='Grupo'
+              labelStyle={textStyle.label}
+              onChangeText={this.handleMainCategoryChange}
+              style={themedStyle.input}
+              textStyle={[textStyle.paragraph, themedStyle.inputText]}
+              validator={NameValidator}
+              value={this.state.mainCategory}
+            />
+          </View>
+          <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
+            <ValidationInput
+              label={`Biografia (${this.state.biography.length}/240)`}
+              labelStyle={textStyle.label}
               maxLength={240}
+              multiline={true}
+              numberOfLines={6}
               onChangeText={this.handleBiographyChange}
+              style={themedStyle.input}
+              textStyle={[textStyle.paragraph, themedStyle.inputText]}
+              validator={StringValidator}
               value={this.state.biography}
             />
           </View>
-          <Text appearance='hint' style={themedStyle.text}>
-            {`${240 - this.state.biography.length} Caracteres restantes`}
-          </Text>
         </View>
       </KeyboardAwareScrollView>
     );
   }
 
-  private handleArtisticNameChange = (artisticName) => this.setState({ artisticName });
-  private handlePriceChange = (price) => this.setState({ price: parseFloat(price) });
-  private handleBiographyChange = (biography) => this.setState({ biography });
-  private handleMainCategoryChange = (mainCategory) => this.setState({ mainCategory });
+  private handleArtisticNameChange = (artisticName = '') => this.setState({ artisticName });
+  private handlePriceChange = (price = '0') => this.setState({ price: parseFloat(price) });
+  private handleBiographyChange = (biography = '') => this.setState({ biography });
+  private handleMainCategoryChange = (mainCategory = '') => this.setState({ mainCategory });
 }
 
 export const ArtistForm = withStyles(AccountComponent, (theme: ThemeType) => ({
@@ -97,7 +96,7 @@ export const ArtistForm = withStyles(AccountComponent, (theme: ThemeType) => ({
   middleContainer: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
+    // alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
@@ -110,22 +109,8 @@ export const ArtistForm = withStyles(AccountComponent, (theme: ThemeType) => ({
     backgroundColor: theme['background-alternative-color-1'],
     borderColor: theme['text-alternative-color'],
   },
-  inputMultiLine: {
-    flexWrap: 'wrap',
-    flex: 1,
-    backgroundColor: theme['background-alternative-color-1'],
-    height: 150,
-    borderRadius: 5,
-    borderColor: theme['text-alternative-color'],
-    borderWidth: 1,
-    padding: 10,
-    fontSize: 17,
-    fontFamily: 'opensans-regular',
-    width: '100%',
-  },
   text: {
     width: '100%',
-    textAlign: 'center',
     fontFamily: 'opensans-regular',
   },
 }));

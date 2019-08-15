@@ -1,22 +1,25 @@
-import { Artist } from '@favid-inc/api';
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import React from 'react';
+import { View } from 'react-native';
 import { NavigationScreenProps } from 'react-navigation';
 
 import { Account } from './Account';
 
-type Props = NavigationScreenProps;
+type Props = ThemedComponentProps & NavigationScreenProps;
 
-interface State {
-  artist: Artist;
-  loading: boolean;
-}
-
-export class AccountContainer extends React.Component<Props, State> {
-  public state: State = {
-    artist: null,
-    loading: false,
-  };
+class AccountContainerComponent extends React.Component<Props> {
   public render() {
-    return <Account />;
+    return (
+      <View style={this.props.themedStyle.container}>
+        <Account />
+      </View>
+    );
   }
 }
+
+export const AccountContainer = withStyles(AccountContainerComponent, (theme: ThemeType) => ({
+  container: {
+    flex: 1,
+    backgroundColor: theme['background-basic-color-2'],
+  },
+}));

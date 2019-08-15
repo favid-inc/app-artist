@@ -2,23 +2,20 @@ import { Artist } from '@favid-inc/api';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Button } from '@kitten/ui';
 import React from 'react';
-import { Alert, ButtonProps, View } from 'react-native';
+import { ActivityIndicator, Alert, ButtonProps, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { CameraIconFill } from '@src/assets/icons';
 import { ContainerView, textStyle } from '@src/components/common';
 
 import { ArtistForm } from './ArtistForm';
-import { ProfileSetting } from './ProfileInfo';
+import { ProfileInfo } from './ProfileInfo';
 import { ProfilePhoto } from './ProfilePhoto';
 
 import { loadProfile } from './loadProfile';
 import { updateProfile } from './updateProfile';
 
-// tslint:disable-next-line: no-empty-interface
-interface ComponentProps {}
-
-export type Props = ThemedComponentProps & ComponentProps;
+export type Props = ThemedComponentProps;
 
 interface State {
   artist: Artist;
@@ -39,6 +36,7 @@ class AccountComponent extends React.Component<Props, State> {
 
   public async componentWillMount() {
     try {
+      this.setState({ loading: true });
       const artist = await loadProfile();
       if (this.isLive) {
         this.setState({ artist });
@@ -56,6 +54,9 @@ class AccountComponent extends React.Component<Props, State> {
     const { themedStyle } = this.props;
     const { artist, loading } = this.state;
 
+    if (loading) {
+      return <ActivityIndicator style={themedStyle.container} size='large' />;
+    }
     if (!artist) {
       return <View />;
     }
@@ -66,17 +67,14 @@ class AccountComponent extends React.Component<Props, State> {
           <View style={themedStyle.photoSection}>
             <ProfilePhoto
               style={themedStyle.photo}
-              source={{ uri: artist.photo, height: 100, width: 100 }}
+              source={{ uri: artist.photoUri, height: 100, width: 100 }}
               button={this.renderPhotoButton}
             />
           </View>
 
           <View style={themedStyle.infoSection}>
-            <ProfileSetting hint='Email' value={artist.email} />
-            <ProfileSetting hint='Nome' value={artist.name} />
-          </View>
-
-          <View style={themedStyle.infoSection}>
+            <ProfileInfo hint='Email' value={artist.email} />
+            <ProfileInfo hint='Nome' value={artist.name} />
             <ArtistForm artist={artist} />
           </View>
 
@@ -128,7 +126,7 @@ class AccountComponent extends React.Component<Props, State> {
   };
 }
 
-export const Account = withStyles<ComponentProps>(AccountComponent, (theme: ThemeType) => ({
+export const Account = withStyles(AccountComponent, (theme: ThemeType) => ({
   container: {
     flex: 1,
     backgroundColor: theme['background-basic-color-2'],
@@ -137,7 +135,7 @@ export const Account = withStyles<ComponentProps>(AccountComponent, (theme: Them
     marginVertical: 20,
   },
   infoSection: {
-    marginTop: 24,
+    marginVertical: 20,
     backgroundColor: theme['background-basic-color-1'],
   },
   photo: {

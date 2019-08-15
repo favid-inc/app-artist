@@ -10,25 +10,27 @@ interface ComponentProps {
   value: string;
 }
 
-export type Props = ComponentProps & ViewProps & ThemedComponentProps;
+type Props = ComponentProps & ViewProps & ThemedComponentProps;
 
-export function InfoComponent(props: Props) {
-  const { themedStyle } = this.props;
-  return (
-    <View style={themedStyle.container}>
-      {this.props.hint && (
-        <Text style={themedStyle.hint} appearance='hint'>
-          {this.props.hint}
+class ProfileInfoComponent extends React.Component<Props> {
+  public render() {
+    const { themedStyle, hint, value } = this.props;
+    return (
+      <View style={themedStyle.container}>
+        {hint && (
+          <Text style={themedStyle.hintLabel} appearance='hint'>
+            {hint}
+          </Text>
+        )}
+        <Text style={themedStyle.valueLabel} appearance='hint'>
+          {value}
         </Text>
-      )}
-      <Text style={themedStyle.value} appearance='hint'>
-        {this.props.value}
-      </Text>
-    </View>
-  );
+      </View>
+    );
+  }
 }
 
-export const ProfileSetting = withStyles(InfoComponent, (theme: ThemeType) => ({
+export const ProfileInfo = withStyles<ComponentProps>(ProfileInfoComponent, (theme: ThemeType) => ({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
