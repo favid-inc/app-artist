@@ -61,6 +61,9 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
       const tokens = await AppAuth.authAsync(oAuthProps);
       this.setState({ tokens, oAuthProps });
       await this.siginWithCredentials();
+      this.setState({ isSignedIn: true });
+    } catch (e) {
+      this.setState({ isSignedIn: false });
     } finally {
       this.setState({ isSigningIn: false });
     }
@@ -87,24 +90,21 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
         const { refreshToken } = this.state.tokens;
         const tokens = await AppAuth.refreshAsync(this.state.oAuthProps, refreshToken);
         this.setState({ tokens: { ...tokens, refreshToken } });
+        await this.siginWithCredentials();
+        this.setState({ isSignedIn: true });
+      } catch (e) {
+        this.setState({ isSignedIn: false });
       } finally {
         this.setState({ isSigningIn: false });
       }
     }
-
-    await this.siginWithCredentials();
   };
 
   private async siginWithCredentials() {
-    try {
-      const { oAuthProps, tokens } = this.state;
-      const credential = getAuthProvider(oAuthProps).credential(tokens.idToken, tokens.accessToken);
-      await firebase.auth().signInWithCredential(credential);
-      await AsyncStorage.setItem(this.storageKey, JSON.stringify({ oAuthProps, tokens }));
-      this.setState({ isSignedIn: true });
-    } catch (e) {
-      this.setState({ isSignedIn: false });
-    }
+    const { oAuthProps, tokens } = this.state;
+    const credential = getAuthProvider(oAuthProps).credential(tokens.idToken, tokens.accessToken);
+    await firebase.auth().signInWithCredential(credential);
+    await AsyncStorage.setItem(this.storageKey, JSON.stringify({ oAuthProps, tokens }));
   }
 }
 

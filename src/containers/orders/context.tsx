@@ -59,7 +59,7 @@ export function connect(Navigator: NavigationContainer) {
     public render() {
       return (
         <OrdersContext.Provider value={this.state}>
-          <Navigator {...this.props} />
+          <OrdersContext.Consumer>{() => <Navigator {...this.props} />}</OrdersContext.Consumer>
         </OrdersContext.Provider>
       );
     }

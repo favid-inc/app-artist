@@ -1,6 +1,5 @@
 import { Artist } from '@favid-inc/api';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
-import { Text } from '@kitten/ui';
 import { NameValidator, StringValidator } from '@src/core/validators';
 import React from 'react';
 import { View } from 'react-native';

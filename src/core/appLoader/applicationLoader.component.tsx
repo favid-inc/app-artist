@@ -1,8 +1,5 @@
 import { LoadingAnimationComponent } from '@src/core/appLoader/loadingAnimation.component';
-import {
-  AppLoading,
-  SplashScreen,
-} from 'expo';
+import { AppLoading, SplashScreen } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
 import React from 'react';
@@ -28,7 +25,6 @@ type LoadingElement = React.ReactElement<{}>;
  * Loads child component after asynchronous tasks are done
  */
 export class ApplicationLoader extends React.Component<Props, State> {
-
   public state: State = {
     loaded: false,
   };
@@ -38,12 +34,12 @@ export class ApplicationLoader extends React.Component<Props, State> {
     SplashScreen.preventAutoHide();
   }
 
-  public render(): React.ReactNode {
+  public render() {
     return (
-      <React.Fragment>
+      <>
         {this.state.loaded ? this.props.children : this.renderLoading()}
-        <LoadingAnimationComponent isLoaded={this.state.loaded}/>
-      </React.Fragment>
+        <LoadingAnimationComponent isLoaded={this.state.loaded} />
+      </>
     );
   }
 
@@ -53,33 +49,28 @@ export class ApplicationLoader extends React.Component<Props, State> {
   };
 
   private onLoadError = (error: Error) => {
-    console.warn(error);
+    // console.warn(error);
   };
 
   private loadResources = (): Promise<void> => {
     return this.loadResourcesAsync(this.props.assets);
   };
 
-  private loadFonts = (fonts: {[key: string]: number}): Promise<void> => {
+  private loadFonts = (fonts: { [key: string]: number }): Promise<void> => {
     return Font.loadAsync(fonts);
   };
 
-  private loadImages = (images: ImageRequireSource[]): Promise<void[]> => {
-    const tasks: Array<Promise<void>> = images.map((image: ImageRequireSource): Promise<void> => {
-      return Asset.fromModule(image).downloadAsync();
-    });
-
-    return Promise.all(tasks);
+  private loadImages = async (images: ImageRequireSource[]): Promise<void> => {
+    await Promise.all(
+      images.map(async (image) => {
+        await Asset.fromModule(image).downloadAsync();
+      }),
+    );
   };
 
   private async loadResourcesAsync(assets: Assets): Promise<void> {
     const { fonts, images } = assets;
-
-    // @ts-ignore (expo type error)
-    return Promise.all([
-      this.loadFonts(fonts),
-      this.loadImages(images),
-    ]);
+    await Promise.all([this.loadFonts(fonts), this.loadImages(images)]);
   }
 
   private renderLoading = (): LoadingElement => {

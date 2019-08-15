@@ -24,9 +24,9 @@ class Container extends Component<Props, State> {
     loading: false,
   };
 
-  public componentDidMount = () => {
-    this.refresh();
-  };
+  public componentDidMount() {
+    // this.refresh();
+  }
 
   public render() {
     const { themedStyle } = this.props;
@@ -74,7 +74,9 @@ class Container extends Component<Props, State> {
     this.props.navigation.navigate('RecordOrderVideo');
   };
 
-  private handleRefresh = () => {};
+  private handleRefresh = () => {
+    this.refresh();
+  };
 
   private async refresh() {
     try {
@@ -84,7 +86,7 @@ class Container extends Component<Props, State> {
       const orders = await listOrders();
       this.context.setOrders(orders);
     } catch (e) {
-      console.error(e);
+      Alert.alert('Erro', 'Desculpe. Houve um erro ao buscar os seus pedidos');
     } finally {
       this.setState({ loading: false });
     }
