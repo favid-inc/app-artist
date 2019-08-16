@@ -1,7 +1,9 @@
 import * as AppAuth from 'expo-app-auth';
 import * as firebase from 'firebase';
 import React from 'react';
-import { AsyncStorage } from 'react-native';
+import { Alert, AsyncStorage } from 'react-native';
+
+import { claimAccount } from './claimAccount';
 
 interface AuthContext {
   isSigningIn: boolean;
@@ -58,10 +60,20 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
   private async signIn(oAuthProps: AppAuth.OAuthProps) {
     try {
       this.setState({ isSigningIn: true });
+
       const tokens = await AppAuth.authAsync(oAuthProps);
+
       this.setState({ tokens, oAuthProps });
-      await this.siginWithCredentials();
-      this.setState({ isSignedIn: true });
+
+      const { user } = await this.siginWithCredentials();
+
+      if (!user.emailVerified) {
+        await user.sendEmailVerification();
+        Alert.alert('Confirmação de conta', `Um email de verificação de conta foi enviado para ${user.email}.`);
+      } else {
+        await claimAccount(await user.getIdToken());
+        this.setState({ isSignedIn: true });
+      }
     } catch (e) {
       this.setState({ isSignedIn: false });
     } finally {
@@ -100,11 +112,17 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
     }
   };
 
-  private async siginWithCredentials() {
-    const { oAuthProps, tokens } = this.state;
-    const credential = getAuthProvider(oAuthProps).credential(tokens.idToken, tokens.accessToken);
-    await firebase.auth().signInWithCredential(credential);
-    await AsyncStorage.setItem(this.storageKey, JSON.stringify({ oAuthProps, tokens }));
+  private async siginWithCredentials(): Promise<firebase.auth.UserCredential> {
+    try {
+      const { oAuthProps, tokens } = this.state;
+      const oAuthCredential = getAuthProvider(oAuthProps).credential(tokens.idToken, tokens.accessToken);
+      const credentials = await firebase.auth().signInWithCredential(oAuthCredential);
+      // const credentials = await firebase.auth().signInWithEmailAndPassword('lmarqs.favid@gmail.com', '123456');
+      await AsyncStorage.setItem(this.storageKey, JSON.stringify({ oAuthProps, tokens }));
+      return credentials;
+    } catch (e) {
+      Alert.alert('Desculpe', 'Infelizmente ocorreu um erro durante a autenticação');
+    }
   }
 }
 

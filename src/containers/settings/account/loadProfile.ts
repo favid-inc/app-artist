@@ -9,22 +9,6 @@ export async function loadProfile(): Promise<LoadProfile['Response']> {
     method: 'GET',
   };
 
-  try {
-    const response = await apiClient.request<LoadProfile['Response']>(request);
-    return response.data;
-  } catch (e) {
-    const user = firebase.auth().currentUser;
-    return {
-      artisticName: user.displayName,
-      biography: '',
-      categories: [],
-      email: user.email,
-      location: '',
-      mainCategory: '',
-      name: user.displayName,
-      phone: '',
-      photoUri: user.photoURL,
-      price: 0,
-    };
-  }
+  const response = await apiClient.request<LoadProfile['Response']>(request);
+  return response.data;
 }

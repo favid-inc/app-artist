@@ -7,10 +7,7 @@ import { favidImage, googleImage } from '@src/assets/images';
 import { AuthContext } from '@src/core/auth';
 import * as config from '@src/core/config';
 
-// tslint:disable-next-line: no-empty-interface
-interface ComponentProps {}
-
-type Props = ThemedComponentProps & NavigationScreenProps & ComponentProps;
+type Props = ThemedComponentProps & NavigationScreenProps;
 
 class SignInContainerComponent extends React.Component<Props> {
   static contextType = AuthContext;
@@ -56,7 +53,7 @@ class SignInContainerComponent extends React.Component<Props> {
   };
 }
 
-export const SignInContainer = withStyles<ComponentProps>(SignInContainerComponent, (theme: ThemeType) => ({
+export const SignInContainer = withStyles(SignInContainerComponent, (theme: ThemeType) => ({
   container: {
     flex: 1,
     backgroundColor: theme['background-basic-color-2'],
