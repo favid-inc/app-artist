@@ -1,5 +1,4 @@
 import { LoadProfile } from '@favid-inc/api/lib/app-artist';
-import * as firebase from 'firebase';
 
 import { apiClient } from '@src/core/utils/apiClient';
 
