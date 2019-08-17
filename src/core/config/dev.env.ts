@@ -9,22 +9,18 @@ export const firebase = {
 };
 
 export const api = {
-  baseURL: 'https://us-central1-onyx-harmony-239219.cloudfunctions.net/api',
+  baseURL: 'https://us-central1-onyx-harmony-239219.cloudfunctions.net/api/api',
 };
 
 export const auth = {
-  behavior: 'web',
-  clientId: '983263249595-2tclp7pj3b23h05l08v8v7af6mgbud1s.apps.googleusercontent.com',
-  issuer: 'https://accounts.google.com',
-  scopes: ['profile', 'email'],
+  google: {
+    behavior: 'web',
+    clientId: '983263249595-2tclp7pj3b23h05l08v8v7af6mgbud1s.apps.googleusercontent.com',
+    issuer: 'https://accounts.google.com',
+    scopes: ['profile', 'email'],
+  },
 };
 
 export const storageKeys = {
   currentUser: 'current_user',
-};
-
-export const core = {
-  elasticsearch: {
-    node: 'http://user:UCBTrbP8hDCn@35.225.67.137/elasticsearch/',
-  },
 };

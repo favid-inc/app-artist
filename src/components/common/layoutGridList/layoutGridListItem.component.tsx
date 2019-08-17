@@ -1,8 +1,3 @@
-import React from 'react';
-import {
-  Image,
-  View,
-} from 'react-native';
 import {
   ThemedComponentProps,
   ThemeType,
@@ -13,8 +8,13 @@ import {
   ListItemProps,
   Text,
 } from '@kitten/ui';
-import { LayoutGridListItemData } from './type';
+import React from 'react';
+import {
+  Image,
+  View,
+} from 'react-native';
 import { textStyle } from '../style';
+import { LayoutGridListItemData } from './type';
 
 interface ComponentProps {
   data: LayoutGridListItemData;

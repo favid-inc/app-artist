@@ -1,8 +1,3 @@
-import React from 'react';
-import {
-  Dimensions,
-  ListRenderItemInfo,
-} from 'react-native';
 import {
   ThemedComponentProps,
   ThemeType,
@@ -12,6 +7,11 @@ import {
   List,
   ListProps,
 } from '@kitten/ui';
+import React from 'react';
+import {
+  Dimensions,
+  ListRenderItemInfo,
+} from 'react-native';
 import {
   LayoutGridListItem,
   LayoutGridListItemProps,
@@ -35,6 +35,16 @@ type ListItemElementInfo = ListRenderItemInfo<LayoutGridListItemData>;
 
 class LayoutGridListComponent extends React.Component<LayoutGridListProps> {
 
+  public render(): React.ReactNode {
+    return (
+      <List
+        numColumns={2}
+        renderItem={this.renderItem}
+        {...this.props}
+      />
+    );
+  }
+
   private onItemPress = (index: number) => {
     this.props.onItemPress(index);
   };
@@ -48,16 +58,6 @@ class LayoutGridListComponent extends React.Component<LayoutGridListProps> {
       />
     );
   };
-
-  public render(): React.ReactNode {
-    return (
-      <List
-        numColumns={2}
-        renderItem={this.renderItem}
-        {...this.props}
-      />
-    );
-  }
 }
 
 export const LayoutGridList = withStyles(LayoutGridListComponent, (theme: ThemeType) => ({

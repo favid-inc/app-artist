@@ -1,9 +1,6 @@
-import {
-  dark,
-  light,
-} from '@eva-design/eva';
-import { default as appTheme } from './appTheme.json';
+import { dark, light } from '@eva-design/eva';
 import { ThemeType } from '@kitten/theme';
+import { default as appTheme } from './appTheme.json';
 
 interface ThemeRegistry {
   ['Eva Light']: ThemeType;
@@ -19,10 +16,7 @@ export const themes: ThemeRegistry = {
   'App Theme': appTheme,
 };
 
-export {
-  ThemeContext,
-  ThemeContextType,
-} from './themeContext';
+export { ThemeContext, ThemeContextType } from './themeContext';
 
 export { ThemeStore } from './theme.store';
 export { ThemeService } from './theme.service';

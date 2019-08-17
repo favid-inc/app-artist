@@ -1,6 +1,5 @@
 import {
   ImageSource,
-  RemoteImage,
 } from './type';
 
 export {
@@ -23,4 +22,3 @@ export const googleImage: ImageSource = {
 export const favidImage: ImageSource = {
   imageSource: require('./source/favid-logo.png'),
 };
-

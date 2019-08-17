@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   ThemedComponentProps,
   ThemeProvider,
@@ -15,10 +14,11 @@ import {
   GridIconOutline,
   ListIconFill,
 } from '@src/assets/icons';
+import { themes } from '@src/core/themes';
+import React from 'react';
 import { LayoutGridList } from '../layoutGridList';
 import { LayoutList } from '../layoutList';
 import { LayoutMenuItemData } from './type';
-import { themes } from '@src/core/themes';
 
 // @ts-ignore (override `children` prop)
 interface ComponentProps extends TabViewProps {
@@ -50,18 +50,6 @@ class LayoutMenuComponent extends React.Component<LayoutMenuProps> {
     this.tabLoadingMap = { ...this.tabLoadingMap, ...nextLoadingMap };
   }
 
-  private shouldLoadTabContentElement = (index: number): boolean => {
-    return this.tabLoadingMap[`${index}`];
-  };
-
-  private createTabLoadingMap = (selectedIndex: number): TabLoadingMap => {
-    return { [`${selectedIndex}`]: true };
-  };
-
-  private onItemPress = (index: number) => {
-    this.props.onItemPress(index);
-  };
-
   public render(): React.ReactNode {
     const { themedStyle, data, ...restProps } = this.props;
 
@@ -90,6 +78,18 @@ class LayoutMenuComponent extends React.Component<LayoutMenuProps> {
       </ThemeProvider>
     );
   }
+
+  private shouldLoadTabContentElement = (index: number): boolean => {
+    return this.tabLoadingMap[`${index}`];
+  };
+
+  private createTabLoadingMap = (selectedIndex: number): TabLoadingMap => {
+    return { [`${selectedIndex}`]: true };
+  };
+
+  private onItemPress = (index: number) => {
+    this.props.onItemPress(index);
+  };
 }
 
 export const LayoutMenu = withStyles(LayoutMenuComponent, (theme: ThemeType) => ({

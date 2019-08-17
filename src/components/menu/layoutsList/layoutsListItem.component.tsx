@@ -1,5 +1,3 @@
-import React from 'react';
-import { ImageProps } from 'react-native';
 import {
   StyleType,
   ThemedComponentProps,
@@ -12,11 +10,13 @@ import {
   Text,
 } from '@kitten/ui';
 import { textStyle } from '@src/components/common';
-import { LayoutsListItemData } from './type';
 import {
   ThemeContext,
   ThemeKey,
 } from '@src/core/themes';
+import React from 'react';
+import { ImageProps } from 'react-native';
+import { LayoutsListItemData } from './type';
 
 interface ComponentProps {
   data: LayoutsListItemData;
@@ -25,12 +25,6 @@ interface ComponentProps {
 export type LayoutsListItemProps = ThemedComponentProps & ListItemProps & ComponentProps;
 
 class LayoutsListItemComponent extends React.Component<LayoutsListItemProps> {
-
-  private renderIconElement = (style: StyleType, theme: ThemeKey): React.ReactElement<ImageProps> => {
-    const iconElement: React.ReactElement<ImageProps> = this.props.data.icon(style, theme);
-
-    return React.cloneElement(iconElement, { style });
-  };
 
   public render(): React.ReactNode {
     const { style, themedStyle, data, ...restProps } = this.props;
@@ -50,6 +44,12 @@ class LayoutsListItemComponent extends React.Component<LayoutsListItemProps> {
       )}</ThemeContext.Consumer>
     );
   }
+
+  private renderIconElement = (style: StyleType, theme: ThemeKey): React.ReactElement<ImageProps> => {
+    const iconElement: React.ReactElement<ImageProps> = this.props.data.icon(style, theme);
+
+    return React.cloneElement(iconElement, { style });
+  };
 }
 
 export const LayoutsListItem = withStyles(LayoutsListItemComponent, (theme: ThemeType) => ({

@@ -1,5 +1,5 @@
 import { ImageStyle, StyleProp } from 'react-native';
-import { Icon, IconElement, IconSource, RemoteIcon } from './icon.component';
+import { Icon, IconElement, IconSource } from './icon.component';
 
 export const MenuIconAuth = (style: StyleProp<ImageStyle>): IconElement => {
   const source: IconSource = {
@@ -260,6 +260,14 @@ export const ComponentsIconTabViewDark = (style: StyleProp<ImageStyle>): IconEle
 export const ComponentsIconText = (style: StyleProp<ImageStyle>): IconElement => {
   const source: IconSource = {
     imageSource: require('./icon-text.png'),
+  };
+
+  return Icon(source, style);
+};
+
+export const LogOutIconFill = (style: StyleProp<ImageStyle>): IconElement => {
+  const source: IconSource = {
+    imageSource: require('./eva/log-out-outline.png'),
   };
 
   return Icon(source, style);

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Favid",
+    "name": "Favid - Artist",
     "icon": "./src/assets/icons/icon.png",
     "version": "2.0.1",
     "slug": "favid-artist",
@@ -28,6 +28,11 @@
     "splash": {
       "image": "src/assets/images/source/splash.png",
       "resizeMode": "contain"
-    }
+    },
+    "platforms": [
+      "android",
+      "ios"
+    ],
+    "description": ""
   }
 }

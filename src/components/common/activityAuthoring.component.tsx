@@ -1,17 +1,17 @@
+import {
+  ThemedComponentProps,
+  ThemeType,
+  withStyles,
+} from '@kitten/theme';
+import { Text } from '@kitten/ui';
+import { Avatar } from '@kitten/ui';
+import { textStyle } from '@src/components/common/style';
 import React from 'react';
 import {
   ImageSourcePropType,
   View,
   ViewProps,
 } from 'react-native';
-import { Text } from '@kitten/ui';
-import {
-  ThemedComponentProps,
-  ThemeType,
-  withStyles,
-} from '@kitten/theme';
-import { Avatar } from '@kitten/ui';
-import { textStyle } from '@src/components/common/style';
 
 interface ComponentProps {
   photo: ImageSourcePropType;

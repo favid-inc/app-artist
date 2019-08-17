@@ -1,9 +1,9 @@
-import React from 'react';
 import {
   ThemedComponentProps,
   ThemeType,
   withStyles,
 } from '@kitten/theme';
+import React from 'react';
 import {
   KeyboardAwareScrollView,
   KeyboardAwareScrollViewProps,

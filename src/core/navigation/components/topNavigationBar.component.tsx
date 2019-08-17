@@ -1,10 +1,8 @@
-import React from 'react';
 import {
   StyleType,
   ThemeType,
   withStyles,
 } from '@kitten/theme';
-import { ImageProps } from 'react-native';
 import {
   TopNavigation,
   TopNavigationAction,
@@ -12,6 +10,8 @@ import {
   TopNavigationProps,
 } from '@kitten/ui';
 import { textStyle } from '@src/components/common';
+import React from 'react';
+import { ImageProps } from 'react-native';
 import { SafeAreaView } from './safeAreaView.component';
 
 export interface ComponentProps {
@@ -25,21 +25,6 @@ type BackIconProp = (style: StyleType) => React.ReactElement<ImageProps>;
 type BackButtonElement = React.ReactElement<TopNavigationActionProps>;
 
 class TopNavigationBarComponent extends React.Component<TopNavigationBarProps> {
-
-  private onBackButtonPress = () => {
-    if (this.props.onBackPress) {
-      this.props.onBackPress();
-    }
-  };
-
-  private renderBackButton = (source: BackIconProp): BackButtonElement => {
-    return (
-      <TopNavigationAction
-        icon={source}
-        onPress={this.onBackButtonPress}
-      />
-    );
-  };
 
   public render(): React.ReactNode {
     const { themedStyle, title, backIcon } = this.props;
@@ -58,6 +43,21 @@ class TopNavigationBarComponent extends React.Component<TopNavigationBarProps> {
       </SafeAreaView>
     );
   }
+
+  private onBackButtonPress = () => {
+    if (this.props.onBackPress) {
+      this.props.onBackPress();
+    }
+  };
+
+  private renderBackButton = (source: BackIconProp): BackButtonElement => {
+    return (
+      <TopNavigationAction
+        icon={source}
+        onPress={this.onBackButtonPress}
+      />
+    );
+  };
 }
 
 export const TopNavigationBar = withStyles(TopNavigationBarComponent, (theme: ThemeType) => ({

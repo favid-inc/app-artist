@@ -1,12 +1,9 @@
-import React from 'react';
-import { ImageRequireSource } from 'react-native';
-import {
-  AppLoading,
-  SplashScreen,
-} from 'expo';
+import { LoadingAnimationComponent } from '@src/core/appLoader/loadingAnimation.component';
+import { AppLoading, SplashScreen } from 'expo';
 import { Asset } from 'expo-asset';
 import * as Font from 'expo-font';
-import { LoadingAnimationComponent } from '@src/core/appLoader/loadingAnimation.component';
+import React from 'react';
+import { ImageRequireSource } from 'react-native';
 
 export interface Assets {
   images: ImageRequireSource[];
@@ -28,15 +25,23 @@ type LoadingElement = React.ReactElement<{}>;
  * Loads child component after asynchronous tasks are done
  */
 export class ApplicationLoader extends React.Component<Props, State> {
+  public state: State = {
+    loaded: false,
+  };
 
   constructor(props: Props) {
     super(props);
     SplashScreen.preventAutoHide();
   }
 
-  public state: State = {
-    loaded: false,
-  };
+  public render() {
+    return (
+      <>
+        {this.state.loaded ? this.props.children : this.renderLoading()}
+        <LoadingAnimationComponent isLoaded={this.state.loaded} />
+      </>
+    );
+  }
 
   private onLoadSuccess = () => {
     this.setState({ loaded: true });
@@ -44,33 +49,28 @@ export class ApplicationLoader extends React.Component<Props, State> {
   };
 
   private onLoadError = (error: Error) => {
-    console.warn(error);
+    // console.warn(error);
   };
 
   private loadResources = (): Promise<void> => {
     return this.loadResourcesAsync(this.props.assets);
   };
 
-  private loadFonts = (fonts: {[key: string]: number}): Promise<void> => {
+  private loadFonts = (fonts: { [key: string]: number }): Promise<void> => {
     return Font.loadAsync(fonts);
   };
 
-  private loadImages = (images: ImageRequireSource[]): Promise<void[]> => {
-    const tasks: Promise<void>[] = images.map((image: ImageRequireSource): Promise<void> => {
-      return Asset.fromModule(image).downloadAsync();
-    });
-
-    return Promise.all(tasks);
+  private loadImages = async (images: ImageRequireSource[]): Promise<void> => {
+    await Promise.all(
+      images.map(async (image) => {
+        await Asset.fromModule(image).downloadAsync();
+      }),
+    );
   };
 
   private async loadResourcesAsync(assets: Assets): Promise<void> {
     const { fonts, images } = assets;
-
-    // @ts-ignore (expo type error)
-    return Promise.all([
-      this.loadFonts(fonts),
-      this.loadImages(images),
-    ]);
+    await Promise.all([this.loadFonts(fonts), this.loadImages(images)]);
   }
 
   private renderLoading = (): LoadingElement => {
@@ -83,13 +83,4 @@ export class ApplicationLoader extends React.Component<Props, State> {
       />
     );
   };
-
-  public render(): React.ReactNode {
-    return (
-      <React.Fragment>
-        {this.state.loaded ? this.props.children : this.renderLoading()}
-        <LoadingAnimationComponent isLoaded={this.state.loaded}/>
-      </React.Fragment>
-    );
-  }
 }

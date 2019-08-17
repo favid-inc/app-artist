@@ -1,3 +1,12 @@
+import {
+  StyleType,
+  ThemedComponentProps,
+  ThemeType,
+  withStyles,
+} from '@kitten/theme';
+import { Text } from '@kitten/ui';
+import { StarIconFill } from '@src/assets/icons';
+import { textStyle } from '@src/components/common/style';
 import React from 'react';
 import {
   ImageProps,
@@ -10,15 +19,6 @@ import {
   View,
   ViewProps,
 } from 'react-native';
-import { Text } from '@kitten/ui';
-import {
-  StyleType,
-  ThemedComponentProps,
-  ThemeType,
-  withStyles,
-} from '@kitten/theme';
-import { StarIconFill } from '@src/assets/icons';
-import { textStyle } from '@src/components/common/style';
 
 interface ComponentProps {
   hint?: string;
@@ -40,6 +40,21 @@ class RateBarComponent extends React.Component<RateBarProps> {
     value: 0,
     max: 5,
   };
+
+  public render(): React.ReactNode {
+    const { style, themedStyle, hint, ...restProps } = this.props;
+    const { container, ...componentStyle } = themedStyle;
+
+    const componentChildren: React.ReactNode = this.renderComponentChildren(componentStyle);
+
+    return (
+      <View
+        {...restProps}
+        style={[container, style]}>
+        {componentChildren}
+      </View>
+    );
+  }
 
   private onRateButtonPress = (index: number) => {
     if (this.props.onChange) {
@@ -88,7 +103,7 @@ class RateBarComponent extends React.Component<RateBarProps> {
   };
 
   private renderRateBar = (style: StyleType): React.ReactNode => {
-    const rates: React.ReactElement<TouchableOpacityProps>[] = [];
+    const rates: Array<React.ReactElement<TouchableOpacityProps>> = [];
 
     for (let index = 0; index < this.props.max; index++) {
       const rateElement: React.ReactElement<TouchableOpacityProps> = this.renderRateButtonElement(style, index);
@@ -107,21 +122,6 @@ class RateBarComponent extends React.Component<RateBarProps> {
       this.renderRateBar(rateBarStyle),
     ];
   };
-
-  public render(): React.ReactNode {
-    const { style, themedStyle, hint, ...restProps } = this.props;
-    const { container, ...componentStyle } = themedStyle;
-
-    const componentChildren: React.ReactNode = this.renderComponentChildren(componentStyle);
-
-    return (
-      <View
-        {...restProps}
-        style={[container, style]}>
-        {componentChildren}
-      </View>
-    );
-  }
 }
 
 export const RateBar = withStyles(RateBarComponent, (theme: ThemeType) => ({
