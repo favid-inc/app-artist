@@ -92,7 +92,7 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
       await user.sendEmailVerification();
       Alert.alert('Confirmação de conta', `Um email de verificação de conta foi enviado para ${user.email}.`);
     } catch (e) {
-      Alert.alert('Erro ao criar conta', e);
+      Alert.alert('Erro ao criar conta', (e && e.message) || 'Verifique sua conexão com a internet e tente novamente');
     } finally {
       this.setState({ isSigningIn: false });
     }
@@ -102,11 +102,13 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
     this.setState({ isSigningIn: true });
 
     try {
-      const { user } = await this.sigIn({ type: 'email', email, password });
-      if (!user.emailVerified) {
+      const auth = await this.sigIn({ type: 'email', email, password });
+      if (!auth) {
+        Alert.alert('Credencias inválidas', 'Não foi possível entrar no app com os dados informados');
+      } else if (!auth.user.emailVerified) {
         Alert.alert('Confirmação de conta', 'Verifique seu email antes de acessar o aplicativo');
       } else {
-        await claimAccount(await user.getIdToken());
+        await claimAccount(await auth.user.getIdToken());
       }
     } finally {
       this.setState({ isSigningIn: false });
@@ -149,11 +151,11 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
           throw new Error();
       }
 
-      this.setState({ isSignedIn: true, credentials });
+      this.setState({ isSignedIn: firebaseCredential.user.emailVerified, credentials });
 
       return firebaseCredential;
     } catch (e) {
-      this.setState({ isSignedIn: false, credentials: null });
+      this.setState({ isSignedIn: false, credentials: { type: 'none' } });
 
       Alert.alert('Desculpe', 'Infelizmente ocorreu um erro durante a autenticação');
     } finally {
@@ -164,7 +166,7 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
   private async signOut() {
     const { credentials } = this.state;
 
-    this.setState({ credentials: null, isSignedIn: false });
+    this.setState({ isSignedIn: false, credentials: { type: 'none' } });
 
     this.saveState();
 

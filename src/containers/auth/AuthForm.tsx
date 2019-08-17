@@ -13,7 +13,7 @@ interface ComponentProps {
   onSignUp: (formData: AuthFormData) => void;
 }
 
-const TAB_INDEX_EMAIL: number = 0;
+const TAB_INDEX_SIGN_IN: number = 0;
 const TAB_INDEX_SIGN_UP: number = 1;
 
 export type SignIn5Props = ThemedComponentProps & ComponentProps;
@@ -48,12 +48,7 @@ class AuthFormComponent extends React.Component<SignIn5Props, State> {
             <SignInForm style={themedStyle.tabContentContainer} onDataChange={this.handleSignInFormChange} />
           </Tab>
           <Tab titleStyle={themedStyle.tabTitle} title='Registrar'>
-            <>
-              <SignUpForm style={themedStyle.tabContentContainer} onDataChange={this.handleSignUpFormChange} />
-              <Text style={themedStyle.signUpCaptionLabel} appearance='hint'>
-                Voce recebera um email de confirmação
-              </Text>
-            </>
+            <SignUpForm style={themedStyle.tabContentContainer} onDataChange={this.handleSignUpFormChange} />
           </Tab>
         </TabView>
         <Button
@@ -63,7 +58,7 @@ class AuthFormComponent extends React.Component<SignIn5Props, State> {
           onPress={this.handleSubmitButtonPress}
           disabled={!submitButtonEnabled}
         >
-          {this.state.selectedTabIndex === TAB_INDEX_EMAIL ? 'ENTRAR' : 'CRIAR CONTA'}
+          {this.state.selectedTabIndex === TAB_INDEX_SIGN_IN ? 'ENTRAR' : 'CRIAR CONTA'}
         </Button>
       </View>
     );
@@ -75,12 +70,10 @@ class AuthFormComponent extends React.Component<SignIn5Props, State> {
     const formValue = this.getSelectedFormData();
 
     switch (selectedTabIndex) {
-      case TAB_INDEX_EMAIL:
-        this.props.onSignIn(formValue);
-        break;
+      case TAB_INDEX_SIGN_IN:
+        return this.props.onSignIn(formValue);
       case TAB_INDEX_SIGN_UP:
-        this.props.onSignUp(formValue);
-        break;
+        return this.props.onSignUp(formValue);
     }
   };
 
@@ -100,7 +93,7 @@ class AuthFormComponent extends React.Component<SignIn5Props, State> {
     const { selectedTabIndex, signInFormData, signUpFormData } = this.state;
 
     switch (selectedTabIndex) {
-      case TAB_INDEX_EMAIL:
+      case TAB_INDEX_SIGN_IN:
         return signInFormData;
       case TAB_INDEX_SIGN_UP:
         return signUpFormData;
@@ -130,23 +123,7 @@ export const AuthForm = withStyles(AuthFormComponent, (theme: ThemeType) => ({
     color: 'white',
     ...textStyle.label,
   },
-  signInLabel: {
-    marginTop: 8,
-    textAlign: 'center',
-    color: 'white',
-    ...textStyle.subtitle,
-  },
-  signUpCaptionLabel: {
-    textAlign: 'center',
-    paddingHorizontal: 32,
-    ...textStyle.paragraph,
-  },
   submitButton: {
     marginHorizontal: 16,
-  },
-
-  signUpText: {
-    color: 'white',
-    ...textStyle.subtitle,
   },
 }));

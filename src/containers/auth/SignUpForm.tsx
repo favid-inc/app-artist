@@ -2,9 +2,9 @@ import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import React from 'react';
 import { View, ViewProps } from 'react-native';
 
-import { LockIconFill, PhoneIconFill } from '@src/assets/icons';
+import { EmailIconFill, LockIconFill, PhoneIconFill } from '@src/assets/icons';
 import { textStyle, ValidationInput } from '@src/components/common';
-import { EmailValidator, StringValidator } from '@src/core/validators';
+import { EmailValidator, PasswordValidator } from '@src/core/validators';
 import { AuthFormData } from './type';
 
 interface ComponentProps {
@@ -43,33 +43,41 @@ class SignUpFormComponent extends React.Component<SignUpFormProps, State> {
   public render(): React.ReactNode {
     const { style, themedStyle, theme, ...restProps } = this.props;
 
+    const confirmPasswordCaption =
+      this.state.password && this.state.confirmPassword && this.state.password !== this.state.confirmPassword
+        ? 'Senhas não conferem'
+        : '';
+
     return (
       <View {...restProps} style={[themedStyle.container, style]}>
         <ValidationInput
-          style={themedStyle.phoneInput}
-          textStyle={textStyle.paragraph}
-          placeholder='Email'
-          icon={PhoneIconFill}
-          validator={EmailValidator}
+          autoCompleteType='email'
+          icon={EmailIconFill}
           onChangeText={this.handleEmailChange}
+          keyboardType='email-address'
+          placeholder='Email'
+          style={themedStyle.emailInput}
+          textStyle={textStyle.paragraph}
+          validator={EmailValidator}
         />
         <ValidationInput
-          style={themedStyle.passwordInput}
-          textStyle={textStyle.paragraph}
+          icon={LockIconFill}
+          onChangeText={this.handlePasswordChange}
           placeholder='Senha'
           secureTextEntry={true}
-          icon={LockIconFill}
-          validator={StringValidator}
-          onChangeText={this.handlePasswordChange}
-        />
-        <ValidationInput
           style={themedStyle.passwordInput}
           textStyle={textStyle.paragraph}
+          validator={PasswordValidator}
+        />
+        <ValidationInput
+          caption={confirmPasswordCaption}
+          icon={LockIconFill}
+          onChangeText={this.handleConfirmPasswordChange}
           placeholder='Confirmar Senha'
           secureTextEntry={true}
-          icon={LockIconFill}
-          validator={StringValidator}
-          onChangeText={this.handleConfirmPasswordChange}
+          style={themedStyle.passwordInput}
+          textStyle={textStyle.paragraph}
+          validator={PasswordValidator}
         />
       </View>
     );
@@ -96,8 +104,11 @@ class SignUpFormComponent extends React.Component<SignUpFormProps, State> {
 
 export const SignUpForm = withStyles(SignUpFormComponent, (theme: ThemeType) => ({
   container: {},
-  phoneInput: {},
+  emailInput: {
+    backgroundColor: theme['background-basic-color-1'],
+  },
   passwordInput: {
     marginTop: 16,
+    backgroundColor: theme['background-basic-color-1'],
   },
 }));

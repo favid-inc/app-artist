@@ -12,8 +12,8 @@ interface ComponentProps {
   hint?: string;
   hintStyle?: StyleProp<TextStyle>;
   iconStyle?: StyleProp<ImageStyle>;
-  onGooglePress: () => void;
-  onFacebookPress: () => void;
+  onGoogleSignIn: () => void;
+  onFacebookSignIn: () => void;
 }
 
 export type SocialAuthProps = ThemedComponentProps & ViewProps & ComponentProps;
@@ -31,13 +31,13 @@ class SocialAuthComponent extends React.Component<SocialAuthProps> {
             activeOpacity={0.75}
             icon={GoogleIconFill}
             iconStyle={iconStyle}
-            onPress={this.props.onGooglePress}
+            onPress={this.props.onGoogleSignIn}
           />
           <SocialButton
             activeOpacity={0.75}
             icon={FacebookIconFill}
             iconStyle={iconStyle}
-            onPress={this.props.onFacebookPress}
+            onPress={this.props.onFacebookSignIn}
           />
         </View>
       </View>
