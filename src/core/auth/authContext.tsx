@@ -6,16 +6,20 @@ import { Alert, AsyncStorage } from 'react-native';
 import { claimAccount } from './claimAccount';
 
 interface AuthContext {
-  isSigningIn: boolean;
   isSignedIn: boolean;
-  signIn: (props: AppAuth.OAuthProps) => Promise<void>;
+  isSigningIn: boolean;
+  signInWithOAuth: (oAuthProps: AppAuth.OAuthProps) => Promise<void>;
+  signInWithEmailAndPassword: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  signUp: (email: string, password: string) => Promise<void>;
 }
 
 export const AuthContext = React.createContext<AuthContext>({
-  isSigningIn: false,
   isSignedIn: false,
-  signIn: () => null,
+  isSigningIn: false,
+  signInWithOAuth: () => null,
+  signInWithEmailAndPassword: () => null,
+  signUp: () => null,
   signOut: () => null,
 });
 
@@ -24,21 +28,34 @@ interface FirebaseAuthProps {
 }
 
 interface FirebaseAuthState extends AuthContext {
-  oAuthProps: AppAuth.OAuthProps;
-  tokens: AppAuth.TokenResponse;
+  credentials?:
+    | { type: 'none' }
+    | {
+        type: 'oauth';
+        oAuthProps: AppAuth.OAuthProps;
+        tokens: AppAuth.TokenResponse;
+      }
+    | {
+        type: 'email';
+        email: string;
+        password: string;
+      };
 }
 
 export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAuthState> {
   public state: FirebaseAuthState = {
-    isSigningIn: false,
+    credentials: { type: 'none' },
     isSignedIn: false,
-    oAuthProps: null,
-    tokens: null,
-    signIn: (props) => this.signIn(props),
+    isSigningIn: false,
+    signInWithOAuth: (oAuthProps) => this.signInWithOAuth(oAuthProps),
+    signInWithEmailAndPassword: (email, password) => this.signInWithEmailAndPassword(email, password),
     signOut: () => this.signOut(),
+    signUp: (email, password) => this.signUp(email, password),
   };
 
-  private storageKey = '@app-artist:core:auth:FirebaseAuth';
+  private STORAGE_KEY: string = '@app-artist:core:auth:FirebaseAuth';
+
+  private unsubscribe: firebase.Unsubscribe;
 
   public render() {
     return (
@@ -48,81 +65,141 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
     );
   }
 
-  public async componentWillMount() {
-    const { tokens, oAuthProps } = JSON.parse((await AsyncStorage.getItem(this.storageKey)) || '{}');
+  public async componentDidMount() {
+    const { isSignedIn, credentials } = JSON.parse((await AsyncStorage.getItem(this.STORAGE_KEY)) || '{}');
 
-    this.setState({ tokens, oAuthProps });
+    this.unsubscribe = firebase.auth().onAuthStateChanged(this.handleAuthStateChanged);
 
-    await this.handleAuthStateChanged();
-    firebase.auth().onAuthStateChanged(this.handleAuthStateChanged);
+    if (isSignedIn) {
+      this.setState({ isSigningIn: true });
+      try {
+        this.sigIn(credentials);
+      } finally {
+        this.setState({ isSigningIn: false });
+      }
+    }
   }
 
-  private async signIn(oAuthProps: AppAuth.OAuthProps) {
+  public async componentWillUnmount() {
+    this.unsubscribe();
+  }
+
+  private async signUp(email: string, password: string) {
+    this.setState({ isSigningIn: true });
+
     try {
-      this.setState({ isSigningIn: true });
-
-      const tokens = await AppAuth.authAsync(oAuthProps);
-
-      this.setState({ tokens, oAuthProps });
-
-      const { user } = await this.siginWithCredentials();
-
-      if (!user.emailVerified) {
-        await user.sendEmailVerification();
-        Alert.alert('Confirmação de conta', `Um email de verificação de conta foi enviado para ${user.email}.`);
-      } else {
-        await claimAccount(await user.getIdToken());
-        this.setState({ isSignedIn: true });
-      }
+      const { user } = await firebase.auth().createUserWithEmailAndPassword(email, password);
+      await user.sendEmailVerification();
+      Alert.alert('Confirmação de conta', `Um email de verificação de conta foi enviado para ${user.email}.`);
     } catch (e) {
-      this.setState({ isSignedIn: false });
+      Alert.alert('Erro ao criar conta', e);
     } finally {
       this.setState({ isSigningIn: false });
     }
   }
 
-  private async signOut() {
-    const { tokens, oAuthProps } = this.state;
-    this.setState({ oAuthProps: null, tokens: null, isSignedIn: false });
-    await AsyncStorage.setItem(this.storageKey, JSON.stringify(this.state));
-    await AppAuth.revokeAsync(oAuthProps, {
-      token: tokens.accessToken,
-      isClientIdProvided: true,
-    });
+  private async signInWithEmailAndPassword(email: string, password: string) {
+    this.setState({ isSigningIn: true });
+
+    try {
+      const { user } = await this.sigIn({ type: 'email', email, password });
+      if (!user.emailVerified) {
+        Alert.alert('Confirmação de conta', 'Verifique seu email antes de acessar o aplicativo');
+      } else {
+        await claimAccount(await user.getIdToken());
+      }
+    } finally {
+      this.setState({ isSigningIn: false });
+    }
   }
 
-  private handleAuthStateChanged = async () => {
-    if (!this.state.tokens) {
+  private async signInWithOAuth(oAuthProps: AppAuth.OAuthProps) {
+    this.setState({ isSigningIn: true });
+
+    try {
+      const tokens = await AppAuth.authAsync(oAuthProps);
+
+      const { user } = await this.sigIn({ type: 'oauth', tokens, oAuthProps });
+
+      await claimAccount(await user.getIdToken());
+    } finally {
+      this.setState({ isSigningIn: false });
+    }
+  }
+
+  private async sigIn(credentials: FirebaseAuthState['credentials']): Promise<firebase.auth.UserCredential> {
+    let firebaseCredential: firebase.auth.UserCredential;
+
+    try {
+      switch (credentials.type) {
+        case 'email':
+          firebaseCredential = await firebase
+            .auth()
+            .signInWithEmailAndPassword(credentials.email, credentials.password);
+          break;
+        case 'oauth':
+          const oAuthCredential = getAuthProvider(credentials.oAuthProps).credential(
+            credentials.tokens.idToken,
+            credentials.tokens.accessToken,
+          );
+
+          firebaseCredential = await firebase.auth().signInWithCredential(oAuthCredential);
+          break;
+        default:
+          throw new Error();
+      }
+
+      this.setState({ isSignedIn: true, credentials });
+
+      return firebaseCredential;
+    } catch (e) {
+      this.setState({ isSignedIn: false, credentials: null });
+
+      Alert.alert('Desculpe', 'Infelizmente ocorreu um erro durante a autenticação');
+    } finally {
+      this.saveState();
+    }
+  }
+
+  private async signOut() {
+    const { credentials } = this.state;
+
+    this.setState({ credentials: null, isSignedIn: false });
+
+    this.saveState();
+
+    if (credentials.type === 'oauth') {
+      AppAuth.revokeAsync(credentials.oAuthProps, {
+        token: credentials.tokens.accessToken,
+        isClientIdProvided: true,
+      });
+    }
+  }
+
+  private handleAuthStateChanged = async (user: firebase.UserInfo) => {
+    if (!this.state.isSignedIn || !this.state.credentials) {
       return;
     }
 
-    if (Date.now() < new Date(this.state.tokens.accessTokenExpirationDate).getTime()) {
+    if (this.state.credentials.type === 'oauth' && !user) {
       try {
-        this.setState({ isSigningIn: true });
-        const { refreshToken } = this.state.tokens;
-        const tokens = await AppAuth.refreshAsync(this.state.oAuthProps, refreshToken);
-        this.setState({ tokens: { ...tokens, refreshToken } });
-        await this.siginWithCredentials();
-        this.setState({ isSignedIn: true });
+        if (Date.now() > new Date(this.state.credentials.tokens.accessTokenExpirationDate).getTime()) {
+          return;
+        }
+
+        const { refreshToken } = this.state.credentials.tokens;
+        const tokens = await AppAuth.refreshAsync(this.state.credentials.oAuthProps, refreshToken);
+        const credentials = { ...this.state.credentials, tokens: { ...tokens, refreshToken } };
+
+        await this.sigIn(credentials);
       } catch (e) {
-        this.setState({ isSignedIn: false });
-      } finally {
-        this.setState({ isSigningIn: false });
+        this.signOut();
       }
     }
   };
 
-  private async siginWithCredentials(): Promise<firebase.auth.UserCredential> {
-    try {
-      const { oAuthProps, tokens } = this.state;
-      const oAuthCredential = getAuthProvider(oAuthProps).credential(tokens.idToken, tokens.accessToken);
-      const credentials = await firebase.auth().signInWithCredential(oAuthCredential);
-      // const credentials = await firebase.auth().signInWithEmailAndPassword('lmarqs.favid@gmail.com', '123456');
-      await AsyncStorage.setItem(this.storageKey, JSON.stringify({ oAuthProps, tokens }));
-      return credentials;
-    } catch (e) {
-      Alert.alert('Desculpe', 'Infelizmente ocorreu um erro durante a autenticação');
-    }
+  private saveState() {
+    AsyncStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.state));
   }
 }
 

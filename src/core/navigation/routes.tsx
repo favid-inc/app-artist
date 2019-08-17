@@ -8,9 +8,9 @@ import {
   NavigationState,
 } from 'react-navigation';
 
+import { SignInContainer } from '@src/containers/auth/AuthContainer';
 import { MenuNavigator } from '@src/containers/menu';
 import { OrdersNavigator } from '@src/containers/orders';
-import { SignInContainer } from '@src/containers/signin/SignInContainer';
 import { AuthContext } from '@src/core/auth';
 
 import { SettingsNavigationMap } from '../../containers/settings';

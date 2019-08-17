@@ -1,31 +1,10 @@
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
+import { Button, Tab, TabView, Text } from '@kitten/ui';
 import React from 'react';
 import { View } from 'react-native';
-import {
-  ThemedComponentProps,
-  ThemeType,
-  withStyles,
-} from '@kitten/theme';
-import {
-  Button,
-  Tab,
-  TabView,
-  Text,
-} from '@kitten/ui';
-import {
-  SignInForm3,
-  SignInForm3Data,
-  SignInForm4,
-  SignInForm4Data,
-} from '@src/components/auth';
-import {
-  ScrollableAvoidKeyboard,
-  ImageOverlay,
-  textStyle,
-} from '@src/components/common';
-import {
-  imageSignIn5Bg,
-  ImageSource,
-} from '@src/assets/images';
+
+import { ImageSource } from '@src/assets/images';
+import { ImageOverlay, ScrollableAvoidKeyboard, textStyle } from '@src/components/common';
 
 interface ComponentProps {
   onSignInEmailPress: (formData: SignInForm3Data) => void;
@@ -45,7 +24,6 @@ interface State {
 }
 
 class SignIn5Component extends React.Component<SignIn5Props, State> {
-
   public state: State = {
     selectedTabIndex: 0,
     emailFormData: undefined,
@@ -53,6 +31,61 @@ class SignIn5Component extends React.Component<SignIn5Props, State> {
   };
 
   private backgroundImage: ImageSource = imageSignIn5Bg;
+
+  public render(): React.ReactNode {
+    const { themedStyle } = this.props;
+    const signInButtonEnabled: boolean = !!this.getSelectedFormData();
+
+    return (
+      <ScrollableAvoidKeyboard>
+        <ImageOverlay style={themedStyle.container} source={this.backgroundImage.imageSource}>
+          <View style={themedStyle.headerContainer}>
+            <Text style={themedStyle.helloLabel}>Sign In</Text>
+            <Text style={themedStyle.signInLabel} category='s1'>
+              Sign in to your account with Email or SMS
+            </Text>
+          </View>
+          <TabView
+            style={themedStyle.tabView}
+            tabBarStyle={themedStyle.tabBar}
+            indicatorStyle={themedStyle.tabViewIndicator}
+            selectedIndex={this.state.selectedTabIndex}
+            onSelect={this.onTabSelect}
+          >
+            <Tab titleStyle={themedStyle.tabTitle} title='EMAIL'>
+              <SignInForm3 style={themedStyle.tabContentContainer} onDataChange={this.onEmailFormDataChange} />
+            </Tab>
+            <Tab titleStyle={themedStyle.tabTitle} title='SMS'>
+              <View>
+                <SignInForm4 style={themedStyle.tabContentContainer} onDataChange={this.onSMSFormDataChange} />
+                <Text style={themedStyle.smsCaptionLabel} appearance='hint'>
+                  within a minute you should receive an SMS with the code
+                </Text>
+              </View>
+            </Tab>
+          </TabView>
+          <Button
+            style={themedStyle.signInButton}
+            textStyle={textStyle.button}
+            size='giant'
+            disabled={!signInButtonEnabled}
+            onPress={this.onSignInButtonPress}
+          >
+            SIGN IN
+          </Button>
+          <Button
+            style={themedStyle.signUpButton}
+            textStyle={themedStyle.signUpText}
+            appearance='ghost'
+            activeOpacity={0.75}
+            onPress={this.onSignUpButtonPress}
+          >
+            Don't have an account? Sign Up
+          </Button>
+        </ImageOverlay>
+      </ScrollableAvoidKeyboard>
+    );
+  }
 
   private onSignInButtonPress = () => {
     const { selectedTabIndex } = this.state;
@@ -95,78 +128,6 @@ class SignIn5Component extends React.Component<SignIn5Props, State> {
         return smsFormData;
     }
   };
-
-  public render(): React.ReactNode {
-    const { themedStyle } = this.props;
-    const signInButtonEnabled: boolean = !!this.getSelectedFormData();
-
-    return (
-      <ScrollableAvoidKeyboard>
-        <ImageOverlay
-          style={themedStyle.container}
-          source={this.backgroundImage.imageSource}>
-          <View style={themedStyle.headerContainer}>
-            <Text
-              style={themedStyle.helloLabel}>
-              Sign In
-            </Text>
-            <Text
-              style={themedStyle.signInLabel}
-              category='s1'>
-              Sign in to your account with Email or SMS
-            </Text>
-          </View>
-          <TabView
-            style={themedStyle.tabView}
-            tabBarStyle={themedStyle.tabBar}
-            indicatorStyle={themedStyle.tabViewIndicator}
-            selectedIndex={this.state.selectedTabIndex}
-            onSelect={this.onTabSelect}>
-            <Tab
-              titleStyle={themedStyle.tabTitle}
-              title='EMAIL'>
-              <SignInForm3
-                style={themedStyle.tabContentContainer}
-                onDataChange={this.onEmailFormDataChange}
-              />
-            </Tab>
-            <Tab
-              titleStyle={themedStyle.tabTitle}
-              title='SMS'>
-              <View>
-                <SignInForm4
-                  style={themedStyle.tabContentContainer}
-                  onDataChange={this.onSMSFormDataChange}
-                />
-                <Text
-                  style={themedStyle.smsCaptionLabel}
-                  appearance='hint'>
-                  within a minute you should receive
-                  an SMS with the code
-                </Text>
-              </View>
-            </Tab>
-          </TabView>
-          <Button
-            style={themedStyle.signInButton}
-            textStyle={textStyle.button}
-            size='giant'
-            disabled={!signInButtonEnabled}
-            onPress={this.onSignInButtonPress}>
-            SIGN IN
-          </Button>
-          <Button
-            style={themedStyle.signUpButton}
-            textStyle={themedStyle.signUpText}
-            appearance='ghost'
-            activeOpacity={0.75}
-            onPress={this.onSignUpButtonPress}>
-            Don't have an account? Sign Up
-          </Button>
-        </ImageOverlay>
-      </ScrollableAvoidKeyboard>
-    );
-  }
 }
 
 export const SignIn5 = withStyles(SignIn5Component, (theme: ThemeType) => ({
@@ -224,4 +185,3 @@ export const SignIn5 = withStyles(SignIn5Component, (theme: ThemeType) => ({
     ...textStyle.subtitle,
   },
 }));
-

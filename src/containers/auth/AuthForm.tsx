@@ -1,0 +1,152 @@
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
+import { Button, Tab, TabView, Text } from '@kitten/ui';
+import React from 'react';
+import { View } from 'react-native';
+
+import { ScrollableAvoidKeyboard, textStyle } from '@src/components/common';
+import { SignInForm } from './SignInForm';
+import { SignUpForm } from './SignUpForm';
+import { AuthFormData } from './type';
+
+interface ComponentProps {
+  onSignIn: (formData: AuthFormData) => void;
+  onSignUp: (formData: AuthFormData) => void;
+}
+
+const TAB_INDEX_EMAIL: number = 0;
+const TAB_INDEX_SIGN_UP: number = 1;
+
+export type SignIn5Props = ThemedComponentProps & ComponentProps;
+
+interface State {
+  selectedTabIndex: number;
+  signInFormData: AuthFormData;
+  signUpFormData: AuthFormData;
+}
+
+class AuthFormComponent extends React.Component<SignIn5Props, State> {
+  public state: State = {
+    selectedTabIndex: 0,
+    signInFormData: undefined,
+    signUpFormData: undefined,
+  };
+
+  public render() {
+    const { themedStyle } = this.props;
+    const submitButtonEnabled: boolean = !!this.getSelectedFormData();
+
+    return (
+      <View style={themedStyle.container}>
+        <TabView
+          style={themedStyle.tabView}
+          tabBarStyle={themedStyle.tabBar}
+          indicatorStyle={themedStyle.tabViewIndicator}
+          selectedIndex={this.state.selectedTabIndex}
+          onSelect={this.onTabSelect}
+        >
+          <Tab titleStyle={themedStyle.tabTitle} title='Entrar'>
+            <SignInForm style={themedStyle.tabContentContainer} onDataChange={this.handleSignInFormChange} />
+          </Tab>
+          <Tab titleStyle={themedStyle.tabTitle} title='Registrar'>
+            <>
+              <SignUpForm style={themedStyle.tabContentContainer} onDataChange={this.handleSignUpFormChange} />
+              <Text style={themedStyle.signUpCaptionLabel} appearance='hint'>
+                Voce recebera um email de confirmação
+              </Text>
+            </>
+          </Tab>
+        </TabView>
+        <Button
+          style={themedStyle.submitButton}
+          textStyle={textStyle.button}
+          size='giant'
+          onPress={this.handleSubmitButtonPress}
+          disabled={!submitButtonEnabled}
+        >
+          {this.state.selectedTabIndex === TAB_INDEX_EMAIL ? 'ENTRAR' : 'CRIAR CONTA'}
+        </Button>
+      </View>
+    );
+  }
+
+  private handleSubmitButtonPress = () => {
+    const { selectedTabIndex } = this.state;
+
+    const formValue = this.getSelectedFormData();
+
+    switch (selectedTabIndex) {
+      case TAB_INDEX_EMAIL:
+        this.props.onSignIn(formValue);
+        break;
+      case TAB_INDEX_SIGN_UP:
+        this.props.onSignUp(formValue);
+        break;
+    }
+  };
+
+  private onTabSelect = (selectedTabIndex: number) => {
+    this.setState({ selectedTabIndex });
+  };
+
+  private handleSignInFormChange = (signInFormData: AuthFormData | undefined) => {
+    this.setState({ signInFormData });
+  };
+
+  private handleSignUpFormChange = (signUpFormData: AuthFormData | undefined) => {
+    this.setState({ signUpFormData });
+  };
+
+  private getSelectedFormData = (): AuthFormData => {
+    const { selectedTabIndex, signInFormData, signUpFormData } = this.state;
+
+    switch (selectedTabIndex) {
+      case TAB_INDEX_EMAIL:
+        return signInFormData;
+      case TAB_INDEX_SIGN_UP:
+        return signUpFormData;
+    }
+  };
+}
+
+export const AuthForm = withStyles(AuthFormComponent, (theme: ThemeType) => ({
+  container: {
+    flex: 1,
+  },
+  tabContentContainer: {
+    marginVertical: 8,
+  },
+  tabView: {
+    flex: 1,
+    paddingHorizontal: 16,
+    margin: 5,
+  },
+  tabBar: {
+    backgroundColor: 'transparent',
+  },
+  tabViewIndicator: {
+    backgroundColor: theme['background-basic-color-1'],
+  },
+  tabTitle: {
+    color: 'white',
+    ...textStyle.label,
+  },
+  signInLabel: {
+    marginTop: 8,
+    textAlign: 'center',
+    color: 'white',
+    ...textStyle.subtitle,
+  },
+  signUpCaptionLabel: {
+    textAlign: 'center',
+    paddingHorizontal: 32,
+    ...textStyle.paragraph,
+  },
+  submitButton: {
+    marginHorizontal: 16,
+  },
+
+  signUpText: {
+    color: 'white',
+    ...textStyle.subtitle,
+  },
+}));

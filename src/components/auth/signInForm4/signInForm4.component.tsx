@@ -1,25 +1,9 @@
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
+import { LockIconFill, PhoneIconFill } from '@src/assets/icons';
+import { textStyle, ValidationInput } from '@src/components/common';
+import { PhoneNumberValidator, SMSCodeValidator } from '@src/core/validators';
 import React from 'react';
-import {
-  View,
-  ViewProps,
-} from 'react-native';
-import {
-  ThemedComponentProps,
-  ThemeType,
-  withStyles,
-} from '@kitten/theme';
-import {
-  textStyle,
-  ValidationInput,
-} from '@src/components/common';
-import {
-  PhoneNumberValidator,
-  SMSCodeValidator,
-} from '@src/core/validators';
-import {
-  LockIconFill,
-  PhoneIconFill,
-} from '@src/assets/icons';
+import { View, ViewProps } from 'react-native';
 import { SignInForm4Data } from './type';
 
 interface ComponentProps {
@@ -38,7 +22,6 @@ interface State {
 }
 
 class SignInForm4Component extends React.Component<SignInForm4Props, State> {
-
   public state: State = {
     phone: undefined,
     code: undefined,
@@ -62,28 +45,11 @@ class SignInForm4Component extends React.Component<SignInForm4Props, State> {
     }
   }
 
-  private onPhoneInputTextChange = (phone: string) => {
-    this.setState({ phone });
-  };
-
-  private onCodeInputTextChange = (code: string) => {
-    this.setState({ code });
-  };
-
-  private isValid = (value: SignInForm4Data): boolean => {
-    const { phone, code } = value;
-
-    return phone !== undefined
-      && code !== undefined;
-  };
-
   public render(): React.ReactNode {
     const { style, themedStyle, theme, ...restProps } = this.props;
 
     return (
-      <View
-        {...restProps}
-        style={[themedStyle.container, style]}>
+      <View {...restProps} style={[themedStyle.container, style]}>
         <ValidationInput
           style={themedStyle.phoneInput}
           textStyle={textStyle.paragraph}
@@ -104,6 +70,20 @@ class SignInForm4Component extends React.Component<SignInForm4Props, State> {
       </View>
     );
   }
+
+  private onPhoneInputTextChange = (phone: string) => {
+    this.setState({ phone });
+  };
+
+  private onCodeInputTextChange = (code: string) => {
+    this.setState({ code });
+  };
+
+  private isValid = (value: SignInForm4Data): boolean => {
+    const { phone, code } = value;
+
+    return phone !== undefined && code !== undefined;
+  };
 }
 
 export const SignInForm4 = withStyles(SignInForm4Component, (theme: ThemeType) => ({
