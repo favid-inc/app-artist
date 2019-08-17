@@ -1,10 +1,10 @@
 import { Audio, Video } from 'expo-av';
 import { PlaybackStatus, PlaybackStatusToSet } from 'expo-av/build/AV';
-
 import React from 'react';
-import { View, StyleSheet, TouchableWithoutFeedback, Dimensions, ActivityIndicator } from 'react-native';
-import { MainControlButton } from './MainContolButton';
+import { ActivityIndicator, Dimensions, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+
 import { Fade } from './Fade';
+import { MainControlButton } from './MainContolButton';
 
 interface Props {
   uri: string;
@@ -16,35 +16,16 @@ interface State {
 }
 
 export class VideoPlayer extends React.Component<Props, State> {
-  private playbackInstance: Video | null = null;
-
   public state: State = {
     playbackStatus: { isLoaded: false },
     isShowingControls: true,
   };
 
+  private playbackInstance: Video | null = null;
+
   public async componentDidMount() {
     await setAudioMode();
   }
-
-  private toggleControls = () => {
-    if (!this.state.playbackStatus.isLoaded) {
-      return;
-    }
-    this.setState({ isShowingControls: !this.state.isShowingControls });
-  };
-
-  private setPlaybackStatusAsync = (playbackStatus: PlaybackStatusToSet) => {
-    this.playbackInstance.setStatusAsync(playbackStatus);
-  };
-
-  private handlePlaybackStatusUpdate = (playbackStatus: PlaybackStatus) => {
-    this.setState({ playbackStatus });
-  };
-
-  private setPlaybackInstance = (playbackInstance: Video) => {
-    this.playbackInstance = playbackInstance;
-  };
 
   public render(): React.ReactNode {
     const { uri } = this.props;
@@ -78,6 +59,25 @@ export class VideoPlayer extends React.Component<Props, State> {
       </TouchableWithoutFeedback>
     );
   }
+
+  private toggleControls = () => {
+    if (!this.state.playbackStatus.isLoaded) {
+      return;
+    }
+    this.setState({ isShowingControls: !this.state.isShowingControls });
+  };
+
+  private setPlaybackStatusAsync = (playbackStatus: PlaybackStatusToSet) => {
+    this.playbackInstance.setStatusAsync(playbackStatus);
+  };
+
+  private handlePlaybackStatusUpdate = (playbackStatus: PlaybackStatus) => {
+    this.setState({ playbackStatus });
+  };
+
+  private setPlaybackInstance = (playbackInstance: Video) => {
+    this.playbackInstance = playbackInstance;
+  };
 }
 
 const LoadingIndicator = () => <ActivityIndicator size='large' />;

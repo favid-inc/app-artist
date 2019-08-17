@@ -1,83 +1,49 @@
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
+import { Text } from '@kitten/ui';
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import { Alert, RefreshControl, ScrollView } from 'react-native';
 import { NavigationScreenProps } from 'react-navigation';
-import { OrderModel } from '@favid-inc/api';
 
-import { Orders } from './SelectOrder';
-import * as actions from '../../../store/actions';
-import { ScrollView, RefreshControl, View, Alert } from 'react-native';
-import { ThemedComponentProps, ThemeType, withStyles } from 'react-native-ui-kitten/theme';
-import { Text } from 'react-native-ui-kitten/ui';
+import { OrdersContext } from '../context';
 
-interface ContainerProps {
+import { listOrders } from './listOrders';
+import { SelectOrder } from './SelectOrder';
+
+type Props = NavigationScreenProps & ThemedComponentProps;
+
+interface State {
   loading: boolean;
-  artistId: string;
-  onListOrders: (string) => void;
-  onSetCurrentOrder: (order: OrderModel) => void;
-  onDelayOrder: (orderId: string) => void;
-  orders: OrderModel[];
 }
 
-type Props = NavigationScreenProps & ContainerProps & ThemedComponentProps;
+class Container extends Component<Props, State> {
+  static contextType = OrdersContext;
 
-interface ContainerState {
-  showDeclineModal: boolean;
-}
+  public context: React.ContextType<typeof OrdersContext>;
 
-class Container extends Component<Props, ContainerState> {
-  public state: ContainerState = {
-    showDeclineModal: true,
+  public state: State = {
+    loading: false,
   };
 
-  public componentDidMount = () => {
-    this.props.onListOrders(this.props.artistId);
-  };
-
-  private onRefresh = () => this.props.onListOrders(this.props.artistId);
-
-  public onDeclineOrder = (order: OrderModel) => {
-    this.props.onSetCurrentOrder(order);
-    this.props.navigation.navigate('DeclineOrder');
-  };
-
-  public onDelayOrder = (orderId: string) => {
-    Alert.alert(
-      'Adiar pedido?',
-      'Esta ação não poderá ser desfeita.',
-      [
-        {
-          text: 'OK, adiar pedido.',
-          onPress: () => this.props.onDelayOrder(orderId),
-        },
-        {
-          text: 'Não',
-          style: 'cancel',
-        },
-      ],
-      { cancelable: false },
-    );
-  };
-
-  public onAcceptOrder = (order: OrderModel) => {
-    this.props.onSetCurrentOrder(order);
-    this.props.navigation.navigate('RecordOrderVideo');
-  };
+  public componentDidMount() {
+    // this.refresh();
+  }
 
   public render() {
-    const { themedStyle, orders, loading } = this.props;
+    const { themedStyle } = this.props;
+    const { orders } = this.context;
+    const { loading } = this.state;
 
     return (
       <ScrollView
         contentContainerStyle={themedStyle.contentContainer}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={this.onRefresh} />}
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={this.handleRefresh} />}
       >
         {orders && orders.length ? (
-          <Orders
+          <SelectOrder
             loading={loading}
-            orders={orders}
-            onDeclineOrder={this.onDeclineOrder}
-            onDelayOrder={this.onDelayOrder}
-            onAcceptOrder={this.onAcceptOrder}
+            onDeclineOrder={this.handleDeclineOrder}
+            onDelayOrder={this.handleDelayOrder}
+            onAcceptOrder={this.handleAcceptOrder}
           />
         ) : (
           <Text appearance='hint' style={themedStyle.text} category='h6'>
@@ -87,21 +53,47 @@ class Container extends Component<Props, ContainerState> {
       </ScrollView>
     );
   }
+
+  private handleDelayOrder = () => {
+    Alert.alert(
+      'Adiar pedido?',
+      'Esta ação não poderá ser desfeita.',
+      [
+        { text: 'OK, adiar pedido.', onPress: () => this.context.removeSelectedOrder() },
+        { text: 'Não', style: 'cancel' },
+      ],
+      { cancelable: false },
+    );
+  };
+
+  private handleDeclineOrder = () => {
+    this.props.navigation.navigate('DeclineOrder');
+  };
+
+  private handleAcceptOrder = () => {
+    this.props.navigation.navigate('RecordOrderVideo');
+  };
+
+  private handleRefresh = () => {
+    this.refresh();
+  };
+
+  private async refresh() {
+    try {
+      this.context.setSelectedOrder(0);
+      this.context.setOrders([]);
+      this.setState({ loading: true });
+      const orders = await listOrders();
+      this.context.setOrders(orders);
+    } catch (e) {
+      Alert.alert('Erro', 'Desculpe. Houve um erro ao buscar os seus pedidos');
+    } finally {
+      this.setState({ loading: false });
+    }
+  }
 }
 
-const mapStateToProps = ({ order, artist }) => ({
-  loading: order.loading,
-  orders: order.orders,
-  artistId: artist.artist.id,
-});
-
-const mapDispatchToProps = dispatch => ({
-  onListOrders: artistId => dispatch(actions.listOrders(artistId)),
-  onSetCurrentOrder: (order: OrderModel) => dispatch(actions.setCurrentOrder(order)),
-  onDelayOrder: (orderId: string) => dispatch(actions.delayOrder(orderId)),
-});
-
-const ContainerStyled = withStyles(Container, (theme: ThemeType) => ({
+export const SelectOrderContainer = withStyles<{}>(Container, (theme: ThemeType) => ({
   contentContainer: {
     flex: 1,
     backgroundColor: theme['background-basic-color-2'],
@@ -113,8 +105,3 @@ const ContainerStyled = withStyles(Container, (theme: ThemeType) => ({
     textAlign: 'center',
   },
 }));
-
-export const SelectOrderContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ContainerStyled);

@@ -1,14 +1,7 @@
+import { ThemeType, withStyles } from '@kitten/theme';
+import { Avatar, AvatarProps, ButtonProps } from '@kitten/ui';
 import React from 'react';
 import { View } from 'react-native';
-import {
-  ThemeType,
-  withStyles,
-} from '@kitten/theme';
-import {
-  Avatar,
-  AvatarProps,
-  ButtonProps,
-} from '@kitten/ui';
 
 interface ComponentProps {
   button?: () => React.ReactElement<ButtonProps>;
@@ -17,7 +10,16 @@ interface ComponentProps {
 export type ProfilePhotoProps = ComponentProps & AvatarProps;
 
 class ProfilePhotoComponent extends React.Component<ProfilePhotoProps> {
+  public render() {
+    const { style, themedStyle, button, ...restProps } = this.props;
 
+    return (
+      <View style={style}>
+        <Avatar style={[style, themedStyle.avatar]} {...restProps} />
+        {button ? this.renderEditElement() : null}
+      </View>
+    );
+  }
   private renderEditElement = (): React.ReactElement<ButtonProps> => {
     const buttonElement: React.ReactElement<ButtonProps> = this.props.button();
 
@@ -25,20 +27,6 @@ class ProfilePhotoComponent extends React.Component<ProfilePhotoProps> {
       style: [buttonElement.props.style, this.props.themedStyle.editButton],
     });
   };
-
-  public render(): React.ReactNode {
-    const { style, themedStyle, button, ...restProps } = this.props;
-
-    return (
-      <View style={style}>
-        <Avatar
-          style={[style, themedStyle.avatar]}
-          {...restProps}
-        />
-        {button ? this.renderEditElement() : null}
-      </View>
-    );
-  }
 }
 
 export const ProfilePhoto = withStyles(ProfilePhotoComponent, (theme: ThemeType) => ({
@@ -50,4 +38,3 @@ export const ProfilePhoto = withStyles(ProfilePhotoComponent, (theme: ThemeType)
     alignSelf: 'flex-end',
   },
 }));
-

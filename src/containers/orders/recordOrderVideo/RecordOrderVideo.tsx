@@ -1,42 +1,23 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+
+import { OrdersContext } from '../context';
+
 import { Camera } from './Camera';
-import { OrderModel } from '@favid-inc/api';
 
-import * as actions from '../../../store/actions';
-
-interface StoreState {
-  order: OrderModel;
-}
-
-interface StoreDispatch {
-  setCurrentOrder: (order: OrderModel) => void;
-}
-
-interface Props extends StoreState, StoreDispatch {
+interface Props {
   onDone: () => void;
 }
 
-class AbstractRecordOrderVideo extends Component<Props> {
-  onCameraRecord = video => {
-    this.props.setCurrentOrder({ ...this.props.order, video });
-    this.props.onDone();
-  };
+export class RecordOrderVideo extends Component<Props> {
+  static contextType = OrdersContext;
+  public context: React.ContextType<typeof OrdersContext>;
 
   public render(): React.ReactNode {
-    return <Camera onRecord={this.onCameraRecord} />;
+    return <Camera onRecord={this.handleCameraRecord} />;
   }
+
+  private handleCameraRecord = (videoUri: string) => {
+    this.context.patchOrder({ videoUri });
+    this.props.onDone();
+  };
 }
-
-const mapStateToProps = ({ order }) => ({
-  order: order.currentOrder,
-} as StoreState);
-
-const mapDispatchToProps = dispatch => ({
-  setCurrentOrder: (order: OrderModel) => dispatch(actions.setCurrentOrder(order)),
-} as StoreDispatch);
-
-export const RecordOrderVideo = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(AbstractRecordOrderVideo);

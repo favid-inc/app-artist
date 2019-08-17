@@ -1,18 +1,18 @@
-import React from 'react';
-import {
-  FlexStyle,
-  Platform,
-} from 'react-native';
 import {
   ThemedComponentProps,
   ThemeType,
   withStyles,
 } from '@kitten/theme';
-import { ShowcaseSectionProps } from './showcaseSection.component';
 import {
   ScrollableAvoidKeyboard,
   ScrollableAvoidKeyboardProps,
 } from '@src/components/common';
+import React from 'react';
+import {
+  FlexStyle,
+  Platform,
+} from 'react-native';
+import { ShowcaseSectionProps } from './showcaseSection.component';
 
 interface ComponentProps {
   children?: ChildrenProp;
@@ -30,6 +30,19 @@ class ShowcaseComponent extends React.Component<ShowcaseProps> {
     ios: 0,
     android: 228,
   });
+
+  public render(): React.ReactNode {
+    const { style, themedStyle, children, ...restProps } = this.props;
+
+    return (
+      <ScrollableAvoidKeyboard
+        style={[themedStyle.container, style]}
+        extraScrollHeight={this.keyboardOffset}
+        {...restProps}>
+        {this.renderSections(children)}
+      </ScrollableAvoidKeyboard>
+    );
+  }
 
   private isLastItem = (index: number): boolean => {
     const { children } = this.props;
@@ -50,19 +63,6 @@ class ShowcaseComponent extends React.Component<ShowcaseProps> {
   private renderSections = (source: ChildrenProp): ShowcaseSectionElement[] => {
     return React.Children.map(source, this.renderSection);
   };
-
-  public render(): React.ReactNode {
-    const { style, themedStyle, children, ...restProps } = this.props;
-
-    return (
-      <ScrollableAvoidKeyboard
-        style={[themedStyle.container, style]}
-        extraScrollHeight={this.keyboardOffset}
-        {...restProps}>
-        {this.renderSections(children)}
-      </ScrollableAvoidKeyboard>
-    );
-  }
 }
 
 export const Showcase = withStyles(ShowcaseComponent, (theme: ThemeType) => ({

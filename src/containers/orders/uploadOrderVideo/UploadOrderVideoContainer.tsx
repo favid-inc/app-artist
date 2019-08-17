@@ -1,13 +1,9 @@
 import React, { Component } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { NavigationScreenProps } from 'react-navigation';
 import { UploadOrderVideo } from './UploadOrderVideo';
-import { StyleSheet, View } from 'react-native';
 
 export class UploadOrderVideoContainer extends Component<NavigationScreenProps> {
-  private handleOnDone = () => {
-    this.props.navigation.navigate('SelectOrder');
-  };
-
   public render(): React.ReactNode {
     return (
       <View style={styles.container}>
@@ -15,6 +11,9 @@ export class UploadOrderVideoContainer extends Component<NavigationScreenProps> 
       </View>
     );
   }
+  private handleOnDone = () => {
+    this.props.navigation.navigate('SelectOrder');
+  };
 }
 
 const styles = StyleSheet.create({

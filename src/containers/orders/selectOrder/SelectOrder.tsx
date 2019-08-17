@@ -1,62 +1,42 @@
+import { Order } from '@favid-inc/api';
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
+import { Button, Text } from '@kitten/ui';
+import { CloseIconOutline, EvaCheckmarkOutline } from '@src/assets/icons';
+import { SwiperComponent, textStyle } from '@src/components/common';
 import React, { Component } from 'react';
-import { OrderModel } from '@favid-inc/api';
-import { Text, Button } from '@kitten/ui';
-import { View, ActivityIndicator } from 'react-native';
-import { withStyles, ThemeType, ThemedComponentProps, StyleType } from '@kitten/theme';
-import { textStyle, SwiperComponent , ActivityAuthoring } from '@src/components/common';
-import { EvaCheckmarkOutline, CloseIconOutline } from '@src/assets/icons';
+import { ActivityIndicator, View } from 'react-native';
+
+import { OrdersContext } from '../context';
+
 interface ComponentProps {
-  orders: OrderModel[];
   loading: boolean;
-  onDeclineOrder: (order: OrderModel) => void;
-  onDelayOrder: (orderId: string) => void;
-  onAcceptOrder: (order: OrderModel) => void;
+  onDeclineOrder: () => void;
+  onDelayOrder: () => void;
+  onAcceptOrder: () => void;
 }
 
-interface State {
-  selectedOrder: number;
-}
+type Props = ComponentProps & ThemedComponentProps;
 
-type OrdersProps = ComponentProps & ThemedComponentProps;
-
-class AbstractSelectOrder extends Component<OrdersProps, State> {
-  public state: State = {
-    selectedOrder: 0,
-  };
-  public onDeclineOrder = () => {
-    const order: OrderModel = this.props.orders[this.state.selectedOrder];
-    this.props.onDeclineOrder(order);
-  };
-
-  public onDelayOrder = () => {
-    const order: OrderModel = this.props.orders[this.state.selectedOrder];
-    this.props.onDelayOrder(order.id);
-  };
-
-  public onAcceptOrder = () => {
-    const order: OrderModel = this.props.orders[this.state.selectedOrder];
-    this.props.onAcceptOrder(order);
-  };
-  public onSelectedOrderChanged = (i: number) => {
-    this.setState({ selectedOrder: i });
-  };
+class SelectOrderComponent extends Component<Props> {
+  static contextType = OrdersContext;
+  public context: React.ContextType<typeof OrdersContext>;
 
   public render() {
-    const { themedStyle, loading, orders } = this.props;
+    const { themedStyle, loading } = this.props;
 
     return (
       <View style={themedStyle.container}>
         <View style={themedStyle.swiperWrapper}>
-        {
-          loading
-          ? <LoadingOrders themedStyle={themedStyle} />
-          : <SwipeOrders
-              orders={this.props.orders}
+          {loading ? (
+            <LoadingOrders themedStyle={themedStyle} />
+          ) : (
+            <SwipeOrders
+              orders={this.context.orders}
               themedStyle={themedStyle}
-              onSelectedOrderChanged={this.onSelectedOrderChanged}
-              title={`${this.state.selectedOrder + 1} de ${(this.props.orders && this.props.orders.length) || 0}`}
+              onSelectedOrderChanged={this.handleSelectedOrderChanged}
+              title={`${this.context.selectedOrder + 1} de ${this.context.orders.length}`}
             />
-        }
+          )}
         </View>
         <View style={themedStyle.buttonsWrapper}>
           <View style={themedStyle.buttons}>
@@ -67,7 +47,7 @@ class AbstractSelectOrder extends Component<OrdersProps, State> {
               appearance='outline'
               icon={CloseIconOutline}
               disabled={this.props.loading}
-              onPress={this.onDeclineOrder}
+              onPress={this.handleDeclineOrder}
             />
             <Button
               style={themedStyle.button}
@@ -75,7 +55,7 @@ class AbstractSelectOrder extends Component<OrdersProps, State> {
               size='large'
               appearance='outline'
               disabled={this.props.loading}
-              onPress={this.onDelayOrder}
+              onPress={this.handleDelayOrder}
             >
               adiar
             </Button>
@@ -86,21 +66,38 @@ class AbstractSelectOrder extends Component<OrdersProps, State> {
               appearance='outline'
               icon={EvaCheckmarkOutline}
               disabled={this.props.loading}
-              onPress={this.onAcceptOrder}
+              onPress={this.handleAcceptOrder}
             />
           </View>
         </View>
       </View>
     );
   }
+
+  private handleDeclineOrder = () => {
+    this.props.onDeclineOrder();
+  };
+
+  private handleDelayOrder = () => {
+    this.props.onDelayOrder();
+  };
+
+  private handleAcceptOrder = () => {
+    this.props.onAcceptOrder();
+  };
+
+  private handleSelectedOrderChanged = (i: number) => {
+    this.context.setSelectedOrder(i);
+  };
 }
+
 const SwipeOrders = ({ themedStyle, orders, title, onSelectedOrderChanged }) => (
   <View style={themedStyle.swiperWrapper}>
     <Text style={themedStyle.title} appearance='hint'>
       {title}
     </Text>
-    <SwiperComponent selectedOrderChanged={i => onSelectedOrderChanged(i)}>
-      {orders.map((order: OrderModel, index: number) => {
+    <SwiperComponent selectedOrderChanged={onSelectedOrderChanged}>
+      {orders.map((order: Order) => {
         return (
           <View key={order.id} style={themedStyle.slide}>
             <Text style={[themedStyle.price, themedStyle.text]} appearance='hint' category='h5'>
@@ -110,10 +107,10 @@ const SwipeOrders = ({ themedStyle, orders, title, onSelectedOrderChanged }) => 
               {`por ${order.customerName}`}
             </Text>
             <Text style={[themedStyle.text, themedStyle.expiration]} appearance='hint' category='c1'>
-              {`expira em ${new Date(order.creationDate)}`}
+              {`expira em ${new Date(order.statusPlacedDate)}`}
             </Text>
             <Text style={[themedStyle.text, themedStyle.instruction]} appearance='hint' category='h6'>
-              {order.videoInstructions}
+              {order.instructions}
             </Text>
           </View>
         );
@@ -121,6 +118,7 @@ const SwipeOrders = ({ themedStyle, orders, title, onSelectedOrderChanged }) => 
     </SwiperComponent>
   </View>
 );
+
 const LoadingOrders = ({ themedStyle }) => (
   <View style={themedStyle.swiperWrapper}>
     <Text style={themedStyle.title} appearance='hint'>
@@ -132,7 +130,7 @@ const LoadingOrders = ({ themedStyle }) => (
   </View>
 );
 
-export const Orders = withStyles(AbstractSelectOrder, (theme: ThemeType) => ({
+export const SelectOrder = withStyles<ComponentProps>(SelectOrderComponent, (theme: ThemeType) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',

@@ -1,9 +1,9 @@
-import React from 'react';
-import { SafeAreaView } from '@src/core/navigation';
-import { ThemeProvider, ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
+import { ThemedComponentProps, ThemeProvider, ThemeType, withStyles } from '@kitten/theme';
 import { BottomNavigation, BottomNavigationTab } from '@kitten/ui';
 import { ListIconFill, PersonIconFill } from '@src/assets/icons';
+import { SafeAreaView } from '@src/core/navigation';
 import { themes } from '@src/core/themes';
+import React from 'react';
 
 interface ComponentProps {
   selectedIndex: number;
@@ -13,9 +13,6 @@ interface ComponentProps {
 type Props = ThemedComponentProps & ComponentProps;
 
 class MenuComponent extends React.Component<Props> {
-  private onTabSelect = (index: number) => {
-    this.props.onTabSelect(index);
-  };
 
   public render(): React.ReactNode {
     const { selectedIndex, themedStyle } = this.props;
@@ -31,6 +28,9 @@ class MenuComponent extends React.Component<Props> {
       </SafeAreaView>
     );
   }
+  private onTabSelect = (index: number) => {
+    this.props.onTabSelect(index);
+  };
 }
 
 export const Menu = withStyles(MenuComponent, (theme: ThemeType) => ({

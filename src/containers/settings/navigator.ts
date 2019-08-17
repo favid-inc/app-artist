@@ -1,6 +1,6 @@
-import { NavigationContainer, createStackNavigator, NavigationRouteConfigMap } from 'react-navigation';
-import { SettingsContainer } from './SettingsContainer';
+import { createStackNavigator, NavigationContainer, NavigationRouteConfigMap } from 'react-navigation';
 import { AccountNavigation } from './account';
+import { SettingsContainer } from './SettingsContainer';
 
 export const SettingsNavigator: NavigationContainer = createStackNavigator(
   {

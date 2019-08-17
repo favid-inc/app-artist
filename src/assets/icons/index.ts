@@ -1,5 +1,5 @@
 import { ImageStyle, StyleProp } from 'react-native';
-import { Icon, IconElement, IconSource, RemoteIcon } from './icon.component';
+import { Icon, IconElement, IconSource } from './icon.component';
 
 export const MenuIconAuth = (style: StyleProp<ImageStyle>): IconElement => {
   const source: IconSource = {

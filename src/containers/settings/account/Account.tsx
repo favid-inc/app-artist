@@ -1,48 +1,115 @@
-import React from 'react';
-import { ButtonProps, View } from 'react-native';
+import { Artist } from '@favid-inc/api';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
-import { Button, Text } from '@kitten/ui';
-import { ProfileSetting } from './profileSetting.component';
-import { ProfilePhoto } from './profilePhoto.component';
-import { CameraIconFill } from '@src/assets/icons';
-import { ContainerView, textStyle, ValidationInput } from '@src/components/common';
-import { ArtistModel } from '@favid-inc/api';
-import { NameValidator, StringValidator } from '@src/core/validators';
-import { TextInput } from 'react-native-gesture-handler';
+import { Button } from '@kitten/ui';
+import React from 'react';
+import { ActivityIndicator, Alert, ButtonProps, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
-interface ComponentProps {
+import { CameraIconFill } from '@src/assets/icons';
+import { ContainerView, textStyle } from '@src/components/common';
+
+import { ArtistForm } from './ArtistForm';
+import { ProfileInfo } from './ProfileInfo';
+import { ProfilePhoto } from './ProfilePhoto';
+
+import { loadProfile } from './loadProfile';
+import { updateProfile } from './updateProfile';
+
+export type Props = ThemedComponentProps;
+
+interface State {
+  artist: Artist;
   loading: boolean;
-  artist: ArtistModel;
-  onUploadPhotoButtonPress: () => void;
-  onSave: (artist: ArtistModel, artistId: string) => void;
 }
 
-export type AccountProps = ThemedComponentProps & ComponentProps;
-
-export interface State {
-  artist: ArtistModel;
-}
-
-class Accountomponent extends React.Component<AccountProps, State> {
+class AccountComponent extends React.Component<Props, State> {
   public state: State = {
-    artist: {
-      name: '',
-      artisticName: '',
-      price: 0,
-      about: '',
-      mainCategory: '',
-      location: '',
-      responseTime: 0,
-    },
+    artist: null,
+    loading: null,
   };
 
-  private onSave = () => {
-    this.props.onSave(this.state.artist, this.state.artist.id);
+  private isLive: boolean = true;
+
+  public componentWillUnmount() {
+    this.isLive = false;
+  }
+
+  public async componentWillMount() {
+    try {
+      this.setState({ loading: true });
+      const artist = await loadProfile();
+      if (this.isLive) {
+        this.setState({ artist });
+      }
+    } catch (e) {
+      Alert.alert('Erro', 'Infelizmente os dados do seu perfil não puderam ser carregados.');
+    } finally {
+      if (this.isLive) {
+        this.setState({ loading: false });
+      }
+    }
+  }
+
+  public render() {
+    const { themedStyle } = this.props;
+    const { artist, loading } = this.state;
+
+    if (loading) {
+      return <ActivityIndicator style={themedStyle.container} size='large' />;
+    }
+    if (!artist) {
+      return <View />;
+    }
+
+    return (
+      <KeyboardAwareScrollView>
+        <ContainerView style={themedStyle.container}>
+          <View style={themedStyle.photoSection}>
+            <ProfilePhoto
+              style={themedStyle.photo}
+              source={{ uri: artist.photoUri, height: 100, width: 100 }}
+              button={this.renderPhotoButton}
+            />
+          </View>
+
+          <View style={themedStyle.infoSection}>
+            <ProfileInfo hint='Email' value={artist.email} />
+            <ProfileInfo hint='Nome' value={artist.name} />
+            <ArtistForm artist={artist} />
+          </View>
+
+          <Button
+            style={themedStyle.button}
+            textStyle={textStyle.button}
+            size='large'
+            status='info'
+            onPress={this.handleSaveClick}
+            disabled={loading}
+          >
+            {loading ? 'Enviando dados...' : 'Salvar'}
+          </Button>
+        </ContainerView>
+      </KeyboardAwareScrollView>
+    );
+  }
+
+  private handleSaveClick = async () => {
+    try {
+      const artist = await updateProfile(this.state.artist);
+      if (this.isLive) {
+        this.setState({ artist });
+      }
+    } catch (e) {
+      Alert.alert('Erro', 'Infelizmente os dados do seu perfil não puderam ser salvos.');
+    } finally {
+      if (this.isLive) {
+        this.setState({ loading: false });
+      }
+    }
   };
 
   private onPhotoButtonPress = () => {
-    this.props.onUploadPhotoButtonPress();
+    // this.props.onUploadPhotoButtonPress();
   };
 
   private renderPhotoButton = (): React.ReactElement<ButtonProps> => {
@@ -57,94 +124,9 @@ class Accountomponent extends React.Component<AccountProps, State> {
       />
     );
   };
-
-  public componentWillMount() {
-    this.setState({ artist: { ...this.props.artist } });
-  }
-
-  public render(): React.ReactNode {
-    const { themedStyle, artist } = this.props;
-    const imageSource = {
-      uri: artist.photo,
-      height: 100,
-      width: 100,
-    };
-    return (
-      <KeyboardAwareScrollView>
-        <ContainerView style={themedStyle.container}>
-          <View style={themedStyle.photoSection}>
-            <ProfilePhoto style={themedStyle.photo} source={imageSource} button={this.renderPhotoButton} />
-          </View>
-          <View style={themedStyle.infoSection}>
-            <ProfileSetting style={themedStyle.profileSetting} hint='Email' value={artist.email} />
-            <ProfileSetting style={themedStyle.profileSetting} hint='Nome' value={artist.name} />
-            <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-              <ValidationInput
-                value={this.state.artist.artisticName}
-                style={themedStyle.input}
-                textStyle={[textStyle.paragraph, themedStyle.inputText]}
-                labelStyle={textStyle.label}
-                placeholder='Nome Artístico'
-                validator={NameValidator}
-                onChangeText={artisticName => this.setState({ artist: { ...this.state.artist, artisticName } })}
-              />
-            </View>
-            <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-              <ValidationInput
-                value={`${this.state.artist.price}`}
-                style={themedStyle.input}
-                textStyle={[textStyle.paragraph, themedStyle.inputText]}
-                labelStyle={textStyle.label}
-                placeholder='Preço'
-                validator={StringValidator}
-                onChangeText={price => this.setState({ artist: { ...this.state.artist, price: parseFloat(price) } })}
-              />
-            </View>
-            <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-              <ValidationInput
-                value={this.state.artist.mainCategory}
-                style={themedStyle.input}
-                textStyle={[textStyle.paragraph, themedStyle.inputText]}
-                labelStyle={textStyle.label}
-                placeholder='Grupo'
-                validator={NameValidator}
-                onChangeText={mainCategory => this.setState({ artist: { ...this.state.artist, mainCategory } })}
-              />
-            </View>
-            <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-              <TextInput
-                style={themedStyle.inputMultiLine}
-                multiline={true}
-                numberOfLines={4}
-                placeholderTextColor='#8893ab'
-                placeholder='Biografia'
-                maxLength={240}
-                onChangeText={about => this.setState({ artist: { ...this.state.artist, about } })}
-                value={this.state.artist.about}
-              />
-            </View>
-            <Text appearance='hint' style={themedStyle.text}>
-              {`${240 - this.state.artist.about.length} Caracteres restantes`}
-            </Text>
-
-            <Button
-              style={themedStyle.button}
-              textStyle={textStyle.button}
-              size='large'
-              status='info'
-              onPress={this.onSave}
-              disabled={this.props.loading}
-            >
-              {this.props.loading ? 'Enviar dados...' : 'Salvar'}
-            </Button>
-          </View>
-        </ContainerView>
-      </KeyboardAwareScrollView>
-    );
-  }
 }
 
-export const Account = withStyles(Accountomponent, (theme: ThemeType) => ({
+export const Account = withStyles(AccountComponent, (theme: ThemeType) => ({
   container: {
     flex: 1,
     backgroundColor: theme['background-basic-color-2'],
@@ -153,45 +135,8 @@ export const Account = withStyles(Accountomponent, (theme: ThemeType) => ({
     marginVertical: 20,
   },
   infoSection: {
-    marginTop: 24,
+    marginVertical: 20,
     backgroundColor: theme['background-basic-color-1'],
-  },
-  contactSection: {
-    marginTop: 24,
-    backgroundColor: theme['background-basic-color-1'],
-  },
-  profileSetting: {
-    borderBottomWidth: 1,
-    borderBottomColor: theme['border-basic-color-2'],
-  },
-  middleContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-  },
-  inputText: {
-    color: theme['text-alternative-color'],
-  },
-  input: {
-    flexWrap: 'wrap',
-    flex: 1,
-    backgroundColor: theme['background-alternative-color-1'],
-    borderColor: theme['text-alternative-color'],
-  },
-  inputMultiLine: {
-    flexWrap: 'wrap',
-    flex: 1,
-    backgroundColor: theme['background-alternative-color-1'],
-    height: 150,
-    borderRadius: 5,
-    borderColor: theme['text-alternative-color'],
-    borderWidth: 1,
-    padding: 10,
-    fontSize: 17,
-    fontFamily: 'opensans-regular',
-    width: '100%',
   },
   photo: {
     width: 124,
@@ -209,10 +154,5 @@ export const Account = withStyles(Accountomponent, (theme: ThemeType) => ({
   button: {
     marginHorizontal: 24,
     marginVertical: 24,
-  },
-  text: {
-    width: '100%',
-    textAlign: 'center',
-    fontFamily: 'opensans-regular',
   },
 }));

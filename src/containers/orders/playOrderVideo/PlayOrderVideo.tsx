@@ -1,46 +1,30 @@
+import { Order } from '@favid-inc/api';
+import { Button } from '@kitten/ui';
 import * as firebase from 'firebase';
-import { connect } from 'react-redux';
 import React, { Component } from 'react';
-import { OrderModel } from '@favid-inc/api';
-import { Button } from 'react-native-ui-kitten';
-import { Dimensions, View, StyleSheet, Text } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
+
+import { OrdersContext } from '../context';
 
 import { VideoPlayer } from './videoPlayer';
 
-interface StoreState {
-  order: OrderModel;
-}
-
-interface Props extends StoreState {
+interface Props {
   onRedo: () => void;
   onUpload: () => void;
 }
 
-class AbstractPlayOrderVideo extends Component<Props> {
-  private handleRedoClick = () => {
-    this.props.onRedo();
-  };
+export class PlayOrderVideo extends Component<Props> {
+  static contextType = OrdersContext;
+  public context: React.ContextType<typeof OrdersContext>;
 
-  private handleUploadClick = () => {
-    this.props.onUpload();
-  };
-
-  public componentDidMount() {
-    this.props.order.video || this.props.onRedo();
-  }
-
-  public render(): React.ReactNode {
-    const { order } = this.props;
-
-    if (!order) {
-      return <View />;
-    }
+  public render() {
+    const { order } = this.context;
 
     return (
       <View style={styles.container}>
         <Row>
           <Col>
-            <OrderVideoPlayer order={this.props.order} />
+            <OrderVideoPlayer order={order} />
           </Col>
         </Row>
         <View style={styles.toolbar}>
@@ -56,10 +40,17 @@ class AbstractPlayOrderVideo extends Component<Props> {
       </View>
     );
   }
+  private handleRedoClick = () => {
+    this.props.onRedo();
+  };
+
+  private handleUploadClick = () => {
+    this.props.onUpload();
+  };
 }
 
-function OrderVideoPlayer({ order }: { order: OrderModel }) {
-  const video = `${order.video}`;
+function OrderVideoPlayer({ order }: { order: Order }) {
+  const video = `${order.videoUri}`;
   const [uri, setUri] = React.useState<string>(video);
 
   React.useEffect(() => {
@@ -74,7 +65,7 @@ function OrderVideoPlayer({ order }: { order: OrderModel }) {
 
         setUri(downloadUrl);
       } catch (e) {
-        console.error(e);
+        // console.error(e);
       }
     })();
   }, [video]);
@@ -85,13 +76,6 @@ function OrderVideoPlayer({ order }: { order: OrderModel }) {
 
   return <VideoPlayer uri={uri} />;
 }
-
-const mapStateToProps = ({ order }) =>
-  ({
-    order: order.currentOrder,
-  } as StoreState);
-
-export const PlayOrderVideo = connect(mapStateToProps)(AbstractPlayOrderVideo);
 
 const Row = ({ children }) => <View style={styles.row}>{children}</View>;
 

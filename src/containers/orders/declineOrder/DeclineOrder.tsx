@@ -1,60 +1,50 @@
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
+import { Button, Text } from '@kitten/ui';
 import React, { Component } from 'react';
-import { ThemedComponentProps, withStyles, ThemeType } from 'react-native-ui-kitten/theme';
+import { TextInput, View } from 'react-native';
+
 import { ContainerView } from '@src/components/common';
-import { View, TextInput } from 'react-native';
-import { Button, Text } from 'react-native-ui-kitten/ui';
 
 interface State {
+  description: string;
+  errors: string[];
   sended: boolean;
-  refusedByArtistDescription: string;
 }
 
 interface Props {
-  onDeclineOrder: (refusedByArtistDescription: string) => void;
-  onGoback: () => void;
+  onDecline: (description: string) => void;
+  onCancel: () => void;
 }
 
 class DeclineOrderComponent extends Component<ThemedComponentProps & Props, State> {
   public state: State = {
+    description: '',
+    errors: [],
     sended: false,
-    refusedByArtistDescription: '',
   };
-
-  public refusedByArtistDescriptionError(): string[] {
-    const errors: string[] = [];
-    if (!this.state.sended) {
-      return errors;
-    }
-    !this.state.refusedByArtistDescription.length && errors.push('Informe o motivo de recusar o pedido.');
-    return errors;
-  }
-
-  public onDeclineOrder() {
-    this.setState({ sended: true });
-    if (this.state.refusedByArtistDescription.length) {
-      this.props.onDeclineOrder(this.state.refusedByArtistDescription);
-    }
-  }
 
   public render() {
     const { themedStyle } = this.props;
+
     return (
       <ContainerView style={themedStyle.container} contentContainerStyle={themedStyle.contentContainer}>
         <View style={themedStyle.contentContainer}>
           <View style={themedStyle.middleContainer}>
             <Text category='h4'>Recusar Pedido</Text>
           </View>
+
           <View style={themedStyle.middleContainer}>
             <TextInput
               style={themedStyle.input}
               multiline={true}
               numberOfLines={4}
-              onChangeText={refusedByArtistDescription => this.setState({ refusedByArtistDescription })}
-              value={this.state.refusedByArtistDescription}
+              onChangeText={this.handleDescriptionChange}
+              value={this.state.description}
             />
           </View>
+
           <View style={themedStyle.middleContainer}>
-            {this.refusedByArtistDescriptionError().map(error => (
+            {this.state.errors.map((error) => (
               <Text style={themedStyle.error} category='label'>
                 {error}
               </Text>
@@ -66,7 +56,7 @@ class DeclineOrderComponent extends Component<ThemedComponentProps & Props, Stat
               size='giant'
               appearance='outline'
               style={themedStyle.button}
-              onPress={() => this.onDeclineOrder()}
+              onPress={this.handleOnDecline}
             >
               Recusar Pedido
             </Button>
@@ -77,7 +67,7 @@ class DeclineOrderComponent extends Component<ThemedComponentProps & Props, Stat
               size='giant'
               appearance='ghost'
               style={themedStyle.button}
-              onPress={() => this.props.onGoback()}
+              onPress={this.handleOnCancel}
             >
               Cancelar
             </Button>
@@ -86,6 +76,35 @@ class DeclineOrderComponent extends Component<ThemedComponentProps & Props, Stat
       </ContainerView>
     );
   }
+
+  private validade(): string[] {
+    const errors: string[] = [];
+    if (!this.state.description) {
+      errors.push('Informe o motivo de recusar o pedido.');
+    }
+
+    return errors;
+  }
+
+  private handleDescriptionChange = (description) => {
+    this.setState({ description });
+  };
+
+  private handleOnDecline = () => {
+    this.setState({ sended: true });
+
+    const errors = this.validade();
+
+    this.setState({ errors });
+
+    if (!errors.length) {
+      this.props.onDecline(this.state.description);
+    }
+  };
+
+  private handleOnCancel = () => {
+    this.props.onCancel();
+  };
 }
 
 export const DeclineOrder = withStyles(DeclineOrderComponent, (theme: ThemeType) => ({

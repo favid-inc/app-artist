@@ -30,7 +30,7 @@ export const CardholderNameFormatter = (value: string): string => {
   return value.toLocaleUpperCase();
 };
 
-export const currencyFormatter = value => {
+export const currencyFormatter = (value) => {
   if (!value) {
     return 'R$ 0.00';
   }
