@@ -12,6 +12,8 @@ interface ComponentProps {
 export type Props = ComponentProps & ThemedComponentProps & ViewProps;
 
 class BankCardComponent extends React.Component<Props> {
+  static contextType = SettingsContext;
+  public context: React.ContextType<typeof SettingsContext>;
   public isProcessing = (): boolean => {
     const { payment } = this.context;
     return payment && payment.status === 'processing';
@@ -27,7 +29,7 @@ class BankCardComponent extends React.Component<Props> {
   };
 
   public render() {
-    const { style, themedStyle, ...restProps } = this.props;
+    const { themedStyle } = this.props;
     const { payment } = this.context;
     const isProcessing = this.isProcessing();
     return this.hasPayment() ? (

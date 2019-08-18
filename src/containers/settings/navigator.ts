@@ -10,8 +10,8 @@ import { TopBarNavigationOptions } from '@src/core/navigation/options';
 export const SettingsNavigator = connect(
   createStackNavigator(
     {
-      "Configurações": SettingsContainer,
-      "Conta": AccountContainer,
+      'Configurações': SettingsContainer,
+      'Conta': AccountContainer,
       'Minha Carteira': MyWalletContainer,
       'Dados Bancários': MyWalletForm,
       'Transferir Dinheiro': Transfer,

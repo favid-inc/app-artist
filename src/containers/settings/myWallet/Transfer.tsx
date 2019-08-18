@@ -1,11 +1,7 @@
 import React from 'react';
-import axios from 'axios';
-import { VALUE_REGEX, NUMBER_REGEX } from '../../../core/formatters';
+import { VALUE_REGEX } from '../../../core/formatters';
 import validate from 'validate.js';
-import { RadioGroup } from './RadioGroup';
-import { constraints } from './constraints';
 import { SettingsContext } from '../context';
-import { validation } from '../../../core/validators';
 import { NavigationScreenProps } from 'react-navigation';
 import { Button, Text } from 'react-native-ui-kitten/ui';
 import { View, ViewProps, Alert, Platform } from 'react-native';
@@ -136,7 +132,7 @@ class TransferComponent extends React.Component<Props, State> {
 
   private isInValid = () => {
     const { model } = this.state;
-    console.log('isInvalid', model);
+    // console.log('isInvalid', model);
     const m = {
       ...model,
     };
@@ -150,7 +146,7 @@ class TransferComponent extends React.Component<Props, State> {
         },
       },
     });
-    console.log('errprs', errors);
+    // console.log('errprs', errors);
     this.setState({ validation: { ...errors } });
     return Boolean(errors);
   };

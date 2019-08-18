@@ -157,7 +157,6 @@ class MyWalletFormComponent extends React.Component<Props, State> {
       this.onChange({ cep, address: logradouro, city: localidade, state: uf });
     } catch (error) {
       this.onChange({ cep });
-      console.error(error);
     }
   };
 
