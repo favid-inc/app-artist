@@ -10,10 +10,9 @@ import {
 
 import { MenuNavigator } from '@src/containers/menu';
 import { OrdersNavigator } from '@src/containers/orders';
+import { SettingsNavigator } from '@src/containers/settings';
 import { SignInContainer } from '@src/containers/signin/SignInContainer';
 import { AuthContext } from '@src/core/auth';
-
-import { SettingsNavigationMap } from '../../containers/settings';
 
 const SignInNavigator: NavigationContainer = createStackNavigator(
   {
@@ -31,7 +30,7 @@ const AppNavigator: NavigationContainer = createStackNavigator(
   {
     ['Home']: MenuNavigator,
     OrdersNavigator,
-    ...SettingsNavigationMap,
+    SettingsNavigator,
   },
   {
     headerMode: 'screen',
