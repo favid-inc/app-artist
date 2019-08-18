@@ -3,7 +3,7 @@ import { Button } from '@kitten/ui';
 import React from 'react';
 import { View } from 'react-native';
 
-import { LogOutIconFill as logOutIconFill, PersonIconFill } from '@src/assets/icons';
+import { BookFill, LogOutIconFill as logOutIconFill, PersonIconFill } from '@src/assets/icons';
 import { AuthContext } from '@src/core/auth';
 
 interface Props {
@@ -18,13 +18,19 @@ class SettingsComponent extends React.Component<SettingsComponentProps> {
 
     return (
       <View style={themedStyle.container}>
+        <NavigateToMyWalletButton themedStyle={themedStyle} onNavigate={this.handleNavigateToMyWallet} />
         <NavigateToAccountButton themedStyle={themedStyle} onNavigate={this.handleNavigateToAccount} />
         <SigOutButton themedStyle={themedStyle} />
       </View>
     );
   }
+
   private handleNavigateToAccount = () => {
     this.props.onNavigate('Conta');
+  };
+
+  private handleNavigateToMyWallet = () => {
+    this.props.onNavigate('Minha Carteira');
   };
 }
 
@@ -32,6 +38,13 @@ const NavigateToAccountButton = ({ themedStyle, onNavigate }) => {
   return (
     <Button status='info' style={themedStyle.Button} onPress={onNavigate} icon={PersonIconFill} size='giant'>
       Conta
+    </Button>
+  );
+};
+const NavigateToMyWalletButton = ({ themedStyle, onNavigate }) => {
+  return (
+    <Button status='info' style={themedStyle.Button} onPress={onNavigate} icon={BookFill} size='giant'>
+      Minha Carteira
     </Button>
   );
 };

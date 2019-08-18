@@ -1,1 +1,1 @@
-export { SettingsNavigator, SettingsNavigationMap } from './navigator';
+export * from './navigator';
