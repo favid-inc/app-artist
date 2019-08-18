@@ -1,19 +1,28 @@
 import React from 'react';
 import { View } from 'react-native';
-import {} from './MyWallet';
+import { ThemedComponentProps, ThemeType, withStyles } from 'react-native-ui-kitten/theme';
+import { NavigationScreenProps } from 'react-navigation';
+import { MyWallet } from './MyWallet';
 type Props = ThemedComponentProps & NavigationScreenProps;
 
-class AccountContainerComponent extends React.Component<Props> {
+import { SettingsContext } from '../context';
+
+class MyWalletContainerComponent extends React.Component<Props> {
+  static contextType = SettingsContext;
+  public context: React.ContextType<typeof SettingsContext>;
   public render() {
     return (
       <View style={this.props.themedStyle.container}>
-        <MyWallet />
+        <MyWallet onNavigate={this.onNavigate} />
       </View>
     );
   }
+  private onNavigate = (pathName: string): void => {
+    this.props.navigation.navigate(pathName);
+  };
 }
 
-export const AccountContainer = withStyles(AccountContainerComponent, (theme: ThemeType) => ({
+export const MyWalletContainer = withStyles(MyWalletContainerComponent, (theme: ThemeType) => ({
   container: {
     flex: 1,
     backgroundColor: theme['background-basic-color-2'],
