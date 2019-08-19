@@ -19,7 +19,7 @@ interface State {
   termsAccepted: boolean;
 }
 
-class SignInContainerComponent extends React.Component<Props, State> {
+class AuthContainerComponent extends React.Component<Props, State> {
   static contextType = AuthContext;
   public context: React.ContextType<typeof AuthContext>;
 
@@ -100,7 +100,7 @@ class SignInContainerComponent extends React.Component<Props, State> {
   };
 }
 
-export const SignInContainer = withStyles(SignInContainerComponent, (theme: ThemeType) => ({
+export const AuthContainer = withStyles(AuthContainerComponent, (theme: ThemeType) => ({
   container: {
     flex: 1,
     backgroundColor: theme['background-basic-color-2'],

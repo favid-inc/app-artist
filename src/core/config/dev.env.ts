@@ -20,7 +20,3 @@ export const auth = {
     scopes: ['profile', 'email'],
   },
 };
-
-export const storageKeys = {
-  currentUser: 'current_user',
-};

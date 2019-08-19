@@ -8,7 +8,7 @@ import {
   NavigationState,
 } from 'react-navigation';
 
-import { SignInContainer } from '@src/containers/auth/AuthContainer';
+import { AuthContainer } from '@src/containers/auth';
 import { MenuNavigator } from '@src/containers/menu';
 import { OrdersNavigator } from '@src/containers/orders';
 import { AuthContext } from '@src/core/auth';
@@ -17,7 +17,7 @@ import { SettingsNavigationMap } from '../../containers/settings';
 
 const SignInNavigator: NavigationContainer = createStackNavigator(
   {
-    ['Sign In']: SignInContainer,
+    ['Sign In']: AuthContainer,
   },
   {
     headerMode: 'screen',
