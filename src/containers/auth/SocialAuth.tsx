@@ -11,7 +11,6 @@ import { SocialButton } from './SocialAuthButton';
 interface ComponentProps {
   hint?: string;
   hintStyle?: StyleProp<TextStyle>;
-  iconStyle?: StyleProp<ImageStyle>;
   onGoogleSignIn: () => void;
   onFacebookSignIn: () => void;
 }
@@ -20,25 +19,15 @@ export type SocialAuthProps = ThemedComponentProps & ViewProps & ComponentProps;
 
 class SocialAuthComponent extends React.Component<SocialAuthProps> {
   public render(): React.ReactNode {
-    const { themedStyle, hintStyle, iconStyle, hint, ...restProps } = this.props;
+    const { themedStyle, hintStyle, hint, ...restProps } = this.props;
     const { buttonContainer, ...componentStyle } = themedStyle;
 
     return (
       <View {...restProps}>
         {hint ? this.renderCaptionElement([componentStyle.hint, hintStyle]) : null}
         <View style={buttonContainer}>
-          <SocialButton
-            activeOpacity={0.75}
-            icon={GoogleIconFill}
-            iconStyle={iconStyle}
-            onPress={this.props.onGoogleSignIn}
-          />
-          <SocialButton
-            activeOpacity={0.75}
-            icon={FacebookIconFill}
-            iconStyle={iconStyle}
-            onPress={this.props.onFacebookSignIn}
-          />
+          <SocialButton activeOpacity={0.75} icon={GoogleIconFill} onPress={this.props.onGoogleSignIn} />
+          <SocialButton activeOpacity={0.75} icon={FacebookIconFill} onPress={this.props.onFacebookSignIn} />
         </View>
       </View>
     );
