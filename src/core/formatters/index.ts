@@ -32,8 +32,8 @@ export const CardholderNameFormatter = (value: string): string => {
 
 export const currencyFormatter = (value) => {
   if (!value) {
-    return 'R$ 0.00';
+    return 'R$ 0,00';
   }
-  const num = parseFloat(value);
+  const num = parseInt(value.replace(/\D/g, ''), 10) / 100 || 0;
   return 'R$ ' + num.toFixed(2);
 };

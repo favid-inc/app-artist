@@ -1,4 +1,4 @@
-import { Artist } from '@favid-inc/api';
+import { Artist, ArtistCategory } from '@favid-inc/api';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Button } from '@kitten/ui';
 import React from 'react';
@@ -12,6 +12,7 @@ import { ArtistForm } from './ArtistForm';
 import { ProfileInfo } from './ProfileInfo';
 import { ProfilePhoto } from './ProfilePhoto';
 
+import { listAvailableArtistCategories } from './listAvailableArtistCategories';
 import { loadProfile } from './loadProfile';
 import { updateProfile } from './updateProfile';
 
@@ -19,12 +20,14 @@ export type Props = ThemedComponentProps;
 
 interface State {
   artist: Artist;
+  categories: ArtistCategory[];
   loading: boolean;
 }
 
 class AccountComponent extends React.Component<Props, State> {
   public state: State = {
     artist: null,
+    categories: [],
     loading: null,
   };
 
@@ -34,12 +37,12 @@ class AccountComponent extends React.Component<Props, State> {
     this.isLive = false;
   }
 
-  public async componentWillMount() {
+  public async componentDidMount() {
     try {
       this.setState({ loading: true });
-      const artist = await loadProfile();
+      const [artist, categories] = await Promise.all([loadProfile(), listAvailableArtistCategories()]);
       if (this.isLive) {
-        this.setState({ artist });
+        this.setState({ artist, categories });
       }
     } catch (e) {
       Alert.alert('Erro', 'Infelizmente os dados do seu perfil não puderam ser carregados.');
@@ -75,7 +78,7 @@ class AccountComponent extends React.Component<Props, State> {
           <View style={themedStyle.infoSection}>
             <ProfileInfo hint='Email' value={artist.email} />
             <ProfileInfo hint='Nome' value={artist.name} />
-            <ArtistForm artist={artist} />
+            <ArtistForm artist={artist} categories={this.state.categories} />
           </View>
 
           <Button
