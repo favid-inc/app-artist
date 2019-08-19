@@ -22,13 +22,15 @@ interface State {
   artist: Artist;
   categories: ArtistCategory[];
   loading: boolean;
+  saving: boolean;
 }
 
 class AccountComponent extends React.Component<Props, State> {
   public state: State = {
     artist: null,
     categories: [],
-    loading: null,
+    loading: false,
+    saving: false,
   };
 
   private isLive: boolean = true;
@@ -55,7 +57,7 @@ class AccountComponent extends React.Component<Props, State> {
 
   public render() {
     const { themedStyle } = this.props;
-    const { artist, loading } = this.state;
+    const { artist, loading, saving } = this.state;
 
     if (loading) {
       return <ActivityIndicator style={themedStyle.container} size='large' />;
@@ -78,7 +80,15 @@ class AccountComponent extends React.Component<Props, State> {
           <View style={themedStyle.infoSection}>
             <ProfileInfo hint='Email' value={artist.email} />
             <ProfileInfo hint='Nome' value={artist.name} />
-            <ArtistForm artist={artist} categories={this.state.categories} />
+            <ArtistForm
+              artist={artist}
+              categories={this.state.categories}
+              onArtisticNameChange={this.handleArtisticNameChange}
+              onPriceChange={this.handlePriceChange}
+              onBiographyChange={this.handleBiographyChange}
+              onMainCategoryChange={this.handleMainCategoryChange}
+              onCategoriesChange={this.handleCategoriesChange}
+            />
           </View>
 
           <Button
@@ -87,17 +97,38 @@ class AccountComponent extends React.Component<Props, State> {
             size='large'
             status='info'
             onPress={this.handleSaveClick}
-            disabled={loading}
+            disabled={saving}
           >
-            {loading ? 'Enviando dados...' : 'Salvar'}
+            {saving ? 'Enviando dados...' : 'Salvar'}
           </Button>
         </ContainerView>
       </KeyboardAwareScrollView>
     );
   }
 
+  private handleArtisticNameChange = (artisticName = '') => {
+    this.setState({ artist: { ...this.state.artist, artisticName } });
+  };
+
+  private handlePriceChange = (price = '') => {
+    this.setState({ artist: { ...this.state.artist, price: parseInt(price.replace(/\D/g, ''), 10) / 100 || 0 } });
+  };
+
+  private handleBiographyChange = (biography = '') => {
+    this.setState({ artist: { ...this.state.artist, biography } });
+  };
+
+  private handleMainCategoryChange = (mainCategory = '') => {
+    this.setState({ artist: { ...this.state.artist, mainCategory } });
+  };
+
+  private handleCategoriesChange = (categories = []) => {
+    this.setState({ artist: { ...this.state.artist, categories } });
+  };
+
   private handleSaveClick = async () => {
     try {
+      this.setState({ saving: true });
       const artist = await updateProfile(this.state.artist);
       if (this.isLive) {
         this.setState({ artist });
@@ -106,7 +137,7 @@ class AccountComponent extends React.Component<Props, State> {
       Alert.alert('Erro', 'Infelizmente os dados do seu perfil não puderam ser salvos.');
     } finally {
       if (this.isLive) {
-        this.setState({ loading: false });
+        this.setState({ saving: false });
       }
     }
   };

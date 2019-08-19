@@ -12,6 +12,11 @@ import { NameValidator, StringValidator } from '@src/core/validators';
 interface ComponentProps {
   artist: Artist;
   categories: ArtistCategory[];
+  onArtisticNameChange: (val: string) => void;
+  onBiographyChange: (val: string) => void;
+  onCategoriesChange: (val: string[]) => void;
+  onMainCategoryChange: (val: string) => void;
+  onPriceChange: (val: string) => void;
 }
 
 export type Props = ThemedComponentProps & ComponentProps;
@@ -37,7 +42,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
             <ValidationInput
               label='Nome Artístico'
               labelStyle={textStyle.label}
-              onChangeText={this.handleArtisticNameChange}
+              onChangeText={this.props.onArtisticNameChange}
               style={themedStyle.input}
               textStyle={[textStyle.paragraph, themedStyle.inputText]}
               validator={NameValidator}
@@ -50,7 +55,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
               label='Preço'
               formatter={currencyFormatter}
               labelStyle={textStyle.label}
-              onChangeText={this.handlePriceChange}
+              onChangeText={this.props.onPriceChange}
               style={themedStyle.input}
               textStyle={[textStyle.paragraph, themedStyle.inputText]}
               validator={StringValidator}
@@ -63,7 +68,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
               single={false}
               value={artist.categories}
               categories={this.props.categories}
-              onChange={this.handleCategoriesChange}
+              onChange={this.props.onCategoriesChange}
               styleMainWrapper={themedStyle.input}
               styleDropdownMenu={themedStyle.input}
               styleTextDropdown={themedStyle.inputText}
@@ -81,7 +86,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
               single={true}
               value={artist.mainCategory}
               categories={artist.categories}
-              onChange={this.handleMainCategoryChange}
+              onChange={this.props.onMainCategoryChange}
               styleMainWrapper={themedStyle.input}
               styleDropdownMenu={themedStyle.input}
               searchInputStyle={themedStyle.input}
@@ -99,7 +104,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
               maxLength={240}
               multiline={true}
               numberOfLines={6}
-              onChangeText={this.handleBiographyChange}
+              onChangeText={this.props.onBiographyChange}
               style={themedStyle.input}
               textStyle={[textStyle.paragraph, themedStyle.inputText]}
               validator={StringValidator}
@@ -110,14 +115,6 @@ class ArtistFormComponent extends React.Component<Props, State> {
       </KeyboardAwareScrollView>
     );
   }
-
-  private handleArtisticNameChange = (artisticName = '') => this.setState({ artisticName });
-  private handlePriceChange = (price = '') => {
-    this.setState({ price: parseInt(price.replace(/\D/g, ''), 10) / 100 || 0 });
-  };
-  private handleBiographyChange = (biography = '') => this.setState({ biography });
-  private handleMainCategoryChange = (mainCategory = '') => this.setState({ mainCategory });
-  private handleCategoriesChange = (categories = []) => this.setState({ categories });
 }
 
 const CategorySelector = ({ categories, value, single, onChange, ...restProps }) => {

@@ -35,5 +35,5 @@ export const currencyFormatter = (value) => {
     return 'R$ 0,00';
   }
   const num = parseInt(value.replace(/\D/g, ''), 10) / 100 || 0;
-  return 'R$ ' + num.toFixed(2);
+  return 'R$ ' + num.toFixed(2).replace('.', ',');
 };
