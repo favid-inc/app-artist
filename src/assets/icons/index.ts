@@ -369,6 +369,14 @@ export const ArrowIosBackFill = (style: StyleProp<ImageStyle>): IconElement => {
   return Icon(source, style);
 };
 
+export const BookFill = (style: StyleProp<ImageStyle>): IconElement => {
+  const source: IconSource = {
+    imageSource: require('./eva/book.png'),
+  };
+
+  return Icon(source, style);
+};
+
 export const BulbIconFill = (style: StyleProp<ImageStyle>): IconElement => {
   const source: IconSource = {
     imageSource: require('./eva/bulb.png'),

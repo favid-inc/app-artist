@@ -43,7 +43,8 @@
     "react-native-ui-kitten": "^4.0.5",
     "react-navigation": "^3.11.0",
     "react-number-format": "^4.0.8",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "validate.js": "^0.13.1"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",

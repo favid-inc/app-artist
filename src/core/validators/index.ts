@@ -53,6 +53,10 @@ export const StringValidator = (value: string): boolean => {
   return !!value;
 };
 
-const RegExpValidator = (regexp: RegExp, value: string): boolean => {
-  return regexp.test(value);
+export const validation = (regexp: RegExp) => (value: string) => {
+  if (value) {
+    return RegExpValidator(regexp, value.replace(/\D/g, ''));
+  }
 };
+
+const RegExpValidator = (regexp: RegExp, value: string): boolean => regexp.test(value);
