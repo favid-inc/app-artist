@@ -2,7 +2,7 @@ import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import React from 'react';
 import { View, ViewProps } from 'react-native';
 
-import { EmailIconFill, LockIconFill, PhoneIconFill } from '@src/assets/icons';
+import { EmailIconFill, LockIconFill } from '@src/assets/icons';
 import { textStyle, ValidationInput } from '@src/components/common';
 import { EmailValidator, PasswordValidator } from '@src/core/validators';
 import { AuthFormData } from './type';

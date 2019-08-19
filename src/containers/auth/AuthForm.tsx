@@ -1,9 +1,9 @@
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
-import { Button, Tab, TabView, Text } from '@kitten/ui';
+import { Button, Tab, TabView } from '@kitten/ui';
 import React from 'react';
 import { View } from 'react-native';
 
-import { ScrollableAvoidKeyboard, textStyle } from '@src/components/common';
+import { textStyle } from '@src/components/common';
 import { SignInForm } from './SignInForm';
 import { SignUpForm } from './SignUpForm';
 import { AuthFormData } from './type';

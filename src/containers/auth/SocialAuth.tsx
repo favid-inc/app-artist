@@ -1,7 +1,7 @@
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Text } from '@kitten/ui';
 import React from 'react';
-import { ImageStyle, StyleProp, TextProps, TextStyle, View, ViewProps } from 'react-native';
+import { StyleProp, TextProps, TextStyle, View, ViewProps } from 'react-native';
 
 import { FacebookIconFill, GoogleIconFill } from '@src/assets/icons';
 import { textStyle } from '@src/components/common';

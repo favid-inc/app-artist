@@ -1,7 +1,7 @@
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { CheckBox } from '@kitten/ui';
 import React from 'react';
-import { ActivityIndicator, Alert, Image, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, View } from 'react-native';
 import { NavigationScreenProps } from 'react-navigation';
 
 import { favidImage } from '@src/assets/images';

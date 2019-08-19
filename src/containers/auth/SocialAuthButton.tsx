@@ -1,7 +1,7 @@
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Button, ButtonProps } from '@kitten/ui';
 import React from 'react';
-import { ImageProps, ImageStyle, StyleProp } from 'react-native';
+import { ImageProps } from 'react-native';
 
 export type SocialButtonProps = ThemedComponentProps & ButtonProps;
 
