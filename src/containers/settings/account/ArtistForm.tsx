@@ -118,21 +118,24 @@ class ArtistFormComponent extends React.Component<Props, State> {
 }
 
 const CategorySelector = ({ categories, value, single, onChange, ...restProps }) => {
-  const categoryToItemMapper = (c) => ({ id: c, text: c });
+  const items = React.useMemo(() => {
+    return (categories || []).map((c) => ({ c }));
+  }, [categories]);
 
-  const items = React.useMemo(() => (categories || []).map(categoryToItemMapper), [categories]);
   const selectedItems = Array.isArray(value) ? value : [value];
 
-  const handleSelectedItemsChange = React.useCallback((selection) => onChange(single ? selection[0] : selection), [
-    onChange,
-  ]);
+  const handleSelectedItemsChange = React.useCallback(
+    (selection) => {
+      onChange(single ? selection[0] : selection);
+    },
+    [onChange],
+  );
 
   return (
     <MultiSelect
-      uniqueKey='id'
-      displayKey='text'
+      uniqueKey='c'
+      displayKey='c'
       items={items}
-      hideTags
       selectedItems={selectedItems}
       onSelectedItemsChange={handleSelectedItemsChange}
       searchInputPlaceholderText='Pesquisar'

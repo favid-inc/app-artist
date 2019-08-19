@@ -9,7 +9,7 @@ export const firebase = {
 };
 
 export const api = {
-  baseURL: 'http://192.168.15.9:5000/api/appArtist',
+  baseURL: 'http://192.168.43.223:5000/api/appArtist',
 };
 
 export const auth = {
