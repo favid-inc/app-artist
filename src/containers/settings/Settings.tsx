@@ -1,10 +1,10 @@
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
-import { Button } from '@kitten/ui';
+import { Button, Text } from '@kitten/ui';
 import React from 'react';
 import { View } from 'react-native';
-
 import { BookFill, LogOutIconFill as logOutIconFill, PersonIconFill } from '@src/assets/icons';
 import { AuthContext } from '@src/core/auth';
+import { loadProfile } from './account/loadProfile';
 
 interface Props {
   onNavigate: (pathName: string) => void;
@@ -12,18 +12,34 @@ interface Props {
 
 export type SettingsComponentProps = ThemedComponentProps & Props;
 
-class SettingsComponent extends React.Component<SettingsComponentProps> {
+interface State {
+  userNotVerified: boolean;
+}
+
+class SettingsComponent extends React.Component<SettingsComponentProps, State> {
+  public state: State = {
+    userNotVerified: true,
+  };
+
   public render() {
     const { themedStyle } = this.props;
 
     return (
       <View style={themedStyle.container}>
-        <NavigateToMyWalletButton themedStyle={themedStyle} onNavigate={this.handleNavigateToMyWallet} />
+        <NavigateToMyWalletButton
+          userNotVerified={this.state.userNotVerified}
+          themedStyle={themedStyle}
+          onNavigate={this.handleNavigateToMyWallet}
+        />
         <NavigateToAccountButton themedStyle={themedStyle} onNavigate={this.handleNavigateToAccount} />
         <SigOutButton themedStyle={themedStyle} />
       </View>
     );
   }
+
+  // public componentDidMount() {
+  //   this.handleLoad();
+  // }
 
   private handleNavigateToAccount = () => {
     this.props.onNavigate('Conta');
@@ -31,6 +47,17 @@ class SettingsComponent extends React.Component<SettingsComponentProps> {
 
   private handleNavigateToMyWallet = () => {
     this.props.onNavigate('Minha Carteira');
+  };
+
+  private handleLoad = async () => {
+    try {
+      const artist = await loadProfile();
+      if (artist) {
+        this.setState({ userNotVerified: Boolean(artist.iuguSubAccountId) });
+      }
+    } catch (error) {
+      console.log('[Settings.tsx] before error:', error);
+    }
   };
 }
 
@@ -41,11 +68,26 @@ const NavigateToAccountButton = ({ themedStyle, onNavigate }) => {
     </Button>
   );
 };
-const NavigateToMyWalletButton = ({ themedStyle, onNavigate }) => {
+
+const NavigateToMyWalletButton = ({ themedStyle, onNavigate, userNotVerified }) => {
   return (
-    <Button status='info' style={themedStyle.Button} onPress={onNavigate} icon={BookFill} size='giant'>
-      Minha Carteira
-    </Button>
+    <View style={{ marginBottom: 20 }}>
+      <Button
+        status='info'
+        disabled={userNotVerified}
+        style={themedStyle.Button}
+        onPress={onNavigate}
+        icon={BookFill}
+        size='giant'
+      >
+        Minha Carteira
+      </Button>
+      {userNotVerified ? (
+        <Text appearance='hint' style={{ textAlign: 'center' }}>
+          Sua conta está sedo verificada...
+        </Text>
+      ) : null}
+    </View>
   );
 };
 
