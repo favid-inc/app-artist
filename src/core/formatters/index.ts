@@ -62,6 +62,6 @@ export const currencyFormatter = (value) => {
   if (!value) {
     return 'R$ 0,00';
   }
-  const num = parseInt(value.replace(/\D/g, ''), 10) / 100 || 0;
-  return 'R$ ' + num.toFixed(2).replace('.', ',');
+  const num = parseInt(value.replace(/\D/g, ''), 10) || 0;
+  return 'R$ ' + num.toFixed(0);
 };

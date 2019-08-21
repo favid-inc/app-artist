@@ -1,9 +1,9 @@
 import { TopBarNavigationOptions } from '@src/core/navigation/options';
-import { MyWalletContainer } from './MyWalletContainter';
+import { WalletContainer } from './WalletContainter';
 
-export const MyWalletNavigation = {
+export const WalletNavigation = {
   'Minha Carteira': {
-    screen: MyWalletContainer,
+    screen: WalletContainer,
     navigationOptions: TopBarNavigationOptions,
   },
 };

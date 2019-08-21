@@ -26,10 +26,10 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
 
     return (
       <View style={themedStyle.container}>
-        <NavigateToMyWalletButton
+        <NavigateToWalletButton
           userNotVerified={this.state.userNotVerified}
           themedStyle={themedStyle}
-          onNavigate={this.handleNavigateToMyWallet}
+          onNavigate={this.handleNavigateToWallet}
         />
         <NavigateToAccountButton themedStyle={themedStyle} onNavigate={this.handleNavigateToAccount} />
         <SigOutButton themedStyle={themedStyle} />
@@ -45,7 +45,7 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
     this.props.onNavigate('Conta');
   };
 
-  private handleNavigateToMyWallet = () => {
+  private handleNavigateToWallet = () => {
     this.props.onNavigate('Minha Carteira');
   };
 
@@ -69,7 +69,7 @@ const NavigateToAccountButton = ({ themedStyle, onNavigate }) => {
   );
 };
 
-const NavigateToMyWalletButton = ({ themedStyle, onNavigate, userNotVerified }) => {
+const NavigateToWalletButton = ({ themedStyle, onNavigate, userNotVerified }) => {
   return (
     <View style={{ marginBottom: 20 }}>
       <Button

@@ -1,12 +1,13 @@
 import React from 'react';
-import { VALUE_REGEX } from '../../../core/formatters';
 import validate from 'validate.js';
 import { SettingsContext } from '../context';
 import { NavigationScreenProps } from 'react-navigation';
 import { Button, Text } from 'react-native-ui-kitten/ui';
 import { View, ViewProps, Alert, Platform } from 'react-native';
 import { ThemedComponentProps, ThemeType, withStyles } from 'react-native-ui-kitten/theme';
-import { textStyle, ValidationInput, ScrollableAvoidKeyboard } from '../../../components/common';
+
+import { textStyle, ValidationInput, ScrollableAvoidKeyboard } from '@src/components/common';
+import { VALUE_REGEX } from '@src/core/formatters';
 
 export type Props = ThemedComponentProps & ViewProps & NavigationScreenProps;
 

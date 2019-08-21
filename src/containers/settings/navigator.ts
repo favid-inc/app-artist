@@ -1,10 +1,10 @@
 import { connect } from './context';
-import { MyWalletForm } from './myWallet/MyWalletForm';
-import { Transfer } from './myWallet/Transfer';
+import { WalletForm } from './wallet/WalletForm';
+import { Transfer } from './wallet/Transfer';
 import { SettingsContainer } from './SettingsContainer';
 import { createStackNavigator } from 'react-navigation';
 import { AccountContainer } from './account/AccountContainer';
-import { MyWalletContainer } from './myWallet/MyWalletContainter';
+import { WalletContainer } from './wallet/WalletContainter';
 import { TopBarNavigationOptions } from '@src/core/navigation/options';
 
 export const SettingsNavigator = connect(
@@ -12,8 +12,8 @@ export const SettingsNavigator = connect(
     {
       'Configurações': SettingsContainer,
       'Conta': AccountContainer,
-      'Minha Carteira': MyWalletContainer,
-      'Dados Bancários': MyWalletForm,
+      'Minha Carteira': WalletContainer,
+      'Dados Bancários': WalletForm,
       'Transferir Dinheiro': Transfer,
     },
     {

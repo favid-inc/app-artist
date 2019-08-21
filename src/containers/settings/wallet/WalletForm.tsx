@@ -77,7 +77,7 @@ const stateValidator = (value) => STATE_REGEX.test(value);
 const cityValidator = (value) => STRING_REGEX.test(value);
 const agencyValidator = (value) => NUMBER_REGEX.test(value);
 const accountValidator = (value) => NUMBER_REGEX.test(value);
-class MyWalletFormComponent extends React.Component<Props, State> {
+class WalletFormComponent extends React.Component<Props, State> {
   static contextType = SettingsContext;
   public context: React.ContextType<typeof SettingsContext>;
 
@@ -379,7 +379,7 @@ const ErrorMessages = (props) => {
     </View>
   );
 };
-export const MyWalletForm = withStyles(MyWalletFormComponent, (theme: ThemeType) => ({
+export const WalletForm = withStyles(WalletFormComponent, (theme: ThemeType) => ({
   container: {
     flex: 1,
     paddingVertical: 20,

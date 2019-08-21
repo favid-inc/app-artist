@@ -12,7 +12,7 @@ interface ComponentProps {
 }
 
 export type Props = ComponentProps & ThemedComponentProps & ViewProps;
-class MyWalletComponent extends React.Component<Props> {
+class WalletComponent extends React.Component<Props> {
   static contextType = SettingsContext;
   public context: React.ContextType<typeof SettingsContext>;
 
@@ -40,7 +40,7 @@ class MyWalletComponent extends React.Component<Props> {
   }
 }
 
-export const MyWallet = withStyles(MyWalletComponent, (theme: ThemeType) => ({
+export const Wallet = withStyles(WalletComponent, (theme: ThemeType) => ({
   container: {
     flex: 1,
     paddingVertical: 40,
