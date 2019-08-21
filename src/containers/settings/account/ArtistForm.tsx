@@ -26,14 +26,16 @@ type State = Artist;
 class ArtistFormComponent extends React.Component<Props, State> {
   public state: State = {};
 
-  public componentWillMount() {
-    this.setState({ ...this.props.artist });
-  }
+  // public componentWillMount() {
+  //   this.setState({ ...this.props.artist });
+  // }
 
   public render(): React.ReactNode {
     const { themedStyle } = this.props;
 
-    const artist = this.state;
+    const { artist } = this.props;
+
+    const categories = Array.from(new Set([...this.props.categories, ...artist.categories, artist.mainCategory]));
 
     return (
       <KeyboardAwareScrollView>
@@ -67,7 +69,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
               selectText='Categorias'
               single={false}
               value={artist.categories}
-              categories={this.props.categories}
+              categories={categories}
               onChange={this.props.onCategoriesChange}
               styleMainWrapper={themedStyle.input}
               styleDropdownMenu={themedStyle.input}
