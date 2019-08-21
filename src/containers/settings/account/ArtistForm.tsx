@@ -61,7 +61,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
               style={themedStyle.input}
               textStyle={[textStyle.paragraph, themedStyle.inputText]}
               validator={StringValidator}
-              value={`${artist.price || 0}`}
+              value={`R$ ${artist.price || 0}`}
             />
           </View>
           <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>

@@ -103,7 +103,7 @@ class AccountComponent extends React.Component<Props, State> {
   };
 
   private handlePriceChange = (price = '') => {
-    this.setState({ artist: { ...this.state.artist, price: parseInt(price.replace(/\D/g, ''), 10) / 100 || 0 } });
+    this.setState({ artist: { ...this.state.artist, price: parseInt(price.replace(/\D/g, ''), 10) || 0 } });
   };
 
   private handleBiographyChange = (biography = '') => {
