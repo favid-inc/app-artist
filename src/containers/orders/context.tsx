@@ -27,7 +27,10 @@ export function connect(Navigator: NavigationContainer) {
     public state: State = {
       selectedOrder: 0,
       setSelectedOrder: (selectedOrder) => {
-        this.setState({ selectedOrder });
+        this.setState({
+          selectedOrder,
+          order: this.state.orders[selectedOrder] || {},
+        });
       },
       removeSelectedOrder: () => {
         const { selectedOrder } = this.state;

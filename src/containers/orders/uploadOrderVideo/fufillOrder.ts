@@ -16,6 +16,12 @@ export async function fufillOrder(
 ): Promise<FulfillOrder['Response']> {
   const { id, videoUri } = order;
 
+  console.log(id, videoUri);
+
+  if (!id) {
+    throw new Error(`fufillOrder: id is invalid: "${id}"`);
+  }
+
   if (!videoUri || !videoUri.startsWith('file://') || !videoUri.endsWith('.mp4')) {
     throw new Error(`fufillOrder: video format is invalid: "${videoUri}"`);
   }

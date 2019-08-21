@@ -85,6 +85,7 @@ class Container extends Component<Props, State> {
       this.setState({ loading: true });
       const orders = await listOrders();
       this.context.setOrders(orders);
+      this.context.setSelectedOrder(0);
     } catch (e) {
       Alert.alert('Erro', 'Desculpe. Houve um erro ao buscar os seus pedidos');
     } finally {

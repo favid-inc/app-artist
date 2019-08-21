@@ -1,5 +1,6 @@
 import { OrderStatus } from '@favid-inc/api';
 import { Button, Text } from '@kitten/ui';
+import { withStyles, ThemedComponentProps } from '@kitten/theme';
 import React from 'react';
 import { ActivityIndicator, Alert, View } from 'react-native';
 
@@ -7,16 +8,18 @@ import { OrdersContext } from '../context';
 
 import { Canceler, CancelToken, fufillOrder } from './fufillOrder';
 
-interface Props {
+interface ComponentProps {
   onDone: () => void;
 }
+
+type Props = ThemedComponentProps & ComponentProps;
 
 interface State {
   isUploading: boolean;
   uploadPercentage: number;
 }
 
-export class UploadOrderVideo extends React.Component<Props, State> {
+class UploadOrderVideoComponent extends React.Component<Props, State> {
   static contextType = OrdersContext;
   public context: React.ContextType<typeof OrdersContext>;
 
@@ -39,16 +42,29 @@ export class UploadOrderVideo extends React.Component<Props, State> {
     }
   }
 
-  public render(): React.ReactNode {
+  public render() {
+    const { themedStyle } = this.props;
     if (this.state.isUploading) {
-      return <SendingIndicator percentage={this.state.uploadPercentage} />;
+      return (
+        <View style={themedStyle.container}>
+          <SendingIndicator percentage={this.state.uploadPercentage} />
+        </View>
+      );
     }
 
     if (this.context.order.status === OrderStatus.FULFILLED) {
-      return <SuccessMessage onPress={this.props.onDone} />;
+      return (
+        <View style={themedStyle.container}>
+          <SuccessMessage onPress={this.props.onDone} />
+        </View>
+      );
     }
 
-    return <SendButton onPress={this.handleUpload} />;
+    return (
+      <View style={themedStyle.container}>
+        <SendButton onPress={this.handleUpload} />;
+      </View>
+    );
   }
 
   private handleUpload = async () => {
@@ -83,19 +99,27 @@ export class UploadOrderVideo extends React.Component<Props, State> {
 const SendingIndicator = (props: { percentage: number }) => (
   <View>
     <ActivityIndicator size='large' color='#0000ff' />
-    <Text>{`Enviando vídeo: ${props.percentage.toPrecision(0)}%`}</Text>
+    <Text>{`Enviando vídeo: ${Math.round(props.percentage)}%`}</Text>
   </View>
 );
 
 const SendButton = (props) => (
   <View>
-    <Button title='Enviar Vídeo' {...props} />
+    <Button size='large' title='Enviar Vídeo' {...props} />
   </View>
 );
 
 const SuccessMessage = (props) => (
   <View>
     <Text>Vídeo enviado com sucesso!</Text>
-    <Button title='Voltar' {...props} />
+    <Button size='large' title='Voltar' {...props} />
   </View>
 );
+
+export const UploadOrderVideo = withStyles<ComponentProps>(UploadOrderVideoComponent, (theme: ThemeType) => ({
+  container: {
+    paddingHorizontal: 16,
+    flex: 1,
+    backgroundColor: theme['background-basic-color-2'],
+  },
+}));

@@ -1,7 +1,7 @@
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Button, Text } from '@kitten/ui';
 import React, { Component } from 'react';
-import { TextInput, View } from 'react-native';
+import { TextInput, View, ActivityIndicator } from 'react-native';
 
 import { ContainerView } from '@src/components/common';
 
@@ -12,6 +12,7 @@ interface State {
 }
 
 interface Props {
+  sending: boolean;
   onDecline: (description: string) => void;
   onCancel: () => void;
 }
@@ -24,7 +25,17 @@ class DeclineOrderComponent extends Component<ThemedComponentProps & Props, Stat
   };
 
   public render() {
-    const { themedStyle } = this.props;
+    const { themedStyle, sending } = this.props;
+
+    if (sending) {
+      return (
+        <ContainerView style={themedStyle.container} contentContainerStyle={themedStyle.contentContainer}>
+          <View style={themedStyle.contentContainer}>
+            <ActivityIndicator size='large' />
+          </View>
+        </ContainerView>
+      );
+    }
 
     return (
       <ContainerView style={themedStyle.container} contentContainerStyle={themedStyle.contentContainer}>
@@ -107,7 +118,7 @@ class DeclineOrderComponent extends Component<ThemedComponentProps & Props, Stat
   };
 }
 
-export const DeclineOrder = withStyles(DeclineOrderComponent, (theme: ThemeType) => ({
+export const DeclineOrder = withStyles<Props>(DeclineOrderComponent, (theme: ThemeType) => ({
   container: {
     paddingHorizontal: 16,
     flex: 1,
