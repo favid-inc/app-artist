@@ -104,13 +104,15 @@ class AuthFormComponent extends React.Component<SignIn5Props, State> {
 export const AuthForm = withStyles(AuthFormComponent, (theme: ThemeType) => ({
   container: {
     flex: 1,
+    alignContent: 'stretch',
   },
   tabContentContainer: {
-    marginVertical: 8,
+    // marginVertical: 8,
+    paddingVertical: 20,
   },
   tabView: {
     flex: 1,
-    paddingHorizontal: 16,
+    paddingHorizontal: 0,
     margin: 5,
   },
   tabBar: {

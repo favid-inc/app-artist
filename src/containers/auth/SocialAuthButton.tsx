@@ -6,7 +6,7 @@ import { ImageProps } from 'react-native';
 export type SocialButtonProps = ThemedComponentProps & ButtonProps;
 
 class SocialAuthButtonComponent extends React.Component<SocialButtonProps> {
-  public render(): React.ReactNode {
+  public render() {
     const { themedStyle, ...restProps } = this.props;
 
     return <Button appearance='ghost' size='giant' {...restProps} icon={this.renderIcon} />;

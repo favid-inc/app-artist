@@ -47,17 +47,15 @@ class AuthContainerComponent extends React.Component<Props, State> {
       <View style={themedStyle.container}>
         <Image source={favidImage.imageSource} style={themedStyle.logoStyle} />
         <ScrollableAvoidKeyboard>
-          <View style={themedStyle.contentContainer}>
-            <AuthForm onSignIn={this.handleSignIn} onSignUp={this.handleSignUp} />
-            <SocialAuth onGoogleSignIn={this.handleGoogleSignIn} onFacebookSignIn={this.handleFacebookSignIn} />
-            <CheckBox
-              style={themedStyle.termsCheckBox}
-              textStyle={themedStyle.termsCheckBoxText}
-              checked={this.state.termsAccepted}
-              text={'Declaro que li e concordo com os termos de uso'}
-              onChange={this.handleTermsAcceptChange}
-            />
-          </View>
+          <AuthForm onSignIn={this.handleSignIn} onSignUp={this.handleSignUp} />
+          <SocialAuth onGoogleSignIn={this.handleGoogleSignIn} onFacebookSignIn={this.handleFacebookSignIn} />
+          <CheckBox
+            style={themedStyle.termsCheckBox}
+            textStyle={themedStyle.termsCheckBoxText}
+            checked={this.state.termsAccepted}
+            text={'Declaro que li e concordo com os termos de uso'}
+            onChange={this.handleTermsAcceptChange}
+          />
         </ScrollableAvoidKeyboard>
       </View>
     );

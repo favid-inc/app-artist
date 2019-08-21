@@ -18,7 +18,7 @@ interface ComponentProps {
 export type SocialAuthProps = ThemedComponentProps & ViewProps & ComponentProps;
 
 class SocialAuthComponent extends React.Component<SocialAuthProps> {
-  public render(): React.ReactNode {
+  public render() {
     const { themedStyle, hintStyle, hint, ...restProps } = this.props;
     const { buttonContainer, ...componentStyle } = themedStyle;
 

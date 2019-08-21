@@ -45,7 +45,7 @@ class SignInFormComponent extends React.Component<SignInFormProps, State> {
     }
   }
 
-  public render(): React.ReactNode {
+  public render() {
     const { style, themedStyle, theme, ...restProps } = this.props;
 
     return (

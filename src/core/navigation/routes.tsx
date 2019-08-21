@@ -12,7 +12,6 @@ import { AuthContainer } from '@src/containers/auth';
 import { MenuNavigator } from '@src/containers/menu';
 import { OrdersNavigator } from '@src/containers/orders';
 import { SettingsNavigator } from '@src/containers/settings';
-import { SignInContainer } from '@src/containers/signin/SignInContainer';
 import { AuthContext } from '@src/core/auth';
 
 const SignInNavigator: NavigationContainer = createStackNavigator(
