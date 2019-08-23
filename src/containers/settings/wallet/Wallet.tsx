@@ -1,43 +1,79 @@
 import React from 'react';
+import { ActivityIndicator, Alert, View, ViewProps } from 'react-native';
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
+import { Text } from '@kitten/ui';
+import { LoadWalletInfo } from '@favid-inc/api/lib/app-artist';
+import { apiClient } from '@src/core/utils/apiClient';
+
 import { SettingsContext } from '../context';
-import { View, ViewProps } from 'react-native';
-import { ThemedComponentProps, ThemeType, withStyles } from 'react-native-ui-kitten/theme';
-import { Text } from 'react-native-ui-kitten/ui';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { BankCard } from './BankCard';
-import { TransferCard } from './TransferCard';
+import { BankAccountInfo } from './BankAccountInfo';
+import { WithdrawCard } from './WithdrawCard';
 
 interface ComponentProps {
   onNavigate: (pathName: string) => void;
 }
 
 export type Props = ComponentProps & ThemedComponentProps & ViewProps;
-class WalletComponent extends React.Component<Props> {
+
+interface State {
+  loading: boolean;
+}
+
+class WalletComponent extends React.Component<Props, State> {
   static contextType = SettingsContext;
   public context: React.ContextType<typeof SettingsContext>;
 
-  public navigateToWalletForm = () => {
-    this.props.onNavigate('Dados Bancários');
+  public state: State = {
+    loading: false,
   };
-  public navigateToTransferForm = () => {
-    this.props.onNavigate('Transferir Dinheiro');
-  };
+
+  public async componentDidMount() {
+    this.setState({ loading: true });
+
+    try {
+      const request: LoadWalletInfo['Request'] = {
+        url: '/LoadWalletInfo',
+        method: 'GET',
+      };
+
+      const response = await apiClient.request<LoadWalletInfo['Response']>(request);
+
+      this.context.setWalletInfo(response.data);
+    } catch (e) {
+      Alert.alert('Erro ao buscar dados da carteira');
+    } finally {
+      this.setState({ loading: false });
+    }
+  }
 
   public render() {
     const { style, themedStyle, ...restProps } = this.props;
 
-    return (
-      <KeyboardAwareScrollView>
+    if (this.state.loading) {
+      return (
         <View style={[themedStyle.container, style]} {...restProps}>
-          <Text appearance='hint' style={themedStyle.title} category='h5'>
-            Dados Bancários
-          </Text>
-          <BankCard onAddWallet={this.navigateToWalletForm} />
-          <TransferCard onTransfer={this.navigateToTransferForm} />
+          <ActivityIndicator size='large' />
         </View>
-      </KeyboardAwareScrollView>
+      );
+    }
+
+    return (
+      <View style={[themedStyle.container, style]} {...restProps}>
+        <Text appearance='hint' style={themedStyle.title} category='h5'>
+          Dados Bancários
+        </Text>
+        <BankAccountInfo />
+        <WithdrawCard onWithdraw={this.navigateToWithdraw} />
+      </View>
     );
   }
+
+  // private navigateToWalletForm = () => {
+  //   this.props.onNavigate('Dados Bancários');
+  // };
+  private navigateToWithdraw = () => {
+    this.props.onNavigate('Sacar Dinheiro');
+  };
 }
 
 export const Wallet = withStyles(WalletComponent, (theme: ThemeType) => ({

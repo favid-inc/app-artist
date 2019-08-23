@@ -1,21 +1,26 @@
+import { RequestWithdraw } from '@favid-inc/api/lib/app-artist';
 import React from 'react';
 import validate from 'validate.js';
-import { SettingsContext } from '../context';
-import { NavigationScreenProps } from 'react-navigation';
-import { Button, Text } from 'react-native-ui-kitten/ui';
+import { Button, Text } from '@kitten/ui';
 import { View, ViewProps, Alert, Platform } from 'react-native';
-import { ThemedComponentProps, ThemeType, withStyles } from 'react-native-ui-kitten/theme';
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 
+import { SettingsContext } from '../context';
 import { textStyle, ValidationInput, ScrollableAvoidKeyboard } from '@src/components/common';
+import { apiClient } from '@src/core/utils/apiClient';
 import { VALUE_REGEX } from '@src/core/formatters';
 
-export type Props = ThemedComponentProps & ViewProps & NavigationScreenProps;
+interface ComponentProps {
+  onDone: () => void;
+}
+
+export type Props = ComponentProps & ThemedComponentProps & ViewProps;
 
 interface State {
   model: {
-    value: string;
+    amount: string;
   };
-  loading: boolean;
+  sending: boolean;
   validation: {
     value: string[];
   };
@@ -32,15 +37,15 @@ const valueValidator = (amountStr: string) => {
   };
 };
 
-class TransferComponent extends React.Component<Props, State> {
+class WithdrawFormComponent extends React.Component<Props, State> {
   static contextType = SettingsContext;
   public context: React.ContextType<typeof SettingsContext>;
 
   public state: State = {
     model: {
-      value: '',
+      amount: '',
     },
-    loading: false,
+    sending: false,
     validation: {
       value: [],
     },
@@ -76,51 +81,72 @@ class TransferComponent extends React.Component<Props, State> {
     }
   };
 
-  public onSend = () => {
+  public onSend = async () => {
     if (this.isInValid()) {
       return;
     }
-    this.setState({ loading: true });
-    setTimeout(() => {
-      this.setState({ loading: false });
-      this.context.setCash(this.state.model.value);
-      Alert.alert('Transferência efetuada com sucesso');
-      this.props.navigation.goBack(null);
-    }, 5000);
+
+    this.setState({ sending: true });
+
+    try {
+      const request: RequestWithdraw['Request'] = {
+        url: '/RequestWithdraw',
+        method: 'POST',
+        data: {
+          amount: parseFloat(this.state.model.amount),
+        },
+      };
+
+      const response = await apiClient.request<RequestWithdraw['Response']>(request);
+
+      this.context.setWalletInfo(response.data);
+
+      Alert.alert('Solicitação enviada com sucesso');
+
+      this.props.onDone();
+    } catch {
+      Alert.alert('Erro ao enviar solicitação');
+    } finally {
+      this.setState({ sending: false });
+    }
   };
 
   public render() {
     const { style, themedStyle } = this.props;
 
+    const { walletInfo } = this.context;
+
+    const currentBalance = parseInt(walletInfo.balance_available_for_withdraw.replace(/\D/g, ''), 10) || 0 / 10;
+
     return (
       <ScrollableAvoidKeyboard style={[themedStyle.container, style]} extraScrollHeight={this.keyboardOffset}>
         <View style={[themedStyle.container, style]}>
           <Text style={themedStyle.title} appearance='hint' category='h6'>
-            Quanto você quer transferir?
+            Quanto você quer sacar?
           </Text>
           <ValidationInput
+            keyboardType='numeric'
+            labelStyle={textStyle.label}
+            onChangeText={this.valueChangeHandler}
             style={themedStyle.input}
             textStyle={textStyle.paragraph}
-            labelStyle={textStyle.label}
-            validator={valueValidator(this.context.payment.cash)}
-            keyboardType='numeric'
-            onChangeText={this.valueChangeHandler}
-            value={this.state.model.value}
+            validator={valueValidator(currentBalance.toString())}
+            value={this.state.model.amount}
           />
           <ErrorMessages errors={this.state.validation.value} />
           <Text appearance='hint' style={themedStyle.title}>
-            {`Seu saldo atual é de R$ ${this.context.payment.cash}`}
+            {`Seu saldo atual é de R$ ${currentBalance.toString().replace('.', ',')}`}
           </Text>
 
           <Button
+            disabled={this.state.sending}
+            onPress={this.onSend}
+            size='giant'
             status='success'
             style={themedStyle.saveButton}
             textStyle={textStyle.button}
-            size='giant'
-            disabled={this.state.loading}
-            onPress={this.onSend}
           >
-            {this.state.loading ? 'Processando...' : 'Solicitar Transferência'}
+            {this.state.sending ? 'Processando...' : 'Solicitar Saque'}
           </Button>
         </View>
       </ScrollableAvoidKeyboard>
@@ -166,7 +192,7 @@ const ErrorMessages = (props) => {
     </View>
   );
 };
-export const Transfer = withStyles(TransferComponent, (theme: ThemeType) => ({
+export const WithdrawForm = withStyles<ComponentProps>(WithdrawFormComponent, (theme: ThemeType) => ({
   container: {
     flex: 1,
     paddingVertical: 20,

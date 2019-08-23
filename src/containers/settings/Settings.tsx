@@ -4,7 +4,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { BookFill, LogOutIconFill as logOutIconFill, PersonIconFill } from '@src/assets/icons';
 import { AuthContext } from '@src/core/auth';
-import { loadProfile } from './account/loadProfile';
+// import { loadProfile } from './account/loadProfile';
 
 interface Props {
   onNavigate: (pathName: string) => void;
@@ -27,7 +27,7 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
     return (
       <View style={themedStyle.container}>
         <NavigateToWalletButton
-          userNotVerified={this.state.userNotVerified}
+          userNotVerified={false}
           themedStyle={themedStyle}
           onNavigate={this.handleNavigateToWallet}
         />
@@ -49,16 +49,16 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
     this.props.onNavigate('Minha Carteira');
   };
 
-  private handleLoad = async () => {
-    try {
-      const artist = await loadProfile();
-      if (artist) {
-        this.setState({ userNotVerified: Boolean(artist.iuguSubAccountId) });
-      }
-    } catch (error) {
-      console.log('[Settings.tsx] before error:', error);
-    }
-  };
+  // private handleLoad = async () => {
+  //   try {
+  //     const artist = await loadProfile();
+  //     if (artist) {
+  //       this.setState({ userNotVerified: Boolean(artist.iuguSubAccountId) });
+  //     }
+  //   } catch (error) {
+  //     console.log('[Settings.tsx] before error:', error);
+  //   }
+  // };
 }
 
 const NavigateToAccountButton = ({ themedStyle, onNavigate }) => {
