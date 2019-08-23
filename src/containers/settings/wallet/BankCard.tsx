@@ -34,11 +34,11 @@ class BankCardComponent extends React.Component<Props> {
     const isProcessing = this.isProcessing();
     return this.hasPayment() ? (
       <View style={themedStyle.walletCard}>
-        <Text appearance='hint'>{`Nome:${payment.name}`}</Text>
-        <Text appearance='hint'>{`CPF:${payment.cpf}`}</Text>
-        <Text appearance='hint'>{`Banco:${payment.bank}`}</Text>
-        <Text appearance='hint'>{`Agência:${payment.bank_ag}`}</Text>
-        <Text appearance='hint'>{`Conta:${payment.bank_cc}`}</Text>
+        <Text appearance='hint'>{`Nome:    ${payment.name}`}</Text>
+        <Text appearance='hint'>{`CPF:     ${payment.cpf}`}</Text>
+        <Text appearance='hint'>{`Banco:   ${payment.bank}`}</Text>
+        <Text appearance='hint'>{`Agência: ${payment.bank_ag}`}</Text>
+        <Text appearance='hint'>{`Conta:   ${payment.bank_cc}`}</Text>
         <Button
           status='info'
           style={themedStyle.saveButton}

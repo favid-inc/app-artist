@@ -16,8 +16,6 @@ export async function fufillOrder(
 ): Promise<FulfillOrder['Response']> {
   const { id, videoUri } = order;
 
-  console.log(id, videoUri);
-
   if (!id) {
     throw new Error(`fufillOrder: id is invalid: "${id}"`);
   }
@@ -30,9 +28,13 @@ export async function fufillOrder(
 
   data.append('id', id);
 
+  const filename = order.videoUri.split('/').pop();
+  const ext = filename.split('.').pop();
+
   data.append('video', {
-    type: 'video/mp4',
     uri: videoUri,
+    name: filename,
+    type: `video/${ext}`,
   });
 
   const request: FulfillOrder['Request'] = {

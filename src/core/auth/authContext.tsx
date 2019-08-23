@@ -2,6 +2,7 @@ import * as AppAuth from 'expo-app-auth';
 import * as firebase from 'firebase';
 import React from 'react';
 import { Alert, AsyncStorage } from 'react-native';
+import { claimAccount } from './claimAccount';
 
 interface AuthContext {
   user: firebase.UserInfo;
@@ -123,7 +124,6 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
       const tokens = await AppAuth.authAsync(oAuthProps);
 
       const { user } = await this.sigIn({ type: 'oauth', tokens, oAuthProps });
-
       await claimAccount(await user.getIdToken());
     } finally {
       this.setState({ isSigningIn: false });

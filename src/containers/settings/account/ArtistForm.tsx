@@ -35,7 +35,21 @@ class ArtistFormComponent extends React.Component<Props, State> {
 
     const { artist } = this.props;
 
-    const categories = Array.from(new Set([...this.props.categories, ...artist.categories, artist.mainCategory]));
+    let categories = [];
+
+    if (Array.isArray(this.props.categories)) {
+      categories.push(...this.props.categories);
+    }
+
+    if (Array.isArray(artist.categories)) {
+      categories.push(...artist.categories);
+    }
+
+    if (artist.mainCategory) {
+      categories.push(artist.mainCategory);
+    }
+
+    categories = Array.from(new Set(categories));
 
     return (
       <KeyboardAwareScrollView>

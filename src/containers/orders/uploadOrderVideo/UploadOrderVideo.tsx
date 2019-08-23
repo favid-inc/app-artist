@@ -1,11 +1,11 @@
 import { OrderStatus } from '@favid-inc/api';
 import { Button, Text } from '@kitten/ui';
-import { withStyles, ThemedComponentProps } from '@kitten/theme';
+import { withStyles, ThemedComponentProps, ThemeType } from '@kitten/theme';
 import React from 'react';
 import { ActivityIndicator, Alert, View } from 'react-native';
 
+import { ContainerView } from '@src/components/common';
 import { OrdersContext } from '../context';
-
 import { Canceler, CancelToken, fufillOrder } from './fufillOrder';
 
 interface ComponentProps {
@@ -44,27 +44,19 @@ class UploadOrderVideoComponent extends React.Component<Props, State> {
 
   public render() {
     const { themedStyle } = this.props;
+    return <View style={themedStyle.container}>{this.renderContent()}</View>;
+  }
+
+  private renderContent() {
     if (this.state.isUploading) {
-      return (
-        <View style={themedStyle.container}>
-          <SendingIndicator percentage={this.state.uploadPercentage} />
-        </View>
-      );
+      return <SendingIndicator percentage={this.state.uploadPercentage} />;
     }
 
     if (this.context.order.status === OrderStatus.FULFILLED) {
-      return (
-        <View style={themedStyle.container}>
-          <SuccessMessage onPress={this.props.onDone} />
-        </View>
-      );
+      return <SuccessMessage onPress={this.props.onDone} />;
     }
 
-    return (
-      <View style={themedStyle.container}>
-        <SendButton onPress={this.handleUpload} />;
-      </View>
-    );
+    return <SendButton onPress={this.handleUpload} />;
   }
 
   private handleUpload = async () => {
@@ -79,13 +71,14 @@ class UploadOrderVideoComponent extends React.Component<Props, State> {
         }
       });
 
-      const order = await fufillOrder(this.context.order, cancelToken, (uploadPercentage) => {
+      await fufillOrder(this.context.order, cancelToken, (uploadPercentage) => {
         if (this.isLive) {
           this.setState({ uploadPercentage });
         }
       });
 
-      this.context.patchOrder(order);
+      this.context.removeSelectedOrder();
+      this.props.onDone();
     } catch (e) {
       Alert.alert('Erro', 'Não foi possível enviar o vídeo. Verifique sua conexão e tente novamente.');
     } finally {
@@ -97,29 +90,35 @@ class UploadOrderVideoComponent extends React.Component<Props, State> {
 }
 
 const SendingIndicator = (props: { percentage: number }) => (
-  <View>
+  <>
     <ActivityIndicator size='large' color='#0000ff' />
-    <Text>{`Enviando vídeo: ${Math.round(props.percentage)}%`}</Text>
-  </View>
+    <Text style={{ textAlign: 'center' }}>{`Enviando vídeo: ${Math.round(props.percentage)}%`}</Text>
+  </>
 );
 
 const SendButton = (props) => (
-  <View>
-    <Button size='large' title='Enviar Vídeo' {...props} />
-  </View>
+  <Button size='large' {...props}>
+    Enviar Vídeo
+  </Button>
 );
 
 const SuccessMessage = (props) => (
-  <View>
+  <>
     <Text>Vídeo enviado com sucesso!</Text>
-    <Button size='large' title='Voltar' {...props} />
-  </View>
+    <Button size='large' {...props}>
+      Voltar
+    </Button>
+  </>
 );
 
 export const UploadOrderVideo = withStyles<ComponentProps>(UploadOrderVideoComponent, (theme: ThemeType) => ({
   container: {
-    paddingHorizontal: 16,
+    alignContent: 'space-between',
+    backgroundColor: theme['background-basic-color-1'],
     flex: 1,
-    backgroundColor: theme['background-basic-color-2'],
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    width: '100%',
   },
 }));
