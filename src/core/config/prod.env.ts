@@ -13,8 +13,10 @@ export const api = {
 };
 
 export const auth = {
-  behavior: 'web',
-  clientId: '983263249595-anadgjdnado7mgh9o8eebpbeg4ki5c6m.apps.googleusercontent.com',
-  issuer: 'https://accounts.google.com',
-  scopes: ['profile', 'email'],
+  google: {
+    behavior: 'web',
+    clientId: '983263249595-2tclp7pj3b23h05l08v8v7af6mgbud1s.apps.googleusercontent.com',
+    issuer: 'https://accounts.google.com',
+    scopes: ['profile', 'email'],
+  },
 };
