@@ -41,10 +41,16 @@ class BankAccountInfoComponent extends React.Component<Props, {}, Context> {
 
     return (
       <View style={themedStyle.walletCard}>
-        <InfoItem hint='Nome' value={informations.find((i) => i.key === 'name').value} />
-        <InfoItem hint='Banco' value={informations.find((i) => i.key === 'bank').value} />
-        <InfoItem hint='Agência' value={informations.find((i) => i.key === 'bank_ag').value} />
-        <InfoItem hint='Conta' value={informations.find((i) => i.key === 'bank_cc').value} />
+        <InfoItem hint='Nome' value={(informations.find((i) => i.key === 'name') || { value: '' }).value} />
+        <InfoItem hint='CPF' value={(informations.find((i) => i.key === 'cpf') || { value: '' }).value} />
+        <InfoItem hint='Banco' value={(informations.find((i) => i.key === 'bank') || { value: '' }).value} />
+        <InfoItem hint='Agência' value={(informations.find((i) => i.key === 'bank_ag') || { value: '' }).value} />
+        <InfoItem hint='Conta' value={(informations.find((i) => i.key === 'bank_cc') || { value: '' }).value} />
+        <InfoItem hint='Operação' value={(informations.find((i) => i.key === 'account_type') || { value: '' }).value} />
+        <InfoItem
+          hint='Transf. Automatica'
+          value={(informations.find((i) => i.key === 'automatic_transfer') || { value: '' }).value ? 'Sim' : 'Não'}
+        />
       </View>
     );
   }
