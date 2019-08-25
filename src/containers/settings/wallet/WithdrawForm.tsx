@@ -139,7 +139,7 @@ class WithdrawFormComponent extends React.Component<Props, State> {
           </Text>
 
           <Button
-            disabled={this.state.sending}
+            disabled={this.state.sending || currentBalance <= 0}
             onPress={this.onSend}
             size='giant'
             status='success'
