@@ -14,6 +14,7 @@ import { ProfilePhoto } from './ProfilePhoto';
 import { listAvailableArtistCategories } from './listAvailableArtistCategories';
 import { loadProfile } from './loadProfile';
 import { updateProfile } from './updateProfile';
+import { PresentationVideo } from './PresentationVideo';
 
 export type Props = ThemedComponentProps;
 
@@ -63,7 +64,9 @@ class AccountComponent extends React.Component<Props, State> {
             <View style={themedStyle.photoSection}>
               <ProfilePhoto artist={artist} onChange={this.handlePhotoUriChange} />
             </View>
-
+            <View style={themedStyle.photoSection}>
+              <PresentationVideo artist={artist} />
+            </View>
             <View style={themedStyle.infoSection}>
               <ProfileInfo hint='Email' value={artist.email} />
               <ProfileInfo hint='Nome' value={artist.name} />
@@ -77,7 +80,6 @@ class AccountComponent extends React.Component<Props, State> {
                 onCategoriesChange={this.handleCategoriesChange}
               />
             </View>
-
             <Button
               style={themedStyle.button}
               textStyle={textStyle.button}
@@ -142,6 +144,7 @@ class AccountComponent extends React.Component<Props, State> {
         this.setState({ artist, categories });
       }
     } catch (e) {
+      console.log('[Account.tsx] error: ', e);
       Alert.alert('Erro', 'Infelizmente os dados do seu perfil não puderam ser carregados.');
     } finally {
       if (this.isLive) {
