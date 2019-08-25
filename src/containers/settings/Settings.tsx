@@ -1,9 +1,20 @@
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Button, Text } from '@kitten/ui';
 import React from 'react';
-import { Linking, View } from 'react-native';
-import { BookFill, FileTextIconFill, LogOutIconFill, PersonIconFill, MenuIconMessaging } from '@src/assets/icons';
+import md5 from 'md5';
+import { Share, Platform, Linking, View } from 'react-native';
+import { ApplyForSponsorship } from '@favid-inc/api/lib/app-artist';
+
+import {
+  BookFill,
+  FileTextIconFill,
+  LogOutIconFill,
+  PersonIconFill,
+  MenuIconMessaging,
+  PeopleIconFill,
+} from '@src/assets/icons';
 import { AuthContext } from '@src/core/auth';
+import * as config from '@src/core/config';
 // import { loadProfile } from './account/loadProfile';
 
 interface Props {
@@ -33,16 +44,13 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
         />
         <NavigateToAccountButton themedStyle={themedStyle} onNavigate={this.handleNavigateToAccount} />
         <SigOutButton themedStyle={themedStyle} />
+        <ShareSponsorship themedStyle={themedStyle} />
         <NeedHelpButton themedStyle={themedStyle} />
         <PoliciesButton themedStyle={themedStyle} />
         <TermsButton themedStyle={themedStyle} />
       </View>
     );
   }
-
-  // public componentDidMount() {
-  //   this.handleLoad();
-  // }
 
   private handleNavigateToAccount = () => {
     this.props.onNavigate('Conta');
@@ -51,17 +59,6 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
   private handleNavigateToWallet = () => {
     this.props.onNavigate('Minha Carteira');
   };
-
-  // private handleLoad = async () => {
-  //   try {
-  //     const artist = await loadProfile();
-  //     if (artist) {
-  //       this.setState({ userNotVerified: Boolean(artist.iuguSubAccountId) });
-  //     }
-  //   } catch (error) {
-  //     console.log('[Settings.tsx] before error:', error);
-  //   }
-  // };
 }
 
 const NavigateToAccountButton = ({ themedStyle, onNavigate }) => {
@@ -101,6 +98,49 @@ const SigOutButton = ({ themedStyle }) => {
   return (
     <Button status='danger' style={themedStyle.Button} onPress={handleSignOutClick} icon={LogOutIconFill} size='giant'>
       Deslogar
+    </Button>
+  );
+};
+
+const ShareSponsorship = ({ themedStyle }) => {
+  const context = React.useContext(AuthContext);
+  const handleSignOutClick = React.useCallback(() => {
+    const { user } = context;
+    const s1 = md5(`$ecr3t[${Date.now()}]`);
+    const s2 = md5(`(${s1})[${user.email}]`);
+    const s3 = md5(`(${s1})[${user.uid}]`);
+    const s4 = md5(`(${s1})[${s2}][${s3}]`);
+
+    const params = { s1, s2, s3, s4 };
+
+    const esc = encodeURIComponent;
+    const query = Object.keys(params)
+      .map((k) => esc(k) + '=' + esc(params[k]))
+      .join('&');
+
+    const url: ApplyForSponsorship['Request']['url'] = '/ApplyForSponsorship';
+
+    const { baseURL } = config.api;
+
+    const fullUrl = `${baseURL}/${url}?${query}`;
+
+    Share.share(
+      Platform.select({
+        ios: {
+          title: `Venha participar do Favid como meu afilhado`,
+          url: fullUrl,
+        },
+        android: {
+          title: `Venha participar do Favid como meu afilhado`,
+          message: `Venha participar do Favid como meu afilhado: "${fullUrl}"`,
+        },
+      }),
+    );
+  }, [context]);
+
+  return (
+    <Button status='warning' style={themedStyle.Button} onPress={handleSignOutClick} icon={PeopleIconFill} size='giant'>
+      Convidar Afilhado
     </Button>
   );
 };
