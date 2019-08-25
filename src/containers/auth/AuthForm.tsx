@@ -126,6 +126,6 @@ export const AuthForm = withStyles(AuthFormComponent, (theme: ThemeType) => ({
     ...textStyle.label,
   },
   submitButton: {
-    marginHorizontal: 16,
+    // marginHorizontal: 16,
   },
 }));

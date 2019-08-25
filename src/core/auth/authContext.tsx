@@ -17,7 +17,7 @@ interface AuthContext {
 export const AuthContext = React.createContext<AuthContext>({
   user: null,
   isSignedIn: false,
-  isSigningIn: false,
+  isSigningIn: true,
   signInWithOAuth: () => null,
   signInWithEmailAndPassword: () => null,
   signUp: () => null,
@@ -48,7 +48,7 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
     user: null,
     credentials: { type: 'none' },
     isSignedIn: false,
-    isSigningIn: false,
+    isSigningIn: true,
     signInWithOAuth: (oAuthProps) => this.signInWithOAuth(oAuthProps),
     signInWithEmailAndPassword: (email, password) => this.signInWithEmailAndPassword(email, password),
     signOut: () => this.signOut(),
@@ -75,10 +75,12 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
     if (isSignedIn) {
       this.setState({ isSigningIn: true });
       try {
-        this.sigIn(credentials);
+        await this.sigIn(credentials);
       } finally {
         this.setState({ isSigningIn: false });
       }
+    } else {
+      this.setState({ isSigningIn: false });
     }
   }
 
@@ -185,24 +187,23 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
     const { isSignedIn, credentials } = this.state;
 
     if (isSignedIn && credentials && credentials.type === 'oauth') {
-      try {
-        if (Date.now() > new Date(credentials.tokens.accessTokenExpirationDate).getTime()) {
-          return;
+      setTimeout(async () => {
+        try {
+          console.log('refreshing Token');
+          const { refreshToken } = credentials.tokens;
+          const tokens = await AppAuth.refreshAsync(credentials.oAuthProps, refreshToken);
+
+          await this.sigIn({
+            ...credentials,
+            tokens: {
+              ...tokens,
+              refreshToken,
+            },
+          });
+        } catch (e) {
+          this.signOut();
         }
-
-        const { refreshToken } = credentials.tokens;
-        const tokens = await AppAuth.refreshAsync(credentials.oAuthProps, refreshToken);
-
-        await this.sigIn({
-          ...credentials,
-          tokens: {
-            ...tokens,
-            refreshToken,
-          },
-        });
-      } catch (e) {
-        this.signOut();
-      }
+      }, new Date(credentials.tokens.accessTokenExpirationDate).getTime() - Date.now());
     }
   };
 
