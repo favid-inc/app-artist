@@ -64,12 +64,10 @@ class AccountComponent extends React.Component<Props, State> {
             <View style={themedStyle.photoSection}>
               <ProfilePhoto artist={artist} onChange={this.handlePhotoUriChange} />
             </View>
-            <View style={themedStyle.photoSection}>
-              <PresentationVideo artist={artist} />
-            </View>
             <View style={themedStyle.infoSection}>
               <ProfileInfo hint='Email' value={artist.email} />
               <ProfileInfo hint='Nome' value={artist.name} />
+              <PresentationVideo artist={artist} onChange={this.handleVideoUriChange} />
               <ArtistForm
                 artist={artist}
                 categories={this.state.categories}
@@ -98,6 +96,10 @@ class AccountComponent extends React.Component<Props, State> {
 
   private handlePhotoUriChange = (photoUri = '') => {
     this.setState({ artist: { ...this.state.artist, photoUri } });
+  };
+
+  private handleVideoUriChange = (videoUri = '') => {
+    this.setState({ artist: { ...this.state.artist, videoUri } });
   };
 
   private handleArtisticNameChange = (artisticName = '') => {
@@ -144,7 +146,6 @@ class AccountComponent extends React.Component<Props, State> {
         this.setState({ artist, categories });
       }
     } catch (e) {
-      console.log('[Account.tsx] error: ', e);
       Alert.alert('Erro', 'Infelizmente os dados do seu perfil não puderam ser carregados.');
     } finally {
       if (this.isLive) {

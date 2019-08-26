@@ -1,22 +1,23 @@
 import { Artist } from '@favid-inc/api';
 import { ThemeType, withStyles } from '@kitten/theme';
-import { Avatar, AvatarProps, Button, Text } from '@kitten/ui';
+import { AvatarProps, Button, Text } from '@kitten/ui';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+import { Audio, Video } from 'expo-av';
 import React from 'react';
-import { ActivityIndicator, Alert, View } from 'react-native';
+import { Dimensions, ActivityIndicator, Alert, View } from 'react-native';
+import { VideoIcon } from '@src/assets/icons';
 
-import { VideoIcon, VideoOffIcon } from '@src/assets/icons';
-
-import { Canceler, CancelToken, uploadProfilePhoto } from './uploadProfilePhoto';
+import { Canceler, CancelToken, uploadProfileVideo } from './uploadProfileVideo';
 
 interface ComponentProps {
   artist: Artist;
+  onChange: (string) => void;
 }
 
 interface State {
   isUploading: boolean;
-  image: string;
+  uploadPercentage: number;
 }
 
 type Props = ComponentProps & AvatarProps;
@@ -24,11 +25,23 @@ type Props = ComponentProps & AvatarProps;
 class PresentationVideoComponent extends React.Component<Props, State> {
   public state: State = {
     isUploading: false,
-    image: null,
+    uploadPercentage: 0,
   };
 
   private uploadCanceler: Canceler;
   private isLive: boolean = true;
+
+  async componentDidMount() {
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      interruptionModeAndroid: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
+      interruptionModeIOS: Audio.INTERRUPTION_MODE_ANDROID_DUCK_OTHERS,
+      playsInSilentModeIOS: true,
+      playThroughEarpieceAndroid: false,
+      shouldDuckAndroid: true,
+      staysActiveInBackground: false,
+    });
+  }
 
   public componentWillUnmount() {
     this.isLive = false;
@@ -38,111 +51,86 @@ class PresentationVideoComponent extends React.Component<Props, State> {
   }
 
   public render() {
-    const { themedStyle, artist, ...restProps } = this.props;
+    const { themedStyle } = this.props;
+    const { isUploading, uploadPercentage } = this.state;
 
     return (
       <View style={themedStyle.container}>
-
-        {this.state.isUploading ? (
-          <ActivityIndicator style={themedStyle.edit} color='#0000ff' />
-        ) : (
-          <View>
-            <Button activeOpacity={0.95} icon={VideoIcon} onPress={this.hadleVideoPicker} />
-            <Text appearance='hint'>Video de Apresentação.</Text>
-          </View>
-        )}
+        <Video
+          shouldPlay={false}
+          source={{ uri: this.props.artist.videoUri }}
+          style={themedStyle.video}
+          useNativeControls={true}
+          resizeMode={Video.RESIZE_MODE_CONTAIN}
+        />
+        <View>
+          <Button
+            activeOpacity={0.95}
+            disabled={isUploading}
+            icon={!isUploading && VideoIcon}
+            onPress={this.handlePickerPress}
+          >
+            {isUploading && `${Math.round(uploadPercentage)}%`}
+          </Button>
+        </View>
       </View>
     );
   }
 
-  public hadleVideoPicker = async () => {
-    const { status: cameraRollPerm } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+  private handlePickerPress = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
-    // only if user allows permission to camera roll
-    if (cameraRollPerm === 'granted') {
-      const pickerResult = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
-        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-      });
-
-      this.handleVideoPicked(pickerResult);
+    if (status !== 'granted') {
+      Alert.alert('Desculpe, precisamos de permissão para essa ação');
     }
-  };
 
-  public handleVideoPicked = async (pickerResult) => {
-    let uploadResponse = null;
-    let uploadResult = null;
-
-    try {
-      this.setState({ isUploading: true });
-
-      if (!pickerResult.cancelled) {
-        uploadResponse = await this.uploadImageAsync(pickerResult.uri);
-        uploadResult = await uploadResponse.json();
-
-        this.setState({
-          image: uploadResult.location,
-        });
-      }
-    } catch (e) {
-      console.log({ uploadResponse });
-      console.log({ uploadResult });
-      console.log({ e });
-      Alert.alert('Upload failed, sorry :(');
-    } finally {
-      this.setState({
-        isUploading: false,
-      });
+    if (this.isLive) {
+      this.setState({ isUploading: true, uploadPercentage: 0 });
     }
-  };
 
-  public uploadImageAsync = async (uri) => {
-    const apiUrl = 'https://file-upload-example-backend-dkhqoilqqn.now.sh/upload';
-
-    // Note:
-    // Uncomment this if you want to experiment with local server
-    //
-    // if (Constants.isDevice) {
-    //   apiUrl = `https://your-ngrok-subdomain.ngrok.io/upload`;
-    // } else {
-    //   apiUrl = `http://localhost:3000/upload`
-    // }
-
-    const uriParts = uri.split('.');
-    const fileType = uriParts[uriParts.length - 1];
-
-    const formData = new FormData();
-    formData.append('photo', {
-      uri,
-      name: `photo.${fileType}`,
-      type: `image/${fileType}`,
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      allowsMultipleSelection: false,
+      mediaTypes: ImagePicker.MediaTypeOptions.Videos,
     });
 
-    const options = {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'multipart/form-data',
-      },
-    };
+    try {
+      if (result.cancelled === false /* Typescrypt fault */) {
+        const cancelToken = new CancelToken((canceler) => {
+          if (this.isLive) {
+            this.uploadCanceler = canceler;
+          }
+        });
 
-    // return fetch(apiUrl, options);
+        const { videoUri } = await uploadProfileVideo(result.uri, cancelToken, (uploadPercentage) => {
+          if (this.isLive) {
+            this.setState({ uploadPercentage });
+          }
+        });
+
+        this.props.onChange(videoUri);
+      }
+    } catch (e) {
+      Alert.alert('Erro', 'Não foi possível enviar o vídeo. Verifique sua conexão e tente novamente.');
+    } finally {
+      if (this.isLive) {
+        this.setState({ isUploading: false });
+      }
+    }
   };
 }
 
 export const PresentationVideo = withStyles<ComponentProps>(PresentationVideoComponent, (theme: ThemeType) => ({
   container: {
-    height: 124,
-    alignSelf: 'center',
+    flex: 1,
+    backgroundColor: 'black',
+  },
+  video: {
+    flex: 1,
+    height: Dimensions.get('window').height * 0.5,
   },
   edit: {
-    position: 'absolute',
-    alignSelf: 'flex-end',
-    width: 48,
     height: 48,
-    borderRadius: 24,
-    transform: [{ translateY: 82 }],
     borderColor: theme['border-basic-color-4'],
     backgroundColor: theme['background-basic-color-4'],
   },
