@@ -84,7 +84,7 @@ const NavigateToWalletButton = ({ themedStyle, onNavigate, userNotVerified }) =>
       </Button>
       {userNotVerified ? (
         <Text appearance='hint' style={{ textAlign: 'center' }}>
-          Sua conta está sedo verificada...
+          Sua conta está sendo verificada...
         </Text>
       ) : null}
     </View>
@@ -176,7 +176,7 @@ const PoliciesButton = ({ themedStyle }) => {
       size='medium'
       appearance='ghost'
     >
-      Politica de Segurança/Privacide
+      Política de Segurança/Privacidade
     </Button>
   );
 };
