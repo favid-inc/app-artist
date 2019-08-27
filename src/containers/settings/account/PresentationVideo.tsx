@@ -90,6 +90,7 @@ class PresentationVideoComponent extends React.Component<Props, State> {
 
     const result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
+      quality: 0,
       allowsMultipleSelection: false,
       mediaTypes: ImagePicker.MediaTypeOptions.Videos,
     });
