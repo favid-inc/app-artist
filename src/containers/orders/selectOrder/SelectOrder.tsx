@@ -206,9 +206,9 @@ export const SelectOrder = withStyles<ComponentProps>(SelectOrderComponent, (the
     alignItems: 'flex-start',
     backgroundColor: theme['background-basic-color-1'],
     marginVertical: 10,
-    marginHorizontal: 20,
-    paddingVertical: 40,
-    paddingHorizontal: 40,
+    marginHorizontal: 5,
+    paddingVertical: 20,
+    paddingHorizontal: 15,
     borderRadius: 15,
   },
 }));
