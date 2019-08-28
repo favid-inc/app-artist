@@ -2,6 +2,7 @@ import { Camera as NativeCamera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import React, { Component } from 'react';
 import { Platform, Text, View } from 'react-native';
+import { captureRef as takeSnapshotAsync } from 'react-native-view-shot';
 
 import { Toolbar } from './toolbar';
 
@@ -9,7 +10,7 @@ const CameraType = NativeCamera.Constants.Type;
 const FlashMode = NativeCamera.Constants.FlashMode;
 
 interface Props {
-  onRecord: (uri: string) => any;
+  onRecord: (videoUri: string, videoThumbnailUri: string) => any;
 }
 
 interface State {
@@ -100,18 +101,20 @@ export class Camera extends Component<Props, State> {
     const start = Date.now();
 
     this.setState({ isCapturing: true });
-    const result = await this.camera.recordAsync({ quality: NativeCamera.Constants.VideoQuality['480p'] });
 
-    this.setState({
-      isCapturing: false,
-    });
+    const { uri: videoUri } = await this.camera.recordAsync({ quality: NativeCamera.Constants.VideoQuality['4:3'] });
+
+    this.setState({ isCapturing: false });
 
     const end = Date.now();
 
     if (end - start < 1000) {
       return;
     }
-    this.props.onRecord(result.uri);
+
+    const videoThumbnailUri = await takeSnapshotAsync(this.camera);
+
+    this.props.onRecord(videoUri, videoThumbnailUri);
   };
 
   private handleCaptureOut = () => {
