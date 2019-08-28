@@ -52,7 +52,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
     categories = Array.from(new Set(categories));
 
     return (
-      <KeyboardAwareScrollView>
+
         <View style={themedStyle.container}>
           <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
             <ValidationInput
@@ -128,7 +128,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
             />
           </View>
         </View>
-      </KeyboardAwareScrollView>
+
     );
   }
 }
