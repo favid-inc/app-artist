@@ -37,7 +37,7 @@ class ProfilePhotoComponent extends React.Component<Props, State> {
   }
 
   public render() {
-    const { themedStyle, artist, onChange, ...restProps } = this.props;
+    const { themedStyle, artist, onChange } = this.props;
 
     return (
       <View style={themedStyle.container}>
@@ -77,13 +77,11 @@ class ProfilePhotoComponent extends React.Component<Props, State> {
 
     try {
       if (result.cancelled === false /* Typescrypt fault */) {
-        const cancelToken = new CancelToken((canceler) => {
-          if (this.isLive) {
-            this.uploadCanceler = canceler;
-          }
-        });
+        const cancelToken: CancelToken = (canceler) => {
+          this.uploadCanceler = canceler;
+        };
 
-        const { photoUri } = await uploadProfilePhoto(result.uri, cancelToken);
+        const { photoUri } = await uploadProfilePhoto(result.uri, cancelToken, () => void 0);
 
         this.props.onChange(photoUri);
       }

@@ -46,6 +46,7 @@
     "react-navigation": "^3.12.1",
     "react-number-format": "^4.2.0",
     "redux-thunk": "^2.3.0",
+    "scheduler": "^0.15.0",
     "validate.js": "^0.13.1"
   },
   "devDependencies": {

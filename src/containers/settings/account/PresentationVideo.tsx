@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import { Audio, Video } from 'expo-av';
 import React from 'react';
-import { Dimensions, ActivityIndicator, Alert, View } from 'react-native';
+import { Dimensions, Alert, View } from 'react-native';
 import { VideoIcon } from '@src/assets/icons';
 
 import { Canceler, CancelToken, uploadProfileVideo } from './uploadProfileVideo';
@@ -97,11 +97,9 @@ class PresentationVideoComponent extends React.Component<Props, State> {
 
     try {
       if (result.cancelled === false /* Typescrypt fault */) {
-        const cancelToken = new CancelToken((canceler) => {
-          if (this.isLive) {
-            this.uploadCanceler = canceler;
-          }
-        });
+        const cancelToken: CancelToken = (canceler) => {
+          this.uploadCanceler = canceler;
+        };
 
         const { videoUri } = await uploadProfileVideo(result.uri, cancelToken, (uploadPercentage) => {
           if (this.isLive) {
