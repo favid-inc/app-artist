@@ -4,7 +4,6 @@ import { withStyles, ThemedComponentProps, ThemeType } from '@kitten/theme';
 import React from 'react';
 import { ActivityIndicator, Alert, View } from 'react-native';
 
-import { ContainerView } from '@src/components/common';
 import { OrdersContext } from '../context';
 import { Canceler, CancelToken, fufillOrder } from './fufillOrder';
 
@@ -65,11 +64,9 @@ class UploadOrderVideoComponent extends React.Component<Props, State> {
     }
 
     try {
-      const cancelToken = new CancelToken((canceler) => {
-        if (this.isLive) {
-          this.uploadCanceler = canceler;
-        }
-      });
+      const cancelToken = (canceler) => {
+        this.uploadCanceler = canceler;
+      };
 
       await fufillOrder(this.context.order, cancelToken, (uploadPercentage) => {
         if (this.isLive) {
