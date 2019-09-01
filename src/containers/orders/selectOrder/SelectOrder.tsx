@@ -100,16 +100,18 @@ const SwipeOrders = ({ themedStyle, orders, title, onSelectedOrderChanged }) => 
       {orders.map((order: Order) => {
         return (
           <View key={order.id} style={themedStyle.slide}>
-            <Text style={[themedStyle.price, themedStyle.text]} appearance='hint' category='h5'>
-              {`R$ ${order.price}`}
+            <Text style={themedStyle.text} appearance='hint' category='p1'>
+              {`por: ${order.customerName}`}
             </Text>
-            <Text style={[themedStyle.text, themedStyle.name]} appearance='hint' category='h4'>
-              {`por ${order.customerName}`}
-            </Text>
+            {order.isGift && order.receiverName && (
+              <Text style={themedStyle.text} appearance='hint' category='p1'>
+                {`para: ${order.receiverName}`}
+              </Text>
+            )}
             <Text style={[themedStyle.text, themedStyle.expiration]} appearance='hint' category='c1'>
-              {`expira em ${new Date(order.statusPlacedDate)}`}
+              {`realizar até ${new Date(order.statusPlacedDate).toLocaleDateString()} - R$ ${order.price}`}
             </Text>
-            <Text style={[themedStyle.text, themedStyle.instruction]} appearance='hint' category='h6'>
+            <Text style={[themedStyle.text, themedStyle.instruction]} appearance='hint' category='p1'>
               {order.instructions}
             </Text>
           </View>
@@ -135,7 +137,7 @@ export const SelectOrder = withStyles<ComponentProps>(SelectOrderComponent, (the
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: theme['background-basic-color-4'],
-    paddingVertical: 10,
+    paddingVertical: 5,
     paddingHorizontal: 10,
     height: '100%',
   },
@@ -180,16 +182,8 @@ export const SelectOrder = withStyles<ComponentProps>(SelectOrderComponent, (the
     lineHeight: 25,
     marginBottom: 5,
   },
-  name: {
-    fontSize: 30,
-    lineHeight: 30,
-    marginBottom: 5,
-  },
   expiration: {
     marginBottom: 10,
-  },
-  instruction: {
-    paddingVertical: 15,
   },
   buttons: {
     flexDirection: 'row',
@@ -206,9 +200,8 @@ export const SelectOrder = withStyles<ComponentProps>(SelectOrderComponent, (the
     alignItems: 'flex-start',
     backgroundColor: theme['background-basic-color-1'],
     marginVertical: 10,
-    marginHorizontal: 20,
-    paddingVertical: 40,
-    paddingHorizontal: 40,
-    borderRadius: 15,
+    marginHorizontal: 10,
+    padding: 15,
+    borderRadius: 10,
   },
 }));

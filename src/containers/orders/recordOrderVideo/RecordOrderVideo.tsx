@@ -8,7 +8,7 @@ interface Props {
   onDone: () => void;
 }
 
-export class RecordOrderVideo extends Component<Props> {
+export class RecordOrderVideo extends React.Component<Props> {
   static contextType = OrdersContext;
   public context: React.ContextType<typeof OrdersContext>;
 
@@ -16,8 +16,8 @@ export class RecordOrderVideo extends Component<Props> {
     return <Camera onRecord={this.handleCameraRecord} />;
   }
 
-  private handleCameraRecord = (videoUri: string) => {
-    this.context.patchOrder({ videoUri });
+  private handleCameraRecord = async (videoUri: string, videoThumbnailUri: string) => {
+    this.context.patchOrder({ videoUri, videoThumbnailUri });
     this.props.onDone();
   };
 }

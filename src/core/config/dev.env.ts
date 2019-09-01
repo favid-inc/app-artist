@@ -9,7 +9,7 @@ export const firebase = {
 };
 
 export const api = {
-  baseURL: 'https://us-central1-onyx-harmony-239219.cloudfunctions.net/api/api',
+  baseURL: 'http://<host>:5000/api/appArtist',
 };
 
 export const auth = {
@@ -19,8 +19,4 @@ export const auth = {
     issuer: 'https://accounts.google.com',
     scopes: ['profile', 'email'],
   },
-};
-
-export const storageKeys = {
-  currentUser: 'current_user',
 };

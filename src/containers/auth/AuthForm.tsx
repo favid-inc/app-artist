@@ -1,9 +1,9 @@
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
-import { Button, Tab, TabView, Text } from '@kitten/ui';
+import { Button, Tab, TabView } from '@kitten/ui';
 import React from 'react';
 import { View } from 'react-native';
 
-import { ScrollableAvoidKeyboard, textStyle } from '@src/components/common';
+import { textStyle } from '@src/components/common';
 import { SignInForm } from './SignInForm';
 import { SignUpForm } from './SignUpForm';
 import { AuthFormData } from './type';
@@ -104,13 +104,15 @@ class AuthFormComponent extends React.Component<SignIn5Props, State> {
 export const AuthForm = withStyles(AuthFormComponent, (theme: ThemeType) => ({
   container: {
     flex: 1,
+    alignContent: 'stretch',
   },
   tabContentContainer: {
-    marginVertical: 8,
+    // marginVertical: 8,
+    paddingVertical: 20,
   },
   tabView: {
     flex: 1,
-    paddingHorizontal: 16,
+    paddingHorizontal: 0,
     margin: 5,
   },
   tabBar: {
@@ -124,6 +126,6 @@ export const AuthForm = withStyles(AuthFormComponent, (theme: ThemeType) => ({
     ...textStyle.label,
   },
   submitButton: {
-    marginHorizontal: 16,
+    // marginHorizontal: 16,
   },
 }));

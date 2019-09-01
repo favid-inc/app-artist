@@ -9,16 +9,14 @@ export const firebase = {
 };
 
 export const api = {
-  baseURL: 'https://us-central1-onyx-harmony-239219.cloudfunctions.net/api',
+  baseURL: 'https://onyx-harmony-239219.firebaseapp.com/api/appArtist',
 };
 
 export const auth = {
-  behavior: 'web',
-  clientId: '983263249595-anadgjdnado7mgh9o8eebpbeg4ki5c6m.apps.googleusercontent.com',
-  issuer: 'https://accounts.google.com',
-  scopes: ['profile', 'email'],
-};
-
-export const storageKeys = {
-  currentUser: 'current_user',
+  google: {
+    behavior: 'web',
+    clientId: '983263249595-2tclp7pj3b23h05l08v8v7af6mgbud1s.apps.googleusercontent.com',
+    issuer: 'https://accounts.google.com',
+    scopes: ['profile', 'email'],
+  },
 };

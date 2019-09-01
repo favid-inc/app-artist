@@ -9,6 +9,10 @@ interface State {
 }
 
 export class RecordOrderVideoContainer extends Component<NavigationScreenProps, State> {
+  public state = {
+    isFocused: true,
+  };
+
   private didFocusSubscription: NavigationEventSubscription;
   private didBlurSubscription: NavigationEventSubscription;
 

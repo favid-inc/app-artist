@@ -25,7 +25,7 @@ class Container extends Component<Props, State> {
   };
 
   public componentDidMount() {
-    // this.refresh();
+    this.refresh();
   }
 
   public render() {
@@ -85,7 +85,9 @@ class Container extends Component<Props, State> {
       this.setState({ loading: true });
       const orders = await listOrders();
       this.context.setOrders(orders);
+      this.context.setSelectedOrder(0);
     } catch (e) {
+      console.log('[SelectOrderContainer.tsx] error:', e);
       Alert.alert('Erro', 'Desculpe. Houve um erro ao buscar os seus pedidos');
     } finally {
       this.setState({ loading: false });
@@ -97,8 +99,8 @@ export const SelectOrderContainer = withStyles<{}>(Container, (theme: ThemeType)
   contentContainer: {
     flex: 1,
     backgroundColor: theme['background-basic-color-2'],
-    paddingVertical: 30,
-    paddingHorizontal: 20,
+    // paddingVertical: 30,
+    // paddingHorizontal: 20,
     justifyContent: 'center',
   },
   text: {

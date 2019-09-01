@@ -7,6 +7,7 @@ export async function declineOrder(order: Order): Promise<DeclineOrder['Response
   const request: DeclineOrder['Request'] = {
     url: '/DeclineOrder',
     method: 'POST',
+    data: order,
   };
 
   const response = await apiClient.request<DeclineOrder['Response']>(request);

@@ -369,6 +369,14 @@ export const ArrowIosBackFill = (style: StyleProp<ImageStyle>): IconElement => {
   return Icon(source, style);
 };
 
+export const BookFill = (style: StyleProp<ImageStyle>): IconElement => {
+  const source: IconSource = {
+    imageSource: require('./eva/book.png'),
+  };
+
+  return Icon(source, style);
+};
+
 export const BulbIconFill = (style: StyleProp<ImageStyle>): IconElement => {
   const source: IconSource = {
     imageSource: require('./eva/bulb.png'),
@@ -572,6 +580,22 @@ export const StarIconFill = (style: StyleProp<ImageStyle>): IconElement => {
 export const StarIconOutline = (style: StyleProp<ImageStyle>): IconElement => {
   const source: IconSource = {
     imageSource: require('./eva/star-outline.png'),
+  };
+
+  return Icon(source, style);
+};
+
+export const VideoIcon = (style: StyleProp<ImageStyle>): IconElement => {
+  const source: IconSource = {
+    imageSource: require('./eva/video.png'),
+  };
+
+  return Icon(source, style);
+};
+
+export const VideoOffIcon = (style: StyleProp<ImageStyle>): IconElement => {
+  const source: IconSource = {
+    imageSource: require('./eva/video-off.png'),
   };
 
   return Icon(source, style);

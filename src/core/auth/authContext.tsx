@@ -2,10 +2,10 @@ import * as AppAuth from 'expo-app-auth';
 import * as firebase from 'firebase';
 import React from 'react';
 import { Alert, AsyncStorage } from 'react-native';
-
 import { claimAccount } from './claimAccount';
 
 interface AuthContext {
+  user: firebase.UserInfo;
   isSignedIn: boolean;
   isSigningIn: boolean;
   signInWithOAuth: (oAuthProps: AppAuth.OAuthProps) => Promise<void>;
@@ -15,8 +15,9 @@ interface AuthContext {
 }
 
 export const AuthContext = React.createContext<AuthContext>({
+  user: null,
   isSignedIn: false,
-  isSigningIn: false,
+  isSigningIn: true,
   signInWithOAuth: () => null,
   signInWithEmailAndPassword: () => null,
   signUp: () => null,
@@ -44,9 +45,10 @@ interface FirebaseAuthState extends AuthContext {
 
 export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAuthState> {
   public state: FirebaseAuthState = {
+    user: null,
     credentials: { type: 'none' },
     isSignedIn: false,
-    isSigningIn: false,
+    isSigningIn: true,
     signInWithOAuth: (oAuthProps) => this.signInWithOAuth(oAuthProps),
     signInWithEmailAndPassword: (email, password) => this.signInWithEmailAndPassword(email, password),
     signOut: () => this.signOut(),
@@ -73,10 +75,12 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
     if (isSignedIn) {
       this.setState({ isSigningIn: true });
       try {
-        this.sigIn(credentials);
+        await this.sigIn(credentials);
       } finally {
         this.setState({ isSigningIn: false });
       }
+    } else {
+      this.setState({ isSigningIn: false });
     }
   }
 
@@ -122,7 +126,6 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
       const tokens = await AppAuth.authAsync(oAuthProps);
 
       const { user } = await this.sigIn({ type: 'oauth', tokens, oAuthProps });
-
       await claimAccount(await user.getIdToken());
     } finally {
       this.setState({ isSigningIn: false });
@@ -179,24 +182,28 @@ export class FirebaseAuth extends React.Component<FirebaseAuthProps, FirebaseAut
   }
 
   private handleAuthStateChanged = async (user: firebase.UserInfo) => {
-    if (!this.state.isSignedIn || !this.state.credentials) {
-      return;
-    }
+    this.setState({ user });
 
-    if (this.state.credentials.type === 'oauth' && !user) {
-      try {
-        if (Date.now() > new Date(this.state.credentials.tokens.accessTokenExpirationDate).getTime()) {
-          return;
+    const { isSignedIn, credentials } = this.state;
+
+    if (isSignedIn && credentials && credentials.type === 'oauth') {
+      setTimeout(async () => {
+        try {
+          console.log('refreshing Token');
+          const { refreshToken } = credentials.tokens;
+          const tokens = await AppAuth.refreshAsync(credentials.oAuthProps, refreshToken);
+
+          await this.sigIn({
+            ...credentials,
+            tokens: {
+              ...tokens,
+              refreshToken,
+            },
+          });
+        } catch (e) {
+          this.signOut();
         }
-
-        const { refreshToken } = this.state.credentials.tokens;
-        const tokens = await AppAuth.refreshAsync(this.state.credentials.oAuthProps, refreshToken);
-        const credentials = { ...this.state.credentials, tokens: { ...tokens, refreshToken } };
-
-        await this.sigIn(credentials);
-      } catch (e) {
-        this.signOut();
-      }
+      }, new Date(credentials.tokens.accessTokenExpirationDate).getTime() - Date.now());
     }
   };
 

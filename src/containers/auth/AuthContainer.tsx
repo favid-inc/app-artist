@@ -1,7 +1,6 @@
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
-import { CheckBox } from '@kitten/ui';
 import React from 'react';
-import { ActivityIndicator, Alert, Image, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, View } from 'react-native';
 import { NavigationScreenProps } from 'react-navigation';
 
 import { favidImage } from '@src/assets/images';
@@ -11,6 +10,7 @@ import * as config from '@src/core/config';
 
 import { AuthForm } from './AuthForm';
 import { SocialAuth } from './SocialAuth';
+import { TermsAndPolicies } from './TermsAndPolicies';
 import { AuthFormData } from './type';
 
 type Props = ThemedComponentProps & NavigationScreenProps;
@@ -19,7 +19,7 @@ interface State {
   termsAccepted: boolean;
 }
 
-class SignInContainerComponent extends React.Component<Props, State> {
+class AuthContainerComponent extends React.Component<Props, State> {
   static contextType = AuthContext;
   public context: React.ContextType<typeof AuthContext>;
 
@@ -34,10 +34,8 @@ class SignInContainerComponent extends React.Component<Props, State> {
       return (
         <View style={themedStyle.container}>
           <Image source={favidImage.imageSource} style={themedStyle.logoStyle} />
-          <View style={themedStyle.contentContainer}>
-            <View style={themedStyle.container}>
-              <ActivityIndicator size='large' />
-            </View>
+          <View style={themedStyle.container}>
+            <ActivityIndicator size='large' />
           </View>
         </View>
       );
@@ -47,17 +45,12 @@ class SignInContainerComponent extends React.Component<Props, State> {
       <View style={themedStyle.container}>
         <Image source={favidImage.imageSource} style={themedStyle.logoStyle} />
         <ScrollableAvoidKeyboard>
-          <View style={themedStyle.contentContainer}>
-            <AuthForm onSignIn={this.handleSignIn} onSignUp={this.handleSignUp} />
-            <SocialAuth onGoogleSignIn={this.handleGoogleSignIn} onFacebookSignIn={this.handleFacebookSignIn} />
-            <CheckBox
-              style={themedStyle.termsCheckBox}
-              textStyle={themedStyle.termsCheckBoxText}
-              checked={this.state.termsAccepted}
-              text={'Declaro que li e concordo com os termos de uso'}
-              onChange={this.handleTermsAcceptChange}
-            />
-          </View>
+          <AuthForm onSignIn={this.handleSignIn} onSignUp={this.handleSignUp} />
+          <SocialAuth onGoogleSignIn={this.handleGoogleSignIn} onFacebookSignIn={this.handleFacebookSignIn} />
+          <TermsAndPolicies
+            onTermsAcceptedChange={this.handleTermsAcceptChange}
+            termsAcceptedValue={this.state.termsAccepted}
+          />
         </ScrollableAvoidKeyboard>
       </View>
     );
@@ -100,17 +93,12 @@ class SignInContainerComponent extends React.Component<Props, State> {
   };
 }
 
-export const SignInContainer = withStyles(SignInContainerComponent, (theme: ThemeType) => ({
+export const AuthContainer = withStyles(AuthContainerComponent, (theme: ThemeType) => ({
   container: {
     flex: 1,
     backgroundColor: theme['background-basic-color-2'],
     alignItems: 'center',
     paddingVertical: 10,
-  },
-  contentContainer: {
-    alignItems: 'center',
-    marginBottom: 20,
-    marginTop: 20,
   },
   logoStyle: {
     padding: 10,
@@ -128,7 +116,7 @@ export const SignInContainer = withStyles(SignInContainerComponent, (theme: Them
   },
 
   termsCheckBox: {
-    margin: 20,
+    marginHorizontal: 20,
   },
   termsCheckBoxText: {
     fontSize: 11,

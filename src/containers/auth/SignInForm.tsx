@@ -2,7 +2,7 @@ import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Button, Text } from '@kitten/ui';
 import * as firebase from 'firebase';
 import React from 'react';
-import { Alert, StyleSheet, TouchableHighlight, TouchableWithoutFeedback, View, ViewProps } from 'react-native';
+import { Alert, StyleSheet, View, ViewProps } from 'react-native';
 import Modal from 'react-native-modal';
 
 import { EmailIconFill, LockIconFill } from '@src/assets/icons';
@@ -45,7 +45,7 @@ class SignInFormComponent extends React.Component<SignInFormProps, State> {
     }
   }
 
-  public render(): React.ReactNode {
+  public render() {
     const { style, themedStyle, theme, ...restProps } = this.props;
 
     return (

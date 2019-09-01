@@ -41,7 +41,6 @@ export class VideoPlayer extends React.Component<Props, State> {
             style={styles.fullScreen}
             useNativeControls={true}
             resizeMode={Video.RESIZE_MODE_CONTAIN}
-            isLooping={true}
           />
           <View style={styles.fullScreen}>
             {this.state.playbackStatus.isLoaded ? (

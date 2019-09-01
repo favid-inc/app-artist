@@ -2,7 +2,7 @@ import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import React from 'react';
 import { View, ViewProps } from 'react-native';
 
-import { EmailIconFill, LockIconFill, PhoneIconFill } from '@src/assets/icons';
+import { EmailIconFill, LockIconFill } from '@src/assets/icons';
 import { textStyle, ValidationInput } from '@src/components/common';
 import { EmailValidator, PasswordValidator } from '@src/core/validators';
 import { AuthFormData } from './type';
@@ -40,7 +40,7 @@ class SignUpFormComponent extends React.Component<SignUpFormProps, State> {
     }
   }
 
-  public render(): React.ReactNode {
+  public render() {
     const { style, themedStyle, theme, ...restProps } = this.props;
 
     const confirmPasswordCaption =
@@ -59,6 +59,7 @@ class SignUpFormComponent extends React.Component<SignUpFormProps, State> {
           style={themedStyle.emailInput}
           textStyle={textStyle.paragraph}
           validator={EmailValidator}
+          value={this.state.email}
         />
         <ValidationInput
           icon={LockIconFill}
@@ -68,6 +69,7 @@ class SignUpFormComponent extends React.Component<SignUpFormProps, State> {
           style={themedStyle.passwordInput}
           textStyle={textStyle.paragraph}
           validator={PasswordValidator}
+          value={this.state.password}
         />
         <ValidationInput
           caption={confirmPasswordCaption}
@@ -78,6 +80,7 @@ class SignUpFormComponent extends React.Component<SignUpFormProps, State> {
           style={themedStyle.passwordInput}
           textStyle={textStyle.paragraph}
           validator={PasswordValidator}
+          value={this.state.confirmPassword}
         />
       </View>
     );
