@@ -1,21 +1,20 @@
+import { ApplyForAffiliation } from '@favid-inc/api/lib/app-artist';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Button, Text } from '@kitten/ui';
-import React from 'react';
 import md5 from 'md5';
-import { Share, Platform, Linking, View } from 'react-native';
-import { ApplyForSponsorship } from '@favid-inc/api/lib/app-artist';
+import React from 'react';
+import { Linking, Platform, Share, View } from 'react-native';
 
 import {
   BookFill,
   FileTextIconFill,
   LogOutIconFill,
-  PersonIconFill,
   MenuIconMessaging,
   PeopleIconFill,
+  PersonIconFill,
 } from '@src/assets/icons';
 import { AuthContext } from '@src/core/auth';
 import * as config from '@src/core/config';
-// import { loadProfile } from './account/loadProfile';
 
 interface Props {
   onNavigate: (pathName: string) => void;
@@ -43,11 +42,11 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
           onNavigate={this.handleNavigateToWallet}
         />
         <NavigateToAccountButton themedStyle={themedStyle} onNavigate={this.handleNavigateToAccount} />
-        <SigOutButton themedStyle={themedStyle} />
-        <ShareSponsorship themedStyle={themedStyle} />
+        <ShareAfilliationButton themedStyle={themedStyle} />
         <NeedHelpButton themedStyle={themedStyle} />
         <PoliciesButton themedStyle={themedStyle} />
         <TermsButton themedStyle={themedStyle} />
+        <SigOutButton themedStyle={themedStyle} />
       </View>
     );
   }
@@ -63,7 +62,7 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
 
 const NavigateToAccountButton = ({ themedStyle, onNavigate }) => {
   return (
-    <Button status='info' style={themedStyle.Button} onPress={onNavigate} icon={PersonIconFill} size='giant'>
+    <Button status='info' style={themedStyle.button} onPress={onNavigate} icon={PersonIconFill} size='large'>
       Conta
     </Button>
   );
@@ -71,23 +70,23 @@ const NavigateToAccountButton = ({ themedStyle, onNavigate }) => {
 
 const NavigateToWalletButton = ({ themedStyle, onNavigate, userNotVerified }) => {
   return (
-    <View style={{ marginBottom: 20 }}>
+    <>
       <Button
         status='info'
         disabled={userNotVerified}
-        style={themedStyle.Button}
+        style={themedStyle.button}
         onPress={onNavigate}
         icon={BookFill}
-        size='giant'
+        size='large'
       >
         Minha Carteira
       </Button>
-      {userNotVerified ? (
-        <Text appearance='hint' style={{ textAlign: 'center' }}>
+      {userNotVerified && (
+        <Text appearance='hint' style={{ textAlign: 'center', marginBottom: 20 }}>
           Sua conta está sendo verificada...
         </Text>
-      ) : null}
-    </View>
+      )}
+    </>
   );
 };
 
@@ -96,29 +95,29 @@ const SigOutButton = ({ themedStyle }) => {
   const handleSignOutClick = React.useCallback(() => context.signOut(), [context]);
 
   return (
-    <Button status='danger' style={themedStyle.Button} onPress={handleSignOutClick} icon={LogOutIconFill} size='giant'>
+    <Button status='danger' style={themedStyle.button} onPress={handleSignOutClick} icon={LogOutIconFill} size='large'>
       Deslogar
     </Button>
   );
 };
 
-const ShareSponsorship = ({ themedStyle }) => {
+const ShareAfilliationButton = ({ themedStyle }) => {
   const context = React.useContext(AuthContext);
   const handleSignOutClick = React.useCallback(() => {
     const { user } = context;
-    const s1 = md5(`$ecr3t[${Date.now()}]`);
+    const s1 = md5(Date.now());
     const s2 = md5(`(${s1})[${user.email}]`);
     const s3 = md5(`(${s1})[${user.uid}]`);
     const s4 = md5(`(${s1})[${s2}][${s3}]`);
 
-    const params = { s1, s2, s3, s4 };
+    const params: ApplyForAffiliation['Request']['params'] = { s1, s2, s3, s4 };
 
     const esc = encodeURIComponent;
     const query = Object.keys(params)
       .map((k) => esc(k) + '=' + esc(params[k]))
       .join('&');
 
-    const url: ApplyForSponsorship['Request']['url'] = '/ApplyForSponsorship';
+    const url: ApplyForAffiliation['Request']['url'] = '/ApplyForAffiliation';
 
     const { baseURL } = config.api;
 
@@ -127,20 +126,20 @@ const ShareSponsorship = ({ themedStyle }) => {
     Share.share(
       Platform.select({
         ios: {
-          title: `Venha participar do Favid como meu afilhado`,
+          title: `Venha participar do Favid como meu afiliado`,
           url: fullUrl,
         },
         android: {
-          title: `Venha participar do Favid como meu afilhado`,
-          message: `Venha participar do Favid como meu afilhado: "${fullUrl}"`,
+          title: `Venha participar do Favid como meu afiliado`,
+          message: `Venha participar do Favid como meu afiliado: "${fullUrl}"`,
         },
       }),
     );
   }, [context]);
 
   return (
-    <Button status='warning' style={themedStyle.Button} onPress={handleSignOutClick} icon={PeopleIconFill} size='giant'>
-      Convidar Afilhado
+    <Button status='warning' style={themedStyle.button} onPress={handleSignOutClick} icon={PeopleIconFill} size='large'>
+      Convidar Afiliado
     </Button>
   );
 };
@@ -152,7 +151,7 @@ const NeedHelpButton = ({ themedStyle }) => {
   );
 
   return (
-    <Button status='primary' style={themedStyle.Button} onPress={handleClick} icon={MenuIconMessaging} size='giant'>
+    <Button status='primary' style={themedStyle.button} onPress={handleClick} icon={MenuIconMessaging} size='large'>
       Preciso de Ajuda
     </Button>
   );
@@ -161,21 +160,12 @@ const NeedHelpButton = ({ themedStyle }) => {
 const PoliciesButton = ({ themedStyle }) => {
   const handleClick = React.useCallback(
     () =>
-      Linking.openURL(
-        'https://onyx-harmony-239219.firebaseapp.com/terms-and-policies/Poli%CC%81tica%20de%20Seguranc%CC%A7a%20e%20Privacidade%20-%20FAVID%20-%2011.04.2019.pdf',
-      ),
+      Linking.openURL('https://onyx-harmony-239219.firebaseapp.com/documents/politica_de_seguranca_e_privacidade.pdf'),
     [],
   );
 
   return (
-    <Button
-      status='primary'
-      style={themedStyle.Button}
-      onPress={handleClick}
-      icon={FileTextIconFill}
-      size='medium'
-      appearance='ghost'
-    >
+    <Button status='primary' style={themedStyle.button} onPress={handleClick} icon={FileTextIconFill} size='large'>
       Política de Segurança/Privacidade
     </Button>
   );
@@ -183,22 +173,12 @@ const PoliciesButton = ({ themedStyle }) => {
 
 const TermsButton = ({ themedStyle }) => {
   const handleClick = React.useCallback(
-    () =>
-      Linking.openURL(
-        'https://onyx-harmony-239219.firebaseapp.com/terms-and-policies/Termos%20de%20Uso%20do%20Site%20ou%20Aplicativo%20-%20FAVID%20-%2011.04.2019.pdf',
-      ),
+    () => Linking.openURL('https://onyx-harmony-239219.firebaseapp.com/documents/termos_de_uso.pdf'),
     [],
   );
 
   return (
-    <Button
-      status='primary'
-      style={themedStyle.Button}
-      onPress={handleClick}
-      icon={FileTextIconFill}
-      size='medium'
-      appearance='ghost'
-    >
+    <Button status='primary' style={themedStyle.button} onPress={handleClick} icon={FileTextIconFill} size='large'>
       Termos de Uso
     </Button>
   );
@@ -213,7 +193,7 @@ export const Settings = withStyles(SettingsComponent, (theme: ThemeType) => ({
     flex: 1,
     width: '100%',
   },
-  Button: {
-    marginVertical: 20,
+  button: {
+    marginVertical: 10,
   },
 }));
