@@ -166,7 +166,7 @@ const PoliciesButton = ({ themedStyle }) => {
 
   return (
     <Button status='primary' style={themedStyle.button} onPress={handleClick} icon={FileTextIconFill} size='large'>
-      Política de Segurança/Privacidade
+      Pol. de Segurança/Privacidade
     </Button>
   );
 };
