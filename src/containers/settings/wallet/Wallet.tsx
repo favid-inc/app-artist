@@ -1,9 +1,9 @@
-import React from 'react';
-import { ActivityIndicator, Alert, View, ViewProps } from 'react-native';
+import { LoadWalletInfo } from '@favid-inc/api/lib/app-artist';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Text } from '@kitten/ui';
-import { LoadWalletInfo } from '@favid-inc/api/lib/app-artist';
 import { apiClient } from '@src/core/utils/apiClient';
+import React from 'react';
+import { ActivityIndicator, Alert, View, ViewProps } from 'react-native';
 
 import { SettingsContext } from '../context';
 import { BankAccountInfo } from './BankAccountInfo';

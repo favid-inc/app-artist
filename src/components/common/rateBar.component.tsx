@@ -1,9 +1,4 @@
-import {
-  StyleType,
-  ThemedComponentProps,
-  ThemeType,
-  withStyles,
-} from '@kitten/theme';
+import { StyleType, ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Text } from '@kitten/ui';
 import { StarIconFill } from '@src/assets/icons';
 import { textStyle } from '@src/components/common/style';
@@ -12,7 +7,6 @@ import {
   ImageProps,
   ImageStyle,
   StyleProp,
-  TextProps,
   TextStyle,
   TouchableOpacity,
   TouchableOpacityProps,
@@ -34,23 +28,20 @@ interface ComponentProps {
 export type RateBarProps = ThemedComponentProps & ViewProps & ComponentProps;
 
 class RateBarComponent extends React.Component<RateBarProps> {
-
   static defaultProps: Partial<RateBarProps> = {
     icon: StarIconFill,
     value: 0,
     max: 5,
   };
 
-  public render(): React.ReactNode {
+  public render() {
     const { style, themedStyle, hint, ...restProps } = this.props;
     const { container, ...componentStyle } = themedStyle;
 
-    const componentChildren: React.ReactNode = this.renderComponentChildren(componentStyle);
+    const componentChildren = this.renderComponentChildren(componentStyle);
 
     return (
-      <View
-        {...restProps}
-        style={[container, style]}>
+      <View {...restProps} style={[container, style]}>
         {componentChildren}
       </View>
     );
@@ -62,65 +53,56 @@ class RateBarComponent extends React.Component<RateBarProps> {
     }
   };
 
-  private renderHintElement = (style: StyleType): React.ReactElement<TextProps> => {
+  private renderHintElement = (style: StyleType) => {
     const { hintStyle } = this.props;
 
     return (
-      <Text
-        key={0}
-        style={[style, hintStyle]}
-        appearance='hint'>
+      <Text key={0} style={[style, hintStyle]} appearance='hint'>
         {this.props.hint}
       </Text>
     );
   };
 
-  private renderRateIconElement = (style: StyleType, index: number): React.ReactElement<ImageProps> => {
+  private renderRateIconElement = (style: StyleType, index: number) => {
     const { value, icon, iconStyle, iconDisabledStyle } = this.props;
 
-    const iconElement: React.ReactElement<ImageProps> = icon(style.icon);
+    const iconElement = icon(style.icon);
 
-    const isEnabled: boolean = index < value;
-    const stateStyle: StyleType = isEnabled ? style.iconEnabled : style.iconDisabled;
-    const derivedStateStyle: StyleType = isEnabled ? iconStyle : iconDisabledStyle;
+    const isEnabled = index < value;
+    const stateStyle = isEnabled ? style.iconEnabled : style.iconDisabled;
+    const derivedStateStyle = isEnabled ? iconStyle : iconDisabledStyle;
 
     return React.cloneElement(iconElement, {
       style: [style.icon, iconElement.props.style, stateStyle, derivedStateStyle],
     });
   };
 
-  private renderRateButtonElement = (style: StyleType, index: number): React.ReactElement<TouchableOpacityProps> => {
-    const iconElement: React.ReactElement<ImageProps> = this.renderRateIconElement(style, index);
+  private renderRateButtonElement = (style: StyleType, index: number) => {
+    const iconElement = this.renderRateIconElement(style, index);
 
     return (
-      <TouchableOpacity
-        key={index}
-        activeOpacity={0.65}
-        onPress={() => this.onRateButtonPress(index)}>
+      <TouchableOpacity key={index} activeOpacity={0.65} onPress={() => this.onRateButtonPress(index)}>
         {iconElement}
       </TouchableOpacity>
     );
   };
 
-  private renderRateBar = (style: StyleType): React.ReactNode => {
+  private renderRateBar = (style: StyleType) => {
     const rates: Array<React.ReactElement<TouchableOpacityProps>> = [];
 
     for (let index = 0; index < this.props.max; index++) {
-      const rateElement: React.ReactElement<TouchableOpacityProps> = this.renderRateButtonElement(style, index);
+      const rateElement = this.renderRateButtonElement(style, index);
       rates.push(rateElement);
     }
 
     return rates;
   };
 
-  private renderComponentChildren = (style: StyleType): React.ReactNode => {
+  private renderComponentChildren = (style: StyleType) => {
     const { hint } = this.props;
     const { hint: hintStyle, ...rateBarStyle } = style;
 
-    return [
-      hint ? this.renderHintElement(style.hint) : null,
-      this.renderRateBar(rateBarStyle),
-    ];
+    return [hint ? this.renderHintElement(style.hint) : null, this.renderRateBar(rateBarStyle)];
   };
 }
 

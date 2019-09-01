@@ -1,6 +1,6 @@
-import { UploadProfilePhoto, ARTIST_UPLOAD_DIRECTORY } from '@favid-inc/api/lib/app-artist';
-import * as firebase from 'firebase';
+import { ARTIST_UPLOAD_DIRECTORY, UploadProfilePhoto } from '@favid-inc/api/lib/app-artist';
 import { apiClient } from '@src/core/utils/apiClient';
+import * as firebase from 'firebase';
 
 export type Canceler = () => void;
 export type CancelToken = (canceler: Canceler) => void;

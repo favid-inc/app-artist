@@ -1,7 +1,7 @@
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Button, Text } from '@kitten/ui';
 import React, { Component } from 'react';
-import { TextInput, View, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, TextInput, View } from 'react-native';
 
 import { ContainerView } from '@src/components/common';
 

@@ -2,10 +2,10 @@ import { createStackNavigator } from 'react-navigation';
 
 import { TopBarNavigationOptions } from '@src/core/navigation/options';
 
-import { WalletNavigation } from './wallet';
+import { AccountNavigation } from './account';
 import { connect } from './context';
 import { SettingsContainer } from './SettingsContainer';
-import { AccountNavigation } from './account';
+import { WalletNavigation } from './wallet';
 
 export const SettingsNavigator = connect(
   createStackNavigator(

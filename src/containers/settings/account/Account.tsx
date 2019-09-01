@@ -13,8 +13,8 @@ import { ProfilePhoto } from './ProfilePhoto';
 
 import { listAvailableArtistCategories } from './listAvailableArtistCategories';
 import { loadProfile } from './loadProfile';
-import { updateProfile } from './updateProfile';
 import { PresentationVideo } from './PresentationVideo';
+import { updateProfile } from './updateProfile';
 
 export type Props = ThemedComponentProps;
 

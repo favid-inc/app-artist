@@ -1,14 +1,14 @@
 import { RequestWithdraw } from '@favid-inc/api/lib/app-artist';
-import React from 'react';
-import validate from 'validate.js';
-import { Button, Text } from '@kitten/ui';
-import { View, ViewProps, Alert, Platform } from 'react-native';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
+import { Button, Text } from '@kitten/ui';
+import React from 'react';
+import { Alert, Platform, View, ViewProps } from 'react-native';
+import validate from 'validate.js';
 
-import { SettingsContext } from '../context';
-import { textStyle, ValidationInput, ScrollableAvoidKeyboard } from '@src/components/common';
-import { apiClient } from '@src/core/utils/apiClient';
+import { ScrollableAvoidKeyboard, textStyle, ValidationInput } from '@src/components/common';
 import { VALUE_REGEX } from '@src/core/formatters';
+import { apiClient } from '@src/core/utils/apiClient';
+import { SettingsContext } from '../context';
 
 interface ComponentProps {
   onDone: () => void;

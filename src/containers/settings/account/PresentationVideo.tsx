@@ -1,12 +1,12 @@
 import { Artist } from '@favid-inc/api';
 import { ThemeType, withStyles } from '@kitten/theme';
 import { AvatarProps, Button, Text } from '@kitten/ui';
+import { VideoIcon } from '@src/assets/icons';
+import { Audio, Video } from 'expo-av';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
-import { Audio, Video } from 'expo-av';
 import React from 'react';
-import { Dimensions, Alert, View } from 'react-native';
-import { VideoIcon } from '@src/assets/icons';
+import { Alert, Dimensions, View } from 'react-native';
 
 import { Canceler, CancelToken, uploadProfileVideo } from './uploadProfileVideo';
 

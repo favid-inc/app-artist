@@ -1,6 +1,6 @@
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import React from 'react';
 import { ScrollView } from 'react-native';
-import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { NavigationScreenProps } from 'react-navigation';
 import { Wallet } from './Wallet';
 type Props = ThemedComponentProps & NavigationScreenProps;

@@ -1,7 +1,7 @@
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
+import { Button, Text } from '@kitten/ui';
 import React from 'react';
 import { View, ViewProps } from 'react-native';
-import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
-import { Text, Button } from '@kitten/ui';
 
 import { textStyle } from '@src/components/common';
 import { SettingsContext } from '../context';

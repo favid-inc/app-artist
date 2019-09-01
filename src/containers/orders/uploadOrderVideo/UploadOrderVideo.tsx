@@ -1,6 +1,6 @@
 import { OrderStatus } from '@favid-inc/api';
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Button, Text } from '@kitten/ui';
-import { withStyles, ThemedComponentProps, ThemeType } from '@kitten/theme';
 import React from 'react';
 import { ActivityIndicator, Alert, View } from 'react-native';
 

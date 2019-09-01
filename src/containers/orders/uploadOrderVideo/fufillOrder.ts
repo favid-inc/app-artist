@@ -1,7 +1,7 @@
 import { Order } from '@favid-inc/api';
-import * as firebase from 'firebase';
-import { FulfillOrder, ARTIST_UPLOAD_DIRECTORY } from '@favid-inc/api/lib/app-artist';
+import { ARTIST_UPLOAD_DIRECTORY, FulfillOrder } from '@favid-inc/api/lib/app-artist';
 import { apiClient } from '@src/core/utils/apiClient';
+import * as firebase from 'firebase';
 
 export type Canceler = () => void;
 export type CancelToken = (canceler: Canceler) => void;
