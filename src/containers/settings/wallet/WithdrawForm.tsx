@@ -99,7 +99,7 @@ class WithdrawFormComponent extends React.Component<Props, State> {
 
       const response = await apiClient.request<RequestWithdraw['Response']>(request);
 
-      this.context.setWalletInfo(response.data);
+      this.context.setWalletInfo({ ...this.context.walletInfo, balance: response.data });
 
       Alert.alert('Solicitação enviada com sucesso');
 
@@ -116,7 +116,9 @@ class WithdrawFormComponent extends React.Component<Props, State> {
 
     const { walletInfo } = this.context;
 
-    const currentBalance = parseInt(walletInfo.balance_available_for_withdraw.replace(/\D/g, ''), 10) || 0 / 10;
+    const { balance } = walletInfo;
+
+    const currentBalance = parseInt(String(balance.available || '').replace(/\D/g, ''), 10) || 0 / 10;
 
     return (
       <ScrollableAvoidKeyboard style={[themedStyle.container, style]} extraScrollHeight={this.keyboardOffset}>

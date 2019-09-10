@@ -68,9 +68,6 @@ class WalletComponent extends React.Component<Props, State> {
     );
   }
 
-  // private navigateToWalletForm = () => {
-  //   this.props.onNavigate('Dados Bancários');
-  // };
   private navigateToWithdraw = () => {
     this.props.onNavigate('Sacar Dinheiro');
   };

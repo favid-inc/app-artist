@@ -24,12 +24,13 @@ class WithdrawCardComponent extends React.Component<Props> {
       return <View />;
     }
 
+    const { balance } = walletInfo;
+
     const { themedStyle } = this.props;
 
     return (
       <View style={themedStyle.walletCard}>
-        <InfoItem hint='Saldo' value={walletInfo.receivable_balance} />
-        <InfoItem hint='Disponível para Saque' value={walletInfo.balance_available_for_withdraw} />
+        <InfoItem hint='Saldo' value={`R$ ${balance.available || 0}`} />
         <Button
           status='success'
           size='giant'
