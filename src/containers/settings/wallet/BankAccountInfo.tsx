@@ -14,11 +14,6 @@ class BankAccountInfoComponent extends React.Component<Props, {}, Context> {
   static contextType = SettingsContext;
   public context: React.ContextType<Context>;
 
-  public isVerified = (): boolean => {
-    const { walletInfo } = this.context;
-    return walletInfo && walletInfo['is_verified?'];
-  };
-
   public render() {
     const { themedStyle } = this.props;
     const { walletInfo } = this.context;
@@ -27,9 +22,9 @@ class BankAccountInfoComponent extends React.Component<Props, {}, Context> {
       return <View style={themedStyle.walletCard} />;
     }
 
-    const { informations } = walletInfo;
+    const { bankAccount } = walletInfo;
 
-    if (!informations || !informations.length) {
+    if (!bankAccount) {
       return (
         <View style={themedStyle.walletCard}>
           <Text appearance='hint' style={themedStyle.title}>
@@ -41,16 +36,12 @@ class BankAccountInfoComponent extends React.Component<Props, {}, Context> {
 
     return (
       <View style={themedStyle.walletCard}>
-        <InfoItem hint='Nome' value={(informations.find((i) => i.key === 'name') || { value: '' }).value} />
-        <InfoItem hint='CPF' value={(informations.find((i) => i.key === 'cpf') || { value: '' }).value} />
-        <InfoItem hint='Banco' value={(informations.find((i) => i.key === 'bank') || { value: '' }).value} />
-        <InfoItem hint='Agência' value={(informations.find((i) => i.key === 'bank_ag') || { value: '' }).value} />
-        <InfoItem hint='Conta' value={(informations.find((i) => i.key === 'bank_cc') || { value: '' }).value} />
-        <InfoItem hint='Operação' value={(informations.find((i) => i.key === 'account_type') || { value: '' }).value} />
-        <InfoItem
-          hint='Transf. Automatica'
-          value={(informations.find((i) => i.key === 'automatic_transfer') || { value: '' }).value ? 'Sim' : 'Não'}
-        />
+        <InfoItem hint='Nome' value={bankAccount.legal_name} />
+        <InfoItem hint='CPF' value={bankAccount.document_number} />
+        <InfoItem hint='Banco' value={bankAccount.bank_code} />
+        <InfoItem hint='Agência' value={`${bankAccount.agencia}-${bankAccount.agencia_dv}`} />
+        <InfoItem hint='Conta' value={`${bankAccount.conta}-${bankAccount.conta_dv}`} />
+        <InfoItem hint='Operação' value={bankAccount.type} />
       </View>
     );
   }
