@@ -4,7 +4,7 @@
     "icon": "./src/assets/icons/icon.png",
     "version": "2.0.1",
     "slug": "favid-artist",
-    "sdkVersion": "33.0.0",
+    "sdkVersion": "34.0.0",
     "privacy": "public",
     "orientation": "portrait",
     "githubUrl": "https://github.com/favid-inc/app-artist",
@@ -20,19 +20,12 @@
     "androidStatusBar": {
       "backgroundColor": "#FFFFFF"
     },
-    "assetBundlePatterns": [
-      "src/assets/images/source/*",
-      "src/assets/icons/**/*.png",
-      "src/assets/fonts"
-    ],
+    "assetBundlePatterns": ["src/assets/images/source/*", "src/assets/icons/**/*.png", "src/assets/fonts"],
     "splash": {
       "image": "src/assets/images/source/splash.png",
       "resizeMode": "contain"
     },
-    "platforms": [
-      "android",
-      "ios"
-    ],
+    "platforms": ["android", "ios"],
     "description": ""
   }
 }
