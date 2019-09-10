@@ -6,7 +6,7 @@ import { LoadWalletInfo } from '@favid-inc/api/lib/app-artist';
 type WalletInfo = LoadWalletInfo['Response'];
 
 interface Context {
-  walletInfo?: LoadWalletInfo['Response'];
+  walletInfo?: WalletInfo;
   setWalletInfo?: (w: WalletInfo) => void;
 }
 

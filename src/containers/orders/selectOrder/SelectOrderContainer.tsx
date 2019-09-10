@@ -87,7 +87,6 @@ class Container extends Component<Props, State> {
       this.context.setOrders(orders);
       this.context.setSelectedOrder(0);
     } catch (e) {
-      console.log('[SelectOrderContainer.tsx] error:', e);
       Alert.alert('Erro', 'Desculpe. Houve um erro ao buscar os seus pedidos');
     } finally {
       this.setState({ loading: false });
