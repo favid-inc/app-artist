@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@eva-design/eva": "^1.0.1",
-    "@favid-inc/api": "^4.1.0",
+    "@favid-inc/api": "^4.2.10",
     "axios": "^0.19.0",
     "expo": "^34.0.3",
     "expo-analytics": "^1.0.11",
@@ -31,7 +31,7 @@
     "expo-image-picker": "^6.0.0",
     "expo-media-library": "^6.0.0",
     "expo-permissions": "^6.0.0",
-    "firebase": "^6.6.0",
+    "firebase": "^6.6.1",
     "md5": "^2.2.1",
     "react": "16.8.3",
     "react-native": "https://github.com/expo/react-native/archive/sdk-34.0.0.tar.gz",
