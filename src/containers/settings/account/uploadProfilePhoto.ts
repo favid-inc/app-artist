@@ -36,9 +36,7 @@ export async function uploadProfilePhoto(uri: string, cancelToken: CancelToken, 
     try {
       const filename = uri.split('/').pop();
 
-      const directory: ARTIST_UPLOAD_DIRECTORY = 'Artist/:userUid/temporary';
-
-      const destination = `${directory.replace(':userUid', firebase.auth().currentUser.uid)}/${filename}`;
+      const destination = `${ARTIST_UPLOAD_DIRECTORY.replace(':userUid', firebase.auth().currentUser.uid)}/${filename}`;
 
       const blob = await fileUriToBlob();
 
