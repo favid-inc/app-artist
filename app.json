@@ -14,8 +14,14 @@
     },
     "android": {
       "package": "br.com.favid.appartist",
-      "versionCode": 19,
-      "playStoreUrl": "https://play.google.com/store/apps/details?id=br.com.favid.appartist"
+      "versionCode": 20,
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=br.com.favid.appartist",
+      "permissions": [
+        "CAMERA",
+        "READ_CONTACTS",
+        "READ_PHONE_STATE",
+        "RECORD_AUDIO"
+      ]
     },
     "androidStatusBar": {
       "backgroundColor": "#FFFFFF"
