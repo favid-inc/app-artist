@@ -45,7 +45,6 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
         <ShareAfilliationButton themedStyle={themedStyle} />
         <NeedHelpButton themedStyle={themedStyle} />
         <PoliciesButton themedStyle={themedStyle} />
-        <TermsButton themedStyle={themedStyle} />
         <SigOutButton themedStyle={themedStyle} />
       </View>
     );
@@ -158,28 +157,11 @@ const NeedHelpButton = ({ themedStyle }) => {
 };
 
 const PoliciesButton = ({ themedStyle }) => {
-  const handleClick = React.useCallback(
-    () =>
-      Linking.openURL('https://onyx-harmony-239219.firebaseapp.com/documents/politica_de_seguranca_e_privacidade.pdf'),
-    [],
-  );
+  const handleClick = React.useCallback(() => Linking.openURL('https://www.favid.com.br/politicas/'), []);
 
   return (
     <Button status='primary' style={themedStyle.button} onPress={handleClick} icon={FileTextIconFill} size='large'>
-      Pol. de Segurança/Privacidade
-    </Button>
-  );
-};
-
-const TermsButton = ({ themedStyle }) => {
-  const handleClick = React.useCallback(
-    () => Linking.openURL('https://onyx-harmony-239219.firebaseapp.com/documents/termos_de_uso.pdf'),
-    [],
-  );
-
-  return (
-    <Button status='primary' style={themedStyle.button} onPress={handleClick} icon={FileTextIconFill} size='large'>
-      Termos de Uso
+      Politicas
     </Button>
   );
 };
