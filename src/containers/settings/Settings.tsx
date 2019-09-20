@@ -16,6 +16,8 @@ import {
 import { AuthContext } from '@src/core/auth';
 import * as config from '@src/core/config';
 
+import { readApplyForAffiliationLink } from './readApplyForAffiliationLink';
+
 interface Props {
   onNavigate: (pathName: string) => void;
 }
@@ -42,7 +44,7 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
           onNavigate={this.handleNavigateToWallet}
         />
         <NavigateToAccountButton themedStyle={themedStyle} onNavigate={this.handleNavigateToAccount} />
-        <ShareAfilliationButton themedStyle={themedStyle} />
+        <ShareAffilliationButton themedStyle={themedStyle} />
         <NeedHelpButton themedStyle={themedStyle} />
         <PoliciesButton themedStyle={themedStyle} />
         <SigOutButton themedStyle={themedStyle} />
@@ -100,37 +102,19 @@ const SigOutButton = ({ themedStyle }) => {
   );
 };
 
-const ShareAfilliationButton = ({ themedStyle }) => {
+const ShareAffilliationButton = ({ themedStyle }) => {
   const context = React.useContext(AuthContext);
-  const handleSignOutClick = React.useCallback(() => {
-    const { user } = context;
-    const s1 = md5(Date.now());
-    const s2 = md5(`(${s1})[${user.email}]`);
-    const s3 = md5(`(${s1})[${user.uid}]`);
-    const s4 = md5(`(${s1})[${s2}][${s3}]`);
-
-    const params: ApplyForAffiliation['Request']['params'] = { s1, s2, s3, s4 };
-
-    const esc = encodeURIComponent;
-    const query = Object.keys(params)
-      .map((k) => esc(k) + '=' + esc(params[k]))
-      .join('&');
-
-    const url: ApplyForAffiliation['Request']['url'] = '/ApplyForAffiliation';
-
-    const { baseURL } = config.api;
-
-    const fullUrl = `${baseURL}/${url}?${query}`;
-
+  const handleSignOutClick = React.useCallback(async () => {
+    const { url } = await readApplyForAffiliationLink();
     Share.share(
       Platform.select({
         ios: {
           title: `Venha participar do Favid como meu afiliado`,
-          url: fullUrl,
+          url,
         },
         android: {
           title: `Venha participar do Favid como meu afiliado`,
-          message: `Venha participar do Favid como meu afiliado: "${fullUrl}"`,
+          message: `Venha participar do Favid como meu afiliado: "${url}"`,
         },
       }),
     );
