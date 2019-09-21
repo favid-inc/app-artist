@@ -2,19 +2,23 @@
   "expo": {
     "name": "Favid - Artist",
     "icon": "./src/assets/icons/icon.png",
-    "version": "2.0.2",
+    "version": "2.0.5",
     "slug": "favid-artist",
-    "sdkVersion": "34.0.0",
+    "sdkVersion": "35.0.0",
     "privacy": "public",
     "orientation": "portrait",
     "githubUrl": "https://github.com/favid-inc/app-artist",
     "ios": {
+      "infoPlist": {
+        "NSPhotoLibraryAddUsageDescription": "This app uses the photo and video library to load videos and photos to de user account.",
+        "NSCameraUsageDescription": "This app uses the photo and video camera to load videos and photos to de user account."
+      },
       "bundleIdentifier": "br.com.favid.appartist",
       "appStoreUrl": "https://itunes.apple.com/us/app/favid/id1246143230"
     },
     "android": {
       "package": "br.com.favid.appartist",
-      "versionCode": 20,
+      "versionCode": 21,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=br.com.favid.appartist",
       "permissions": [
         "CAMERA",
@@ -32,6 +36,6 @@
       "resizeMode": "contain"
     },
     "platforms": ["android", "ios"],
-    "description": ""
+    "description": "FaVid é um marketplace que conecta os ídolos com os fãs de forma íntima, aproximando-os de artistas, atletas, influenciadores digitais, entre outros famosos através de vídeos."
   }
 }
