@@ -40,14 +40,12 @@ interface State {
   theme: ThemeKey;
 }
 
-firebase.auth().onIdTokenChanged(async (auth) => {
-  const headers = apiClient.defaults.headers.common;
-  try {
-    const idToken = await auth.getIdToken();
-    headers.Authorization = `Bearer ${idToken}`;
-  } catch (e) {
-    delete headers.Authorization;
-  }
+apiClient.interceptors.request.use(async (axiosRequestConfig) => {
+  const idToken = await firebase.auth().currentUser.getIdToken();
+  const headers = {};
+  Object.assign(headers, axiosRequestConfig.headers, { Authorization: `Bearer ${idToken}` });
+  axiosRequestConfig.headers = headers;
+  return axiosRequestConfig;
 });
 
 export class App extends React.Component<{}, State> {
