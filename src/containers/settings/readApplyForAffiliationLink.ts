@@ -8,7 +8,12 @@ export async function readApplyForAffiliationLink(): Promise<ReadApplyForAffilia
     method: 'GET',
   };
 
-  const response = await apiClient.request<ReadApplyForAffiliationLink['Response']>(request);
+  const {
+    config: { baseURL },
+    data: { url },
+  } = await apiClient.request<ReadApplyForAffiliationLink['Response']>(request);
 
-  return response.data;
+  return {
+    url: `${baseURL}/${url}`,
+  };
 }

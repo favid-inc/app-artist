@@ -1,7 +1,5 @@
-import { ApplyForAffiliation } from '@favid-inc/api/lib/app-artist';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Button, Text } from '@kitten/ui';
-import md5 from 'md5';
 import React from 'react';
 import { Linking, Platform, Share, View } from 'react-native';
 
@@ -93,10 +91,10 @@ const NavigateToWalletButton = ({ themedStyle, onNavigate, userNotVerified }) =>
 
 const SigOutButton = ({ themedStyle }) => {
   const context = React.useContext(AuthContext);
-  const handleSignOutClick = React.useCallback(() => context.signOut(), [context]);
+  const handleClick = React.useCallback(() => context.signOut(), [context]);
 
   return (
-    <Button status='danger' style={themedStyle.button} onPress={handleSignOutClick} icon={LogOutIconFill} size='large'>
+    <Button status='danger' style={themedStyle.button} onPress={handleClick} icon={LogOutIconFill} size='large'>
       Deslogar
     </Button>
   );
@@ -104,7 +102,7 @@ const SigOutButton = ({ themedStyle }) => {
 
 const ShareAffilliationButton = ({ themedStyle }) => {
   const context = React.useContext(AuthContext);
-  const handleSignOutClick = React.useCallback(async () => {
+  const handleClick = React.useCallback(async () => {
     const { url } = await readApplyForAffiliationLink();
     Share.share(
       Platform.select({
@@ -121,7 +119,7 @@ const ShareAffilliationButton = ({ themedStyle }) => {
   }, [context]);
 
   return (
-    <Button status='warning' style={themedStyle.button} onPress={handleSignOutClick} icon={PeopleIconFill} size='large'>
+    <Button status='warning' style={themedStyle.button} onPress={handleClick} icon={PeopleIconFill} size='large'>
       Convidar Afiliado
     </Button>
   );
