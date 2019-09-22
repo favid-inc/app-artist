@@ -61,8 +61,8 @@ export class Router extends React.Component<ComponentProps> {
   public render() {
     return (
       <AuthContext.Consumer>
-        {({ isSignedIn }) =>
-          isSignedIn ? (
+        {({ user }) =>
+          user ? (
             <NavigationRouter onNavigationStateChange={this.props.onNavigationStateChange} />
           ) : (
             <AuthNavigationRouter onNavigationStateChange={this.props.onNavigationStateChange} />

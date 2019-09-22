@@ -9,7 +9,7 @@ export const firebase = {
 };
 
 export const api = {
-  baseURL: 'http://<host>:5000/api/appArtist',
+  baseURL: 'http://192.168.15.6:5000/api/appArtist',
 };
 
 export const auth = {
@@ -18,5 +18,11 @@ export const auth = {
     clientId: '983263249595-2tclp7pj3b23h05l08v8v7af6mgbud1s.apps.googleusercontent.com',
     issuer: 'https://accounts.google.com',
     scopes: ['profile', 'email'],
+  },
+  facebook: {
+    appid: '642908949561774',
+    options: {
+      permissions: ['public_profile', 'email'],
+    },
   },
 };

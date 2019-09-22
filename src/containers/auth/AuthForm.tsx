@@ -117,12 +117,13 @@ export const AuthForm = withStyles(AuthFormComponent, (theme: ThemeType) => ({
   },
   tabBar: {
     backgroundColor: 'transparent',
+    color: theme['text-hint-color'],
   },
   tabViewIndicator: {
-    backgroundColor: theme['background-basic-color-1'],
+    backgroundColor: theme['text-hint-color'],
   },
   tabTitle: {
-    color: 'white',
+    color: theme['text-hint-color'],
     ...textStyle.label,
   },
   submitButton: {

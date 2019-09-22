@@ -19,4 +19,10 @@ export const auth = {
     issuer: 'https://accounts.google.com',
     scopes: ['profile', 'email'],
   },
+  facebook: {
+    appid: '642908949561774',
+    options: {
+      permissions: ['public_profile', 'email'],
+    },
+  },
 };

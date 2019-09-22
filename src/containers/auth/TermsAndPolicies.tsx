@@ -19,7 +19,7 @@ export function TermsAndPoliciesComponent({ themedStyle, onTermsAcceptedChange, 
         style={themedStyle.termsCheckBox}
         textStyle={themedStyle.termsCheckBoxText}
         checked={termsAcceptedValue}
-        text={'Declaro que li e concordo com os'}
+        text={'Declaro que li e concordo com os termos de uso'}
         onChange={onTermsAcceptedChange}
       />
       <PoliciesButton />
@@ -32,7 +32,7 @@ const PoliciesButton = () => {
 
   return (
     <Button status='primary' onPress={handleClick} size='tiny' appearance='ghost'>
-      Termos de uso e as Políticas de Segurança/Privacide
+      Termos de uso e Políticas de Segurança/Privacide
     </Button>
   );
 };
@@ -41,6 +41,7 @@ export const TermsAndPolicies = withStyles<ComponentProps>(TermsAndPoliciesCompo
   container: {
     flex: 1,
     backgroundColor: theme['background-basic-color-2'],
+    // width: 300,
   },
   termsCheckBox: {
     marginHorizontal: 20,
