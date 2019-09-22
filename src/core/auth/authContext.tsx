@@ -103,7 +103,8 @@ export class FirebaseAuth extends React.Component<Props, State> {
     try {
       const { idToken, accessToken } = await AppAuth.authAsync(config.auth.google);
       const oAuthCredential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
-      await this.sigIn({ type: 'google', oAuthCredential });
+      const { user } = await this.sigIn({ type: 'google', oAuthCredential });
+      await claimAccount(await user.getIdToken());
     } finally {
       this.setState({ isSigningIn: false });
     }
@@ -118,7 +119,8 @@ export class FirebaseAuth extends React.Component<Props, State> {
       );
 
       const oAuthCredential = firebase.auth.FacebookAuthProvider.credential(token);
-      this.sigIn({ type: 'facebook', oAuthCredential });
+      const { user } = await this.sigIn({ type: 'facebook', oAuthCredential });
+      await claimAccount(await user.getIdToken());
     } finally {
       this.setState({ isSigningIn: false });
     }
