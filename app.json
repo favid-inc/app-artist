@@ -1,10 +1,10 @@
 {
   "expo": {
     "name": "Favid - Artist",
-    "icon": "./src/assets/icons/icon.png",
+    "icon": "./src/assets/images/source/favid-logo.png",
     "version": "2.0.5",
     "slug": "favid-artist",
-    "sdkVersion": "35.0.0",
+    "sdkVersion": "34.0.0",
     "privacy": "public",
     "orientation": "portrait",
     "githubUrl": "https://github.com/favid-inc/app-artist",
@@ -20,12 +20,7 @@
       "package": "br.com.favid.appartist",
       "versionCode": 21,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=br.com.favid.appartist",
-      "permissions": [
-        "CAMERA",
-        "READ_CONTACTS",
-        "READ_PHONE_STATE",
-        "RECORD_AUDIO"
-      ]
+      "permissions": ["CAMERA", "READ_CONTACTS", "READ_PHONE_STATE", "RECORD_AUDIO"]
     },
     "androidStatusBar": {
       "backgroundColor": "#FFFFFF"
@@ -36,6 +31,6 @@
       "resizeMode": "contain"
     },
     "platforms": ["android", "ios"],
-    "description": "FaVid é um marketplace que conecta os ídolos com os fãs de forma íntima, aproximando-os de artistas, atletas, influenciadores digitais, entre outros famosos através de vídeos."
+    "description": "Favid é um marketplace que conecta os ídolos com os fãs de forma íntima, aproximando-os de artistas, atletas, influenciadores digitais, entre outros famosos através de vídeos."
   }
 }
