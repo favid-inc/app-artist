@@ -1,7 +1,7 @@
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Button, CheckBox } from '@kitten/ui';
 import React from 'react';
-import { Linking, View } from 'react-native';
+import { View } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
 import { textStyle } from '@src/components/common';
