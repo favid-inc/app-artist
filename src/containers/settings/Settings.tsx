@@ -12,7 +12,6 @@ import {
   PersonIconFill,
 } from '@src/assets/icons';
 import { AuthContext } from '@src/core/auth';
-import * as config from '@src/core/config';
 
 import { readApplyForAffiliationLink } from './readApplyForAffiliationLink';
 
@@ -44,7 +43,7 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
         <NavigateToAccountButton themedStyle={themedStyle} onNavigate={this.handleNavigateToAccount} />
         <ShareAffilliationButton themedStyle={themedStyle} />
         <NeedHelpButton themedStyle={themedStyle} />
-        <PoliciesButton themedStyle={themedStyle} />
+        <PoliciesButton themedStyle={themedStyle} onNavigate={this.handleNavigatePolicies} />
         <SigOutButton themedStyle={themedStyle} />
       </View>
     );
@@ -52,6 +51,10 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
 
   private handleNavigateToAccount = () => {
     this.props.onNavigate('Conta');
+  };
+
+  private handleNavigatePolicies = () => {
+    this.props.onNavigate('Políticas');
   };
 
   private handleNavigateToWallet = () => {
@@ -135,11 +138,9 @@ const NeedHelpButton = ({ themedStyle }) => {
   );
 };
 
-const PoliciesButton = ({ themedStyle }) => {
-  const handleClick = React.useCallback(() => Linking.openURL('https://www.favid.com.br/politicas/'), []);
-
+const PoliciesButton = ({ themedStyle, onNavigate }) => {
   return (
-    <Button status='primary' style={themedStyle.button} onPress={handleClick} icon={FileTextIconFill} size='large'>
+    <Button status='primary' style={themedStyle.button} onPress={onNavigate} icon={FileTextIconFill} size='large'>
       Politicas
     </Button>
   );

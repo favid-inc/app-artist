@@ -8,15 +8,22 @@ import {
   NavigationState,
 } from 'react-navigation';
 
+import { TopBarNavigationOptions } from '@src/core/navigation/options';
+
 import { AuthContainer } from '@src/containers/auth';
+import { AuthContext } from '@src/core/auth';
 import { MenuNavigator } from '@src/containers/menu';
 import { OrdersNavigator } from '@src/containers/orders';
+import { PoliciesContainer } from '@src/containers/policies';
 import { SettingsNavigator } from '@src/containers/settings';
-import { AuthContext } from '@src/core/auth';
 
 const SignInNavigator: NavigationContainer = createStackNavigator(
   {
     ['Sign In']: AuthContainer,
+    ['Políticas']: {
+      screen: PoliciesContainer,
+      navigationOptions: TopBarNavigationOptions,
+    },
   },
   {
     headerMode: 'screen',

@@ -2,6 +2,7 @@ import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Button, CheckBox } from '@kitten/ui';
 import React from 'react';
 import { Linking, View } from 'react-native';
+import { withNavigation } from 'react-navigation';
 
 import { textStyle } from '@src/components/common';
 
@@ -27,15 +28,15 @@ export function TermsAndPoliciesComponent({ themedStyle, onTermsAcceptedChange, 
   );
 }
 
-const PoliciesButton = () => {
-  const handleClick = React.useCallback(() => Linking.openURL('https://www.favid.com.br/politicas/'), []);
+const PoliciesButton = withNavigation(({ navigation }) => {
+  const handleClick = React.useCallback(() => navigation.navigate('Políticas'), [navigation]);
 
   return (
     <Button status='primary' onPress={handleClick} size='tiny' appearance='ghost'>
       Termos de uso e Políticas de Segurança/Privacide
     </Button>
   );
-};
+});
 
 export const TermsAndPolicies = withStyles<ComponentProps>(TermsAndPoliciesComponent, (theme: ThemeType) => ({
   container: {
