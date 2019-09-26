@@ -141,7 +141,7 @@ const NeedHelpButton = ({ themedStyle }) => {
 const PoliciesButton = ({ themedStyle, onNavigate }) => {
   return (
     <Button status='primary' style={themedStyle.button} onPress={onNavigate} icon={FileTextIconFill} size='large'>
-      Politicas
+      Políticas
     </Button>
   );
 };
