@@ -7,6 +7,7 @@ import { ActivityIndicator, Alert, View, ViewProps } from 'react-native';
 
 import { Card } from './Card';
 import { InfoItem } from './InfoItem';
+import { CreateWalletForm } from './createWalletForm';
 
 interface ComponentProps {
   onNavigate: (pathName: string) => void;
@@ -64,6 +65,13 @@ class WalletComponent extends React.Component<Props, State> {
 
     return (
       <View style={[themedStyle.container, style]} {...restProps}>
+        <Card>
+          <Text appearance='hint' style={themedStyle.title} category='h5'>
+            Criar Carteira
+          </Text>
+          <CreateWalletForm />
+        </Card>
+
         {recipient && (
           <Card>
             <InfoItem hint='Status' value={recipient.status} />
@@ -95,10 +103,10 @@ class WalletComponent extends React.Component<Props, State> {
 export const Wallet = withStyles(WalletComponent, (theme: ThemeType) => ({
   container: {
     flex: 1,
-    paddingVertical: 40,
     backgroundColor: theme['background-basic-color-2'],
   },
   title: {
     textAlign: 'center',
+    paddingVertical: 10,
   },
 }));
