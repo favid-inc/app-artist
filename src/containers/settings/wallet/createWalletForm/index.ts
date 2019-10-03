@@ -1,1 +1,1 @@
-export { CreateWalletForm } from '../CreateWalletForm';
+export { CreateWalletForm } from './CreateWalletForm';
