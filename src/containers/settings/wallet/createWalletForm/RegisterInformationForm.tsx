@@ -4,7 +4,6 @@ import React from 'react';
 import { View } from 'react-native';
 
 import { textStyle } from '@src/components/common';
-import { StringValidator } from '@src/core/validators';
 
 import { RegisterInformation } from '../types';
 
@@ -29,7 +28,7 @@ export class RegisterInformationForm extends React.Component<Props> {
               autoCapitalize='words'
               autoCompleteType='name'
               keyboardType='default'
-              label='Titular'
+              label='Nome'
               labelStyle={textStyle.label}
               onChangeText={this.onNameChange}
               status={value.name ? 'success' : 'danger'}
@@ -53,30 +52,9 @@ export class RegisterInformationForm extends React.Component<Props> {
         </View>
         <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
           <Input
-            autoCapitalize='none'
-            autoCompleteType='email'
-            keyboardType='email-address'
-            label='Email'
-            labelStyle={textStyle.label}
-            onChangeText={this.onEmailChange}
-            style={themedStyle.input}
-            textStyle={[textStyle.paragraph, themedStyle.inputText]}
-            status={
-              /* RFC 5322 */
-              /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
-                value.email,
-              )
-                ? 'success'
-                : 'danger'
-            }
-            value={value.email}
-          />
-        </View>
-        <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-          <Input
             autoCompleteType='tel'
             keyboardType='phone-pad'
-            label='Telefone'
+            label='Celular'
             labelStyle={textStyle.label}
             onChangeText={this.onPhoneNumberChange}
             style={themedStyle.input}
@@ -93,13 +71,8 @@ export class RegisterInformationForm extends React.Component<Props> {
     );
   }
 
-  private onEmailChange = (value = '') => {
-    const val = value.trim();
-    this.props.onChange({ ...this.props.value, email: val });
-  };
-
   private onDocumentNumberChange = (value = '') => {
-    const [match, g1, g2, g3, g4] = value
+    const [, g1, g2, g3, g4] = value
       .replace(/\D/g, '')
       .substr(0, 11)
       .match(/^(\d{1,3})?(\d{1,3})?(\d{1,3})?(\d{1,2})?/);
@@ -122,7 +95,7 @@ export class RegisterInformationForm extends React.Component<Props> {
   private onPhoneNumberChange = (value = '') => {
     const val = value.replace(/\D/g, '').substr(0, 11);
 
-    const [match, g1, g2, g3] = val.match(
+    const [, g1, g2, g3] = val.match(
       val.length <= 10 ? /(\d{1,2})?(\d{1,4})?(\d{1,4})?/ : /(\d{1,2})?(\d{1,5})?(\d{1,4})?/,
     );
 

@@ -1,13 +1,12 @@
 import { ThemedComponentProps } from '@kitten/theme';
 import { Input } from '@kitten/ui';
 import React from 'react';
-import { View, Picker } from 'react-native';
+import { Picker, View } from 'react-native';
 
-import { textStyle, ValidationInput } from '@src/components/common';
-import { StringValidator } from '@src/core/validators';
+import { textStyle } from '@src/components/common';
 
-import { BankAccount } from '../types';
 import { BankAccountType, BankCode } from '../constants';
+import { BankAccount } from '../types';
 
 interface ComponentProps {
   value: BankAccount;
@@ -26,11 +25,9 @@ export class BankAccountForm extends React.Component<Props> {
       <>
         <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
           <Picker selectedValue={value.bank_code} style={themedStyle.input} onValueChange={this.onBankCodeChange}>
-            {Object.keys(BankCode)
-              .map((key) => key.replace(/\D/g, ''))
-              .map((key) => (
-                <Picker.Item key={key} value={key} label={BankCode[key]} />
-              ))}
+            {Object.keys(BankCode).map((key) => (
+              <Picker.Item key={key} value={key.replace('_', '')} label={BankCode[key]} />
+            ))}
           </Picker>
         </View>
         <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
@@ -71,7 +68,7 @@ export class BankAccountForm extends React.Component<Props> {
   };
 
   private onAgenciaChange = (value = '') => {
-    const [match, agencia = '', dv = ''] = value.replace(/\D/g, '').match(/^(\d{1,})?(\d{1})/) || [];
+    const [, agencia = '', dv = ''] = value.replace(/\D/g, '').match(/^(\d{1,})?(\d{1})/) || [];
 
     this.props.onChange({
       ...this.props.value,
@@ -81,7 +78,7 @@ export class BankAccountForm extends React.Component<Props> {
   };
 
   private onContaChange = (value = '') => {
-    const [match, conta = '', dv = ''] = value.replace(/\D/g, '').match(/^(\d{1,})?(\d{1})/) || [];
+    const [, conta = '', dv = ''] = value.replace(/\D/g, '').match(/^(\d{1,})?(\d{1})/) || [];
 
     this.props.onChange({
       ...this.props.value,
