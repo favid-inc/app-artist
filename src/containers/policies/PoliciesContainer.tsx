@@ -1,7 +1,7 @@
 import { PUBLIC_POLICIES } from '@favid-inc/api';
 import React from 'react';
-import { NavigationScreenProps, NavigationEventSubscription } from 'react-navigation';
-import { ScrollView, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, ScrollView } from 'react-native';
+import { NavigationEventSubscription, NavigationScreenProps } from 'react-navigation';
 
 import { Markdown } from './Markdown';
 

@@ -37,7 +37,7 @@ class ProfilePhotoComponent extends React.Component<Props, State> {
   }
 
   public render() {
-    const { themedStyle, artist, onChange } = this.props;
+    const { themedStyle, artist } = this.props;
 
     return (
       <View style={themedStyle.container}>

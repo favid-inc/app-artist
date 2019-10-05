@@ -1,7 +1,7 @@
 import { createStackNavigator } from 'react-navigation';
 
-import { TopBarNavigationOptions } from '@src/core/navigation/options';
 import { PoliciesContainer } from '@src/containers/policies';
+import { TopBarNavigationOptions } from '@src/core/navigation/options';
 
 import { AccountNavigation } from './account';
 import { SettingsContainer } from './SettingsContainer';

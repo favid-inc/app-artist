@@ -1,6 +1,6 @@
 import { Artist } from '@favid-inc/api';
 import { ThemeType, withStyles } from '@kitten/theme';
-import { AvatarProps, Button, Text } from '@kitten/ui';
+import { AvatarProps, Button } from '@kitten/ui';
 import { VideoIcon } from '@src/assets/icons';
 import { Audio, Video } from 'expo-av';
 import * as ImagePicker from 'expo-image-picker';

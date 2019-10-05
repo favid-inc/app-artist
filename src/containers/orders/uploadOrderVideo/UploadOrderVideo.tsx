@@ -5,7 +5,7 @@ import React from 'react';
 import { ActivityIndicator, Alert, View } from 'react-native';
 
 import { OrdersContext } from '../context';
-import { Canceler, CancelToken, fufillOrder } from './fufillOrder';
+import { Canceler, fufillOrder } from './fufillOrder';
 
 interface ComponentProps {
   onDone: () => void;

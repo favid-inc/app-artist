@@ -4,7 +4,7 @@ import { ActivityIndicator, Alert, Image, View } from 'react-native';
 import { NavigationScreenProps } from 'react-navigation';
 
 import { favidImage } from '@src/assets/images';
-import { ScrollableAvoidKeyboard, textStyle } from '@src/components/common';
+import { ScrollableAvoidKeyboard } from '@src/components/common';
 import { AuthContext } from '@src/core/auth';
 
 import { AuthForm } from './AuthForm';

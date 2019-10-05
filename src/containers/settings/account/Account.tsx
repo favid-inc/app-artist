@@ -2,7 +2,7 @@ import { Artist, ArtistCategory } from '@favid-inc/api';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Button } from '@kitten/ui';
 import React from 'react';
-import { ActivityIndicator, Alert, ButtonProps, RefreshControl, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Alert, RefreshControl, ScrollView, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 import { ContainerView, textStyle } from '@src/components/common';
