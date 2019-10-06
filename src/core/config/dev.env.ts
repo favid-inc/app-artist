@@ -14,7 +14,6 @@ export const api = {
 
 export const auth = {
   google: {
-    behavior: 'web',
     clientId: '983263249595-2tclp7pj3b23h05l08v8v7af6mgbud1s.apps.googleusercontent.com',
     issuer: 'https://accounts.google.com',
     scopes: ['profile', 'email'],
