@@ -2,7 +2,7 @@
   "expo": {
     "name": "Favid - Artist",
     "icon": "./src/assets/images/source/favid-logo.png",
-    "version": "2.0.5",
+    "version": "2.0.7",
     "slug": "favid-artist",
     "sdkVersion": "34.0.0",
     "privacy": "public",
@@ -10,27 +10,39 @@
     "githubUrl": "https://github.com/favid-inc/app-artist",
     "ios": {
       "infoPlist": {
-        "NSPhotoLibraryAddUsageDescription": "This app uses the photo and video library to load videos and photos to de user account.",
-        "NSCameraUsageDescription": "This app uses the photo and video camera to load videos and photos to de user account."
+        "NSCameraUsageDescription": "Este aplicativo usa a biblioteca de fotos e vídeos para carregar vídeos e fotos na conta do usuário.",
+        "NSPhotoLibraryUsageDescription": "Este aplicativo usa a biblioteca de fotos e vídeos para carregar vídeos e fotos na conta do usuário."
       },
       "bundleIdentifier": "br.com.favid.appartist",
       "appStoreUrl": "https://itunes.apple.com/us/app/favid/id1246143230"
     },
     "android": {
       "package": "br.com.favid.appartist",
-      "versionCode": 21,
+      "versionCode": 24,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=br.com.favid.appartist",
-      "permissions": ["CAMERA", "READ_CONTACTS", "READ_PHONE_STATE", "RECORD_AUDIO"]
+      "permissions": [
+        "CAMERA",
+        "READ_CONTACTS",
+        "READ_PHONE_STATE",
+        "RECORD_AUDIO"
+      ]
     },
     "androidStatusBar": {
       "backgroundColor": "#FFFFFF"
     },
-    "assetBundlePatterns": ["src/assets/images/source/*", "src/assets/icons/**/*.png", "src/assets/fonts"],
+    "assetBundlePatterns": [
+      "src/assets/images/source/*",
+      "src/assets/icons/**/*.png",
+      "src/assets/fonts"
+    ],
     "splash": {
       "image": "src/assets/images/source/splash.png",
       "resizeMode": "contain"
     },
-    "platforms": ["android", "ios"],
+    "platforms": [
+      "android",
+      "ios"
+    ],
     "description": "Favid é um marketplace que conecta os ídolos com os fãs de forma íntima, aproximando-os de artistas, atletas, influenciadores digitais, entre outros famosos através de vídeos."
   }
 }
