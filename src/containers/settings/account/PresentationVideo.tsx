@@ -82,6 +82,7 @@ class PresentationVideoComponent extends React.Component<Props, State> {
 
     if (status !== 'granted') {
       Alert.alert('Desculpe, precisamos de permissão para essa ação');
+      return;
     }
 
     if (this.isLive) {
