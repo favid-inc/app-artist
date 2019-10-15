@@ -65,7 +65,7 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
 const NavigateToAccountButton = ({ themedStyle, onNavigate }) => {
   return (
     <Button status='info' style={themedStyle.button} onPress={onNavigate} icon={PersonIconFill} size='large'>
-      Conta
+      Meu Perfil
     </Button>
   );
 };
