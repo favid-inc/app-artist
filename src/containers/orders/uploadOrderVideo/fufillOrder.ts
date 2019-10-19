@@ -1,5 +1,5 @@
-import { Order } from '@favid-inc/api';
-import { ARTIST_UPLOAD_DIRECTORY, FulfillOrder } from '@favid-inc/api/lib/app-artist';
+import { Order, ARTIST_UPLOAD_DIRECTORY } from '@favid-inc/api';
+import { FulfillOrder } from '@favid-inc/api/lib/app-artist';
 import { apiClient } from '@src/core/utils/apiClient';
 import * as firebase from 'firebase';
 

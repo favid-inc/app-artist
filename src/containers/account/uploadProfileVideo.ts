@@ -1,4 +1,5 @@
-import { ARTIST_UPLOAD_DIRECTORY, UploadProfileVideo } from '@favid-inc/api/lib/app-artist';
+import { UploadProfileVideo } from '@favid-inc/api/lib/app-artist';
+import { ARTIST_UPLOAD_DIRECTORY } from '@favid-inc/api';
 import { apiClient } from '@src/core/utils/apiClient';
 import * as firebase from 'firebase';
 
