@@ -1,6 +1,6 @@
 import { Artist, ArtistCategory, ArtistRegisterStatus } from '@favid-inc/api';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
-import { Button, Text } from '@kitten/ui';
+import { Button } from '@kitten/ui';
 import React from 'react';
 import { ActivityIndicator, Alert, RefreshControl, ScrollView, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -62,13 +62,6 @@ class AccountComponent extends React.Component<Props, State> {
       >
         <KeyboardAwareScrollView>
           <ContainerView style={themedStyle.container}>
-            {artist.registerStatus === ArtistRegisterStatus.INCOMPLETED && (
-              <View style={themedStyle.textSection}>
-                <Text> Preencha os campos abaixo para solicitar uma conta de Artista.</Text>
-                <Text> Os dados enviados passarão por análise antes de você poder acessar a plataforma.</Text>
-              </View>
-            )}
-
             <View style={themedStyle.photoSection}>
               <ProfilePhoto artist={artist} onChange={this.handlePhotoUriChange} />
             </View>
@@ -161,6 +154,11 @@ class AccountComponent extends React.Component<Props, State> {
       this.setState({ loading: true });
       const [artist, categories] = await Promise.all([loadProfile(), listAvailableArtistCategories()]);
       if (this.isLive) {
+        Alert.alert(
+          'Criação de conta',
+          'Preencha os campos abaixo para solicitar uma conta de Artista.' +
+            ' Os dados enviados passarão por análise e aprovação antes de você poder acessar a plataforma.',
+        );
         this.setState({ artist, categories });
       }
     } catch (e) {
@@ -177,10 +175,6 @@ export const Account = withStyles(AccountComponent, (theme: ThemeType) => ({
   container: {
     flex: 1,
     backgroundColor: theme['background-basic-color-2'],
-  },
-  textSection: {
-    padding: 20,
-    backgroundColor: theme['background-basic-color-1'],
   },
   photoSection: {
     marginVertical: 20,

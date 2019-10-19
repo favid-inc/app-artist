@@ -77,7 +77,7 @@ class ProfilePhotoComponent extends React.Component<Props, State> {
     });
 
     try {
-      if (result.cancelled === false /* Typescrypt fault */) {
+      if (result.cancelled === false) {
         const cancelToken: CancelToken = (canceler) => {
           this.uploadCanceler = canceler;
         };
