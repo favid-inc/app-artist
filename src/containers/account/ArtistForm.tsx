@@ -11,6 +11,7 @@ import { NameValidator, StringValidator } from '@src/core/validators';
 interface ComponentProps {
   artist: Artist;
   categories: ArtistCategory[];
+  onNameChange: (val: string) => void;
   onArtisticNameChange: (val: string) => void;
   onBiographyChange: (val: string) => void;
   onCategoriesChange: (val: string[]) => void;
@@ -52,6 +53,17 @@ class ArtistFormComponent extends React.Component<Props, State> {
 
     return (
       <View style={themedStyle.container}>
+        <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
+          <ValidationInput
+            label='Nome'
+            labelStyle={textStyle.label}
+            onChangeText={this.props.onNameChange}
+            style={themedStyle.input}
+            textStyle={[textStyle.paragraph, themedStyle.inputText]}
+            validator={NameValidator}
+            value={artist.name}
+          />
+        </View>
         <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
           <ValidationInput
             label='Nome Artístico'

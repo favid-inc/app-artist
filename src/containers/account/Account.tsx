@@ -71,6 +71,7 @@ class AccountComponent extends React.Component<Props, State> {
               <ArtistForm
                 artist={artist}
                 categories={this.state.categories}
+                onNameChange={this.handleNameChange}
                 onArtisticNameChange={this.handleArtisticNameChange}
                 onPriceChange={this.handlePriceChange}
                 onBiographyChange={this.handleBiographyChange}
@@ -100,6 +101,10 @@ class AccountComponent extends React.Component<Props, State> {
 
   private handleVideoUriChange = (videoUri = '') => {
     this.setState({ artist: { ...this.state.artist, videoUri } });
+  };
+
+  private handleNameChange = (name = '') => {
+    this.setState({ artist: { ...this.state.artist, name } });
   };
 
   private handleArtisticNameChange = (artisticName = '') => {

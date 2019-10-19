@@ -1,5 +1,5 @@
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
-import { Button, Text } from '@kitten/ui';
+import { Button } from '@kitten/ui';
 import React from 'react';
 import { Linking, Platform, Share, View } from 'react-native';
 
@@ -35,11 +35,7 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
 
     return (
       <View style={themedStyle.container}>
-        <NavigateToWalletButton
-          userNotVerified={false}
-          themedStyle={themedStyle}
-          onNavigate={this.handleNavigateToWallet}
-        />
+        <NavigateToWalletButton themedStyle={themedStyle} onNavigate={this.handleNavigateToWallet} />
         <NavigateToAccountButton themedStyle={themedStyle} onNavigate={this.handleNavigateToAccount} />
         <ShareAffilliationButton themedStyle={themedStyle} />
         <NeedHelpButton themedStyle={themedStyle} />
@@ -70,25 +66,11 @@ const NavigateToAccountButton = ({ themedStyle, onNavigate }) => {
   );
 };
 
-const NavigateToWalletButton = ({ themedStyle, onNavigate, userNotVerified }) => {
+const NavigateToWalletButton = ({ themedStyle, onNavigate }) => {
   return (
-    <>
-      <Button
-        status='info'
-        disabled={userNotVerified}
-        style={themedStyle.button}
-        onPress={onNavigate}
-        icon={BookFill}
-        size='large'
-      >
-        Minha Carteira
-      </Button>
-      {userNotVerified && (
-        <Text appearance='hint' style={{ textAlign: 'center', marginBottom: 20 }}>
-          Sua conta está sendo verificada...
-        </Text>
-      )}
-    </>
+    <Button status='info' style={themedStyle.button} onPress={onNavigate} icon={BookFill} size='large'>
+      Minha Carteira
+    </Button>
   );
 };
 
