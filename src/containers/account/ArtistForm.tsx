@@ -1,4 +1,4 @@
-import { Artist, ArtistCategory } from '@favid-inc/api';
+import { Artist, ArtistCategory, ArtistRegisterStatus } from '@favid-inc/api';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import React from 'react';
 import { View } from 'react-native';
