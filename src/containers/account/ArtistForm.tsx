@@ -1,8 +1,10 @@
-import { Artist, ArtistCategory, ArtistRegisterStatus } from '@favid-inc/api';
+import { Artist, ArtistCategory } from '@favid-inc/api';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
+import { Text } from '@kitten/ui';
 import React from 'react';
 import { View } from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
+import DatePicker from 'react-native-datepicker';
 
 import { textStyle, ValidationInput } from '@src/components/common';
 import { currencyFormatter } from '@src/core/formatters';
@@ -17,6 +19,7 @@ interface ComponentProps {
   onCategoriesChange: (val: string[]) => void;
   onMainCategoryChange: (val: string) => void;
   onPriceChange: (val: string) => void;
+  onBirthdateChange: (valStr: string, valDate: Date) => void;
 }
 
 export type Props = ThemedComponentProps & ComponentProps;
@@ -25,10 +28,6 @@ type State = Artist;
 
 class ArtistFormComponent extends React.Component<Props, State> {
   public state: State = {};
-
-  // public componentWillMount() {
-  //   this.setState({ ...this.props.artist });
-  // }
 
   public render(): React.ReactNode {
     const { themedStyle } = this.props;
@@ -53,7 +52,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
 
     return (
       <View style={themedStyle.container}>
-        <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
+        <View style={themedStyle.middleContainer}>
           <ValidationInput
             label='Nome'
             labelStyle={textStyle.label}
@@ -64,7 +63,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
             value={artist.name}
           />
         </View>
-        <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
+        <View style={themedStyle.middleContainer}>
           <ValidationInput
             label='Nome Artístico'
             labelStyle={textStyle.label}
@@ -75,57 +74,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
             value={artist.artisticName}
           />
         </View>
-        <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-          <ValidationInput
-            keyboardType='numeric'
-            label='Preço'
-            formatter={currencyFormatter}
-            labelStyle={textStyle.label}
-            onChangeText={this.props.onPriceChange}
-            style={themedStyle.input}
-            textStyle={[textStyle.paragraph, themedStyle.inputText]}
-            validator={StringValidator}
-            value={`R$ ${artist.price || 0}`}
-          />
-        </View>
-        <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-          <CategorySelector
-            selectText='Categorias'
-            single={false}
-            value={artist.categories}
-            categories={categories}
-            onChange={this.props.onCategoriesChange}
-            styleMainWrapper={themedStyle.input}
-            styleDropdownMenu={themedStyle.input}
-            styleTextDropdown={themedStyle.inputText}
-            searchInputStyle={themedStyle.input}
-            styleSelectorContainer={[
-              themedStyle.middleContainer,
-              themedStyle.profileSetting,
-              { flexDirection: 'column' },
-            ]}
-            styleTextDropdownSelected={{ paddingHorizontal: 10 }}
-          />
-        </View>
-        <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-          <CategorySelector
-            selectText='Categoria Principal'
-            single={true}
-            value={artist.mainCategory}
-            categories={artist.categories}
-            onChange={this.props.onMainCategoryChange}
-            styleMainWrapper={themedStyle.input}
-            styleDropdownMenu={themedStyle.input}
-            searchInputStyle={themedStyle.input}
-            styleSelectorContainer={[
-              themedStyle.middleContainer,
-              themedStyle.profileSetting,
-              { flexDirection: 'column' },
-            ]}
-            styleTextDropdownSelected={{ paddingHorizontal: 10 }}
-          />
-        </View>
-        <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
+        <View style={themedStyle.middleContainer}>
           <ValidationInput
             label={`Biografia (${(artist.biography && artist.biography.length) || 0}/240)`}
             labelStyle={textStyle.label}
@@ -138,6 +87,78 @@ class ArtistFormComponent extends React.Component<Props, State> {
             validator={StringValidator}
             value={artist.biography}
           />
+        </View>
+        <View style={themedStyle.middleContainer}>
+          <ValidationInput
+            keyboardType='numeric'
+            label='Preço'
+            formatter={currencyFormatter}
+            labelStyle={textStyle.label}
+            onChangeText={this.props.onPriceChange}
+            style={themedStyle.input}
+            textStyle={[textStyle.paragraph, themedStyle.inputText]}
+            validator={StringValidator}
+            value={`R$ ${artist.price || 0}`}
+          />
+        </View>
+        <View style={themedStyle.middleContainer}>
+          <Text style={themedStyle.inputLabel} appearance='hint'>
+            Data de Nascimento
+          </Text>
+          <DatePicker
+            style={{ width: '100%' }}
+            onDateChange={this.props.onBirthdateChange}
+            date={artist.birthdate ? new Date(artist.birthdate) : ''}
+            format='DD/MM/YYYY'
+            maxDate={new Date()}
+            customStyles={{ dateInput: themedStyle.input }}
+            showIcon={false}
+          />
+        </View>
+        <View style={themedStyle.middleContainer}>
+          <Text style={themedStyle.inputLabel} appearance='hint'>
+            Categorias
+          </Text>
+          <View style={{ width: '100%' }}>
+            <CategorySelector
+              single={false}
+              value={artist.categories}
+              categories={categories}
+              onChange={this.props.onCategoriesChange}
+              styleMainWrapper={themedStyle.input}
+              styleDropdownMenu={themedStyle.input}
+              styleTextDropdown={themedStyle.inputText}
+              searchInputStyle={themedStyle.input}
+              styleSelectorContainer={[
+                themedStyle.middleContainer,
+                themedStyle.profileSetting,
+                { flexDirection: 'column' },
+              ]}
+              styleTextDropdownSelected={{ paddingHorizontal: 10 }}
+            />
+          </View>
+        </View>
+        <View style={themedStyle.middleContainer}>
+          <Text style={themedStyle.inputLabel} appearance='hint'>
+            Categoria Principal
+          </Text>
+          <View style={{ width: '100%' }}>
+            <CategorySelector
+              single={true}
+              value={artist.mainCategory}
+              categories={artist.categories}
+              onChange={this.props.onMainCategoryChange}
+              styleMainWrapper={themedStyle.input}
+              styleDropdownMenu={themedStyle.input}
+              searchInputStyle={themedStyle.input}
+              styleSelectorContainer={[
+                themedStyle.middleContainer,
+                themedStyle.profileSetting,
+                { flexDirection: 'column' },
+              ]}
+              styleTextDropdownSelected={{ paddingHorizontal: 10 }}
+            />
+          </View>
         </View>
       </View>
     );
@@ -160,6 +181,7 @@ const CategorySelector = ({ categories, value, single, onChange, ...restProps })
 
   return (
     <MultiSelect
+      selectText='Selecionar'
       uniqueKey='c'
       displayKey='c'
       items={items}
@@ -188,9 +210,13 @@ export const ArtistForm = withStyles<ComponentProps>(ArtistFormComponent, (theme
   middleContainer: {
     display: 'flex',
     flexDirection: 'row',
-    // alignItems: 'center',
-    paddingVertical: 10,
+    flexWrap: 'wrap',
+    // paddingVertical: 10,
     paddingHorizontal: 20,
+  },
+  inputLabel: {
+    ...textStyle.label,
+    paddingVertical: 10,
   },
   inputText: {
     color: theme['text-alternative-color'],
@@ -200,9 +226,7 @@ export const ArtistForm = withStyles<ComponentProps>(ArtistFormComponent, (theme
     flex: 1,
     backgroundColor: theme['background-alternative-color-1'],
     borderColor: theme['text-alternative-color'],
-  },
-  text: {
-    width: '100%',
-    fontFamily: 'opensans-regular',
+    borderRadius: 5,
+    paddingVertical: 10,
   },
 }));

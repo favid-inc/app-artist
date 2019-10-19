@@ -4,6 +4,8 @@ import { Button } from '@kitten/ui';
 import React from 'react';
 import { ActivityIndicator, Alert, RefreshControl, ScrollView, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import validate from 'validate.js';
+import moment from 'moment';
 
 import { ContainerView, textStyle } from '@src/components/common';
 
@@ -24,6 +26,24 @@ interface State {
   loading: boolean;
   saving: boolean;
 }
+
+const constraints = {
+  name: {
+    length: {
+      minimum: 6,
+      message: '^Preencha seu nome',
+    },
+  },
+  birthdate: {
+    presence: {
+      message: '^Selecione uma data de nascimento',
+    },
+    numericality: {
+      lessThanOrEqualTo: +moment().subtract(13, 'years'),
+      message: '^Voce deve ter no mínimo 13 anos de idade',
+    },
+  },
+};
 
 class AccountComponent extends React.Component<Props, State> {
   public state: State = {
@@ -67,7 +87,6 @@ class AccountComponent extends React.Component<Props, State> {
             </View>
             <View style={themedStyle.infoSection}>
               <ProfileInfo hint='Email' value={artist.email} />
-              <ProfileInfo hint='Nome' value={artist.name} />
               <PresentationVideo artist={artist} onChange={this.handleVideoUriChange} />
               <ArtistForm
                 artist={artist}
@@ -78,6 +97,7 @@ class AccountComponent extends React.Component<Props, State> {
                 onBiographyChange={this.handleBiographyChange}
                 onMainCategoryChange={this.handleMainCategoryChange}
                 onCategoriesChange={this.handleCategoriesChange}
+                onBirthdateChange={this.handleBirthdateChange}
               />
             </View>
 
@@ -133,7 +153,18 @@ class AccountComponent extends React.Component<Props, State> {
     this.setState({ artist: { ...this.state.artist, categories } });
   };
 
+  private handleBirthdateChange = (birthdateFormatted, birthdate) => {
+    this.setState({ artist: { ...this.state.artist, birthdate: birthdate.getTime() } });
+  };
+
   private handleSaveClick = async () => {
+    const errors = validate(this.state.artist, constraints);
+
+    if (errors) {
+      Alert.alert('Verifique os erros abaixo listados antes de prosseguir', Object.values(errors).join('\n'));
+      return;
+    }
+
     try {
       this.setState({ saving: true });
       const artist = await updateProfile(this.state.artist);
