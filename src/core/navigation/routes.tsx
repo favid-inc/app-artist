@@ -10,6 +10,7 @@ import {
 
 import { TopBarNavigationOptions } from '@src/core/navigation/options';
 
+import { AccountContainer } from '@src/containers/account';
 import { AuthContainer } from '@src/containers/auth';
 import { MenuNavigator } from '@src/containers/menu';
 import { OrdersNavigator } from '@src/containers/orders';
@@ -33,6 +34,16 @@ const SignInNavigator: NavigationContainer = createStackNavigator(
   },
 );
 
+const CreateArtistAccountNavigator = createStackNavigator(
+  {
+    ['Criar Conta de Artista']: AccountContainer,
+  },
+  {
+    headerMode: 'screen',
+    defaultNavigationOptions: TopBarNavigationOptions,
+  },
+);
+
 const AppNavigator: NavigationContainer = createStackNavigator(
   {
     ['Home']: MenuNavigator,
@@ -52,9 +63,9 @@ const createAppRouter = (container: NavigationContainer): NavigationContainer =>
   return createAppContainer(container);
 };
 
-// const NavigationRouter: NavigationContainer = createAppRouter(AppNavigator);
 const NavigationRouter: NavigationContainer = createAppRouter(AppNavigator);
 const AuthNavigationRouter: NavigationContainer = createAppRouter(SignInNavigator);
+const CreateArtistAccountRouter: NavigationContainer = createAppRouter(CreateArtistAccountNavigator);
 
 interface ComponentProps {
   onNavigationStateChange: (
@@ -70,7 +81,11 @@ export class Router extends React.Component<ComponentProps> {
       <AuthContext.Consumer>
         {({ user }) =>
           user ? (
-            <NavigationRouter onNavigationStateChange={this.props.onNavigationStateChange} />
+            ((user as unknown) as any).isArtist ? (
+              <NavigationRouter onNavigationStateChange={this.props.onNavigationStateChange} />
+            ) : (
+              <CreateArtistAccountRouter onNavigationStateChange={this.props.onNavigationStateChange} />
+            )
           ) : (
             <AuthNavigationRouter onNavigationStateChange={this.props.onNavigationStateChange} />
           )
