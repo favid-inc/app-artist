@@ -104,6 +104,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
               themedStyle.profileSetting,
               { flexDirection: 'column' },
             ]}
+            styleTextDropdownSelected={{ paddingHorizontal: 10 }}
           />
         </View>
         <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
@@ -121,6 +122,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
               themedStyle.profileSetting,
               { flexDirection: 'column' },
             ]}
+            styleTextDropdownSelected={{ paddingHorizontal: 10 }}
           />
         </View>
         <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
