@@ -6,8 +6,9 @@ import { ActivityIndicator, Alert, RefreshControl, ScrollView, View } from 'reac
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import validate from 'validate.js';
 import moment from 'moment';
+import * as firebase from 'firebase';
 
-import { ContainerView, textStyle } from '@src/components/common';
+import { textStyle } from '@src/components/common';
 import { AuthContext } from '@src/core/auth';
 
 import { ArtistForm } from './ArtistForm';
@@ -88,17 +89,7 @@ class AccountComponent extends React.Component<Props, State> {
             action='Carregar novamente'
             onCallAction={this.handleRefresh}
           />
-        </ScrollView>
-      );
-    }
-
-    if (artist.registerStatus === ArtistRegisterStatus.APPROVED) {
-      return (
-        <ScrollView
-          contentContainerStyle={themedStyle.container}
-          refreshControl={<RefreshControl refreshing={loading} onRefresh={this.handleRefresh} />}
-        >
-          <RegisterApprovedCard />
+          <SignOutButton themedStyle={themedStyle} />
         </ScrollView>
       );
     }
@@ -126,46 +117,42 @@ class AccountComponent extends React.Component<Props, State> {
     }
 
     return (
-      <ScrollView
-        contentContainerStyle={themedStyle.container}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={this.handleRefresh} />}
-      >
+      <ScrollView refreshControl={<RefreshControl refreshing={loading} onRefresh={this.handleRefresh} />}>
         <KeyboardAwareScrollView>
-          <ContainerView>
-            <View style={themedStyle.photoSection}>
-              <ProfilePhoto artist={artist} onChange={this.handlePhotoUriChange} />
-            </View>
-            <View style={themedStyle.infoSection}>
-              <ProfileInfo hint='Email' value={artist.email} />
-              <PresentationVideo artist={artist} onChange={this.handleVideoUriChange} />
-              <ArtistForm
-                artist={artist}
-                categories={this.state.categories}
-                onNameChange={this.handleNameChange}
-                onArtisticNameChange={this.handleArtisticNameChange}
-                onPriceChange={this.handlePriceChange}
-                onBiographyChange={this.handleBiographyChange}
-                onMainCategoryChange={this.handleMainCategoryChange}
-                onCategoriesChange={this.handleCategoriesChange}
-                onBirthdateChange={this.handleBirthdateChange}
-              />
-            </View>
+          <View style={themedStyle.photoSection}>
+            <ProfilePhoto artist={artist} onChange={this.handlePhotoUriChange} />
+          </View>
+          <View style={themedStyle.infoSection}>
+            <ProfileInfo hint='Email' value={artist.email} />
+            <PresentationVideo artist={artist} onChange={this.handleVideoUriChange} />
+            <ArtistForm
+              artist={artist}
+              categories={this.state.categories}
+              onNameChange={this.handleNameChange}
+              onArtisticNameChange={this.handleArtisticNameChange}
+              onPriceChange={this.handlePriceChange}
+              onBiographyChange={this.handleBiographyChange}
+              onMainCategoryChange={this.handleMainCategoryChange}
+              onCategoriesChange={this.handleCategoriesChange}
+              onBirthdateChange={this.handleBirthdateChange}
+            />
+          </View>
 
-            <Button
-              style={themedStyle.button}
-              textStyle={textStyle.button}
-              size='large'
-              status='info'
-              onPress={this.handleSaveClick}
-              disabled={saving}
-            >
-              {saving
-                ? 'Enviando dados...'
-                : artist.registerStatus === ArtistRegisterStatus.INCOMPLETED
-                ? 'Enviar dados para análise'
-                : 'Atualizar Perfil'}
-            </Button>
-          </ContainerView>
+          <Button
+            style={themedStyle.button}
+            textStyle={textStyle.button}
+            size='giant'
+            status='info'
+            onPress={this.handleSaveClick}
+            disabled={saving}
+          >
+            {saving
+              ? 'Enviando dados...'
+              : artist.registerStatus === ArtistRegisterStatus.INCOMPLETED
+              ? 'Enviar dados para análise'
+              : 'Atualizar Perfil'}
+          </Button>
+          <SignOutButton themedStyle={themedStyle} />
         </KeyboardAwareScrollView>
       </ScrollView>
     );
@@ -200,7 +187,7 @@ class AccountComponent extends React.Component<Props, State> {
   };
 
   private handleCategoriesChange = (categories = []) => {
-    this.setState({ artist: { ...this.state.artist, categories } });
+    this.setState({ artist: { ...this.state.artist, categories: categories.filter((c) => c.trim()) } });
   };
 
   private handleBirthdateChange = (birthdateFormatted, birthdate) => {
@@ -233,7 +220,12 @@ class AccountComponent extends React.Component<Props, State> {
   private handleRefresh = async () => {
     try {
       this.setState({ loading: true });
-      const [artist, categories] = await Promise.all([loadProfile(), listAvailableArtistCategories()]);
+      const [artist, categories] = await Promise.all([
+        loadProfile(),
+        listAvailableArtistCategories(),
+        firebase.auth().currentUser.getIdToken(true),
+      ]);
+
       if (!this.isLive) {
         return;
       }
@@ -253,19 +245,6 @@ class AccountComponent extends React.Component<Props, State> {
     }
   };
 }
-
-const RegisterApprovedCard = () => {
-  const context = React.useContext(AuthContext);
-  const handleCallAction = React.useCallback(() => context.signOut(), [context]);
-
-  return (
-    <CallToActionCard
-      description='Sua inscrição foi aprovada. Por motivos de segurança precisamos que você faça login novamente.'
-      action='OK'
-      onCallAction={handleCallAction}
-    />
-  );
-};
 
 const RegisterPendingCard = () => {
   const context = React.useContext(AuthContext);
@@ -296,6 +275,23 @@ const RegisterDeniedCard = () => {
   );
 };
 
+const SignOutButton = ({ themedStyle }) => {
+  const context = React.useContext(AuthContext);
+  const handleCallAction = React.useCallback(() => context.signOut(), [context]);
+
+  return (
+    <Button
+      status='danger'
+      style={themedStyle.button}
+      textStyle={textStyle.button}
+      size='giant'
+      onPress={handleCallAction}
+    >
+      Sair
+    </Button>
+  );
+};
+
 export const Account = withStyles(AccountComponent, (theme: ThemeType) => ({
   container: {
     alignItems: 'center',
@@ -312,7 +308,7 @@ export const Account = withStyles(AccountComponent, (theme: ThemeType) => ({
     backgroundColor: theme['background-basic-color-1'],
   },
   button: {
-    marginHorizontal: 24,
+    marginHorizontal: 20,
     marginVertical: 24,
   },
 }));
