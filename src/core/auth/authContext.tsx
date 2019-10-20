@@ -61,7 +61,7 @@ export class FirebaseAuth extends React.Component<Props, State> {
 
   public componentDidMount() {
     this.subscription = firebase.auth().onAuthStateChanged(async (user) => {
-      const { claims } = await user.getIdTokenResult();
+      const { claims } = user ? await user.getIdTokenResult() : { claims: null };
       this.setState({ isSigningIn: false, user, claims });
     });
   }
