@@ -73,10 +73,13 @@ export class FirebaseAuth extends React.Component<Props, State> {
         return;
       }
 
-      await claimAccount(await user.getIdToken());
-
       try {
         const { claims } = await user.getIdTokenResult();
+
+        if (!claims.artist) {
+          await claimAccount(await user.getIdToken());
+        }
+
         this.setState({ isSigningIn: false, user, claims });
       } catch (e) {
         firebase.auth().signOut();

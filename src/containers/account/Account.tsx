@@ -80,17 +80,17 @@ class AccountComponent extends React.Component<Props, State> {
 
     if (!artist) {
       return (
-        <ScrollView
-          contentContainerStyle={themedStyle.container}
-          refreshControl={<RefreshControl refreshing={loading} onRefresh={this.handleRefresh} />}
-        >
+        <>
           <CallToActionCard
             description='Desculpe. Os dados da sua conta não puderam ser carregados.'
             action='Carregar novamente'
             onCallAction={this.handleRefresh}
           />
-          <SignOutButton themedStyle={themedStyle} />
-        </ScrollView>
+
+          <View style={themedStyle.container}>
+            <SignOutButton themedStyle={themedStyle} />
+          </View>
+        </>
       );
     }
 
@@ -219,7 +219,7 @@ class AccountComponent extends React.Component<Props, State> {
 
   private handleRefresh = async () => {
     try {
-      this.setState({ loading: true });
+      this.setState({ loading: true, artist: null, categories: null });
       const [artist, categories] = await Promise.all([
         loadProfile(),
         listAvailableArtistCategories(),
