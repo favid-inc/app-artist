@@ -34,7 +34,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
 
     const { artist } = this.props;
 
-    let categories = [];
+    const categories = [];
 
     if (Array.isArray(this.props.categories)) {
       categories.push(...this.props.categories);
@@ -47,8 +47,6 @@ class ArtistFormComponent extends React.Component<Props, State> {
     if (artist.mainCategory) {
       categories.push(artist.mainCategory);
     }
-
-    categories = Array.from(new Set(categories));
 
     return (
       <View style={themedStyle.container}>
@@ -123,7 +121,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
             <CategorySelector
               single={false}
               value={artist.categories}
-              categories={categories}
+              categories={Array.from(new Set(categories)).filter((c) => c.trim())}
               onChange={this.props.onCategoriesChange}
               styleMainWrapper={themedStyle.input}
               styleDropdownMenu={themedStyle.input}
