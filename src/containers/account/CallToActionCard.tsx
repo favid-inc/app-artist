@@ -19,9 +19,11 @@ class CallToActionCardComponent extends React.Component<Props> {
         <Text category='h5' style={themedStyle.description}>
           {this.props.description}
         </Text>
-        <Button size='giant' onPress={this.props.onCallAction}>
-          {this.props.action}
-        </Button>
+        {this.props.action && (
+          <Button size='giant' onPress={this.props.onCallAction}>
+            {this.props.action}
+          </Button>
+        )}
       </View>
     );
   }
