@@ -9,6 +9,7 @@ import { claimAccount } from './claimAccount';
 
 interface AuthContext {
   isSigningIn: boolean;
+  claims: firebase.auth.IdTokenResult['claims'];
   user: firebase.UserInfo;
   signInWithGoogle: () => Promise<void>;
   signInWithFacebook: () => Promise<void>;
@@ -39,6 +40,7 @@ type State = AuthContext;
 export class FirebaseAuth extends React.Component<Props, State> {
   public state: State = {
     isSigningIn: true,
+    claims: {},
     user: null,
     signInWithGoogle: () => this.signInWithGoogle(),
     signInWithFacebook: () => this.signInWithFacebook(),
@@ -58,8 +60,9 @@ export class FirebaseAuth extends React.Component<Props, State> {
   }
 
   public componentDidMount() {
-    this.subscription = firebase.auth().onAuthStateChanged((user) => {
-      this.setState({ isSigningIn: false, user });
+    this.subscription = firebase.auth().onAuthStateChanged(async (user) => {
+      const { claims } = await user.getIdTokenResult();
+      this.setState({ isSigningIn: false, user, claims });
     });
   }
 

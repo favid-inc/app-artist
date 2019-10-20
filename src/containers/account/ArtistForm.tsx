@@ -102,7 +102,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
           />
         </View>
         <View style={themedStyle.middleContainer}>
-          <Text style={themedStyle.inputLabel} appearance='hint'>
+          <Text style={themedStyle.inputLabel} appearance='hint' category='label'>
             Data de Nascimento
           </Text>
           <DatePicker

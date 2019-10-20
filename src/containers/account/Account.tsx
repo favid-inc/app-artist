@@ -8,6 +8,7 @@ import validate from 'validate.js';
 import moment from 'moment';
 
 import { ContainerView, textStyle } from '@src/components/common';
+import { AuthContext } from '@src/core/auth';
 
 import { ArtistForm } from './ArtistForm';
 import { ProfileInfo } from './ProfileInfo';
@@ -17,6 +18,7 @@ import { listAvailableArtistCategories } from './listAvailableArtistCategories';
 import { loadProfile } from './loadProfile';
 import { PresentationVideo } from './PresentationVideo';
 import { updateProfile } from './updateProfile';
+import { CallToActionCard } from './CallToActionCard';
 
 export type Props = ThemedComponentProps;
 
@@ -68,20 +70,68 @@ class AccountComponent extends React.Component<Props, State> {
     const { artist, loading, saving } = this.state;
 
     if (loading) {
-      return <ActivityIndicator style={themedStyle.container} size='large' />;
+      return (
+        <View style={themedStyle.container}>
+          <ActivityIndicator size='large' />
+        </View>
+      );
     }
 
     if (!artist) {
-      return <View />;
+      return (
+        <ScrollView
+          contentContainerStyle={themedStyle.container}
+          refreshControl={<RefreshControl refreshing={loading} onRefresh={this.handleRefresh} />}
+        >
+          <CallToActionCard
+            description='Desculpe. Os dados da sua conta não puderam ser carregados.'
+            action='Carregar novamente'
+            onCallAction={this.handleRefresh}
+          />
+        </ScrollView>
+      );
+    }
+
+    if (artist.registerStatus === ArtistRegisterStatus.APPROVED) {
+      return (
+        <ScrollView
+          contentContainerStyle={themedStyle.container}
+          refreshControl={<RefreshControl refreshing={loading} onRefresh={this.handleRefresh} />}
+        >
+          <RegisterApprovedCard />
+        </ScrollView>
+      );
+    }
+
+    if (artist.registerStatus === ArtistRegisterStatus.PENDING) {
+      return (
+        <ScrollView
+          contentContainerStyle={themedStyle.container}
+          refreshControl={<RefreshControl refreshing={loading} onRefresh={this.handleRefresh} />}
+        >
+          <RegisterPendingCard />
+        </ScrollView>
+      );
+    }
+
+    if (artist.registerStatus === ArtistRegisterStatus.DENIED) {
+      return (
+        <ScrollView
+          contentContainerStyle={themedStyle.container}
+          refreshControl={<RefreshControl refreshing={loading} onRefresh={this.handleRefresh} />}
+        >
+          <RegisterDeniedCard />
+        </ScrollView>
+      );
     }
 
     return (
       <ScrollView
-        contentContainerStyle={themedStyle.contentContainer}
+        contentContainerStyle={themedStyle.container}
         refreshControl={<RefreshControl refreshing={loading} onRefresh={this.handleRefresh} />}
       >
         <KeyboardAwareScrollView>
-          <ContainerView style={themedStyle.container}>
+          <ContainerView>
             <View style={themedStyle.photoSection}>
               <ProfilePhoto artist={artist} onChange={this.handlePhotoUriChange} />
             </View>
@@ -184,16 +234,18 @@ class AccountComponent extends React.Component<Props, State> {
     try {
       this.setState({ loading: true });
       const [artist, categories] = await Promise.all([loadProfile(), listAvailableArtistCategories()]);
-      if (this.isLive) {
+      if (!this.isLive) {
+        return;
+      }
+      if (artist.registerStatus === ArtistRegisterStatus.INCOMPLETED) {
         Alert.alert(
           'Criação de conta',
           'Preencha os campos abaixo para solicitar uma conta de Artista.' +
             ' Os dados enviados passarão por análise e aprovação antes de você poder acessar a plataforma.',
         );
-        this.setState({ artist, categories });
       }
-    } catch (e) {
-      Alert.alert('Erro', 'Infelizmente os dados do seu perfil não puderam ser carregados.');
+
+      this.setState({ artist, categories });
     } finally {
       if (this.isLive) {
         this.setState({ loading: false });
@@ -202,10 +254,55 @@ class AccountComponent extends React.Component<Props, State> {
   };
 }
 
+const RegisterApprovedCard = () => {
+  const context = React.useContext(AuthContext);
+  const handleCallAction = React.useCallback(() => context.signOut(), [context]);
+
+  return (
+    <CallToActionCard
+      description='Sua inscrição foi aprovada. Por motivos de segurança precisamos que você faça login novamente.'
+      action='OK'
+      onCallAction={handleCallAction}
+    />
+  );
+};
+
+const RegisterPendingCard = () => {
+  const context = React.useContext(AuthContext);
+  const handleCallAction = React.useCallback(() => context.signOut(), [context]);
+
+  return (
+    <CallToActionCard
+      description={
+        'Sua inscrição já foi submetida e seus dados estão sendo validados.' +
+        ' Em breve você receberá um email com o resultado da análise.'
+      }
+      action='Sair'
+      onCallAction={handleCallAction}
+    />
+  );
+};
+
+const RegisterDeniedCard = () => {
+  const context = React.useContext(AuthContext);
+  const handleCallAction = React.useCallback(() => context.signOut(), [context]);
+
+  return (
+    <CallToActionCard
+      description='Infelizmente sua inscrição como artista não foi aprovada.'
+      action='Sair'
+      onCallAction={handleCallAction}
+    />
+  );
+};
+
 export const Account = withStyles(AccountComponent, (theme: ThemeType) => ({
   container: {
-    flex: 1,
+    alignItems: 'center',
     backgroundColor: theme['background-basic-color-2'],
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   photoSection: {
     marginVertical: 20,

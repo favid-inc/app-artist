@@ -79,9 +79,9 @@ export class Router extends React.Component<ComponentProps> {
   public render() {
     return (
       <AuthContext.Consumer>
-        {({ user }) =>
+        {({ user, claims }) =>
           user ? (
-            ((user as unknown) as any).isArtist ? (
+            claims.artist ? (
               <NavigationRouter onNavigationStateChange={this.props.onNavigationStateChange} />
             ) : (
               <CreateArtistAccountRouter onNavigationStateChange={this.props.onNavigationStateChange} />
