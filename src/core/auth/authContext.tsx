@@ -40,7 +40,7 @@ type State = AuthContext;
 export class FirebaseAuth extends React.Component<Props, State> {
   public state: State = {
     isSigningIn: true,
-    claims: {},
+    claims: null,
     user: null,
     signInWithGoogle: () => this.signInWithGoogle(),
     signInWithFacebook: () => this.signInWithFacebook(),
