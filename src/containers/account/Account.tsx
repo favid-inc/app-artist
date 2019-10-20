@@ -255,10 +255,12 @@ const RegisterPendingCard = () => {
 
   return (
     <CallToActionCard
-      description={
-        'Sua inscrição já foi submetida e seus dados estão sendo validados.' +
-        ' Em breve você receberá um email com o resultado da análise.'
-      }
+      description={[
+        'Parabéns',
+        'registramos seu cadastro na favid',
+        'assim que o administrador autorizar seu acesso',
+        'você receberá um email de validação.',
+      ].join(', ')}
       action='Sair'
       onCallAction={handleCallAction}
     />
