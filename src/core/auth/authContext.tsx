@@ -61,10 +61,21 @@ export class FirebaseAuth extends React.Component<Props, State> {
 
   public componentDidMount() {
     this.subscription = firebase.auth().onAuthStateChanged(async (user) => {
-      if (user && !user.emailVerified) {
-        firebase.auth().signOut();
+      if (!user) {
+        this.setState({ isSigningIn: false, user: null, claims: null });
+        return;
       }
-      const { claims } = user ? await user.getIdTokenResult() : { claims: null };
+
+      await claimAccount(await user.getIdToken());
+
+      if (!user.emailVerified) {
+        Alert.alert('Confirmação de conta', `Um email de verificação de conta foi enviado para ${user.email}.`);
+        await user.sendEmailVerification();
+        firebase.auth().signOut();
+        return;
+      }
+
+      const { claims } = await user.getIdTokenResult();
       this.setState({ isSigningIn: false, user, claims });
     });
   }
@@ -77,9 +88,7 @@ export class FirebaseAuth extends React.Component<Props, State> {
     this.setState({ isSigningIn: true });
 
     try {
-      const { user } = await firebase.auth().createUserWithEmailAndPassword(email, password);
-      await user.sendEmailVerification();
-      Alert.alert('Confirmação de conta', `Um email de verificação de conta foi enviado para ${user.email}.`);
+      await firebase.auth().createUserWithEmailAndPassword(email, password);
     } catch (e) {
       Alert.alert('Erro ao criar conta', (e && e.message) || 'Verifique sua conexão com a internet e tente novamente');
     } finally {
@@ -96,8 +105,6 @@ export class FirebaseAuth extends React.Component<Props, State> {
         Alert.alert('Credencias inválidas', 'Não foi possível entrar no app com os dados informados');
       } else if (!auth.user.emailVerified) {
         Alert.alert('Confirmação de conta', 'Verifique seu email antes de acessar o aplicativo');
-      } else {
-        await claimAccount(await auth.user.getIdToken());
       }
     } finally {
       this.setState({ isSigningIn: false });
@@ -109,8 +116,7 @@ export class FirebaseAuth extends React.Component<Props, State> {
     try {
       const { idToken, accessToken } = await AppAuth.authAsync(config.auth.google);
       const oAuthCredential = firebase.auth.GoogleAuthProvider.credential(idToken, accessToken);
-      const { user } = await this.sigIn({ type: 'google', oAuthCredential });
-      await claimAccount(await user.getIdToken());
+      await this.sigIn({ type: 'google', oAuthCredential });
     } finally {
       this.setState({ isSigningIn: false });
     }
@@ -125,8 +131,7 @@ export class FirebaseAuth extends React.Component<Props, State> {
       );
 
       const oAuthCredential = firebase.auth.FacebookAuthProvider.credential(token);
-      const { user } = await this.sigIn({ type: 'facebook', oAuthCredential });
-      await claimAccount(await user.getIdToken());
+      this.sigIn({ type: 'facebook', oAuthCredential });
     } finally {
       this.setState({ isSigningIn: false });
     }
