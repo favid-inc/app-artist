@@ -112,8 +112,8 @@ export const AuthForm = withStyles(AuthFormComponent, (theme: ThemeType) => ({
   },
   tabView: {
     flex: 1,
-    paddingHorizontal: 0,
-    margin: 5,
+    paddingHorizontal: 10,
+    // margin: 5,
   },
   tabBar: {
     backgroundColor: 'transparent',
