@@ -121,7 +121,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
             <CategorySelector
               single={false}
               value={artist.categories}
-              categories={Array.from(new Set(categories)).filter((c) => c.trim())}
+              categories={categories}
               onChange={this.props.onCategoriesChange}
               styleMainWrapper={themedStyle.input}
               styleDropdownMenu={themedStyle.input}
@@ -165,10 +165,12 @@ class ArtistFormComponent extends React.Component<Props, State> {
 
 const CategorySelector = ({ categories, value, single, onChange, ...restProps }) => {
   const items = React.useMemo(() => {
-    return (categories || []).map((c) => ({ c }));
+    return Array.from(new Set(categories || []))
+      .filter((c: string) => c && c.trim())
+      .map((c) => ({ c }));
   }, [categories]);
 
-  const selectedItems = Array.isArray(value) ? value : [value];
+  const selectedItems = !value ? [] : Array.isArray(value) ? value : [value];
 
   const handleSelectedItemsChange = React.useCallback(
     (selection) => {
@@ -209,7 +211,6 @@ export const ArtistForm = withStyles<ComponentProps>(ArtistFormComponent, (theme
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
-    // paddingVertical: 10,
     paddingHorizontal: 20,
   },
   inputLabel: {

@@ -32,8 +32,7 @@ class CallToActionCardComponent extends React.Component<Props> {
 export const CallToActionCard = withStyles(CallToActionCardComponent, (theme: ThemeType) => ({
   container: {
     backgroundColor: theme['background-basic-color-1'],
-    marginVertical: 10,
-    marginHorizontal: 5,
+    margin: 10,
     borderRadius: 6,
   },
   description: {

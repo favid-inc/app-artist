@@ -80,17 +80,18 @@ class AccountComponent extends React.Component<Props, State> {
 
     if (!artist) {
       return (
-        <>
+        <ScrollView
+          contentContainerStyle={themedStyle.container}
+          refreshControl={<RefreshControl refreshing={loading} onRefresh={this.handleRefresh} />}
+        >
           <CallToActionCard
             description='Desculpe. Os dados da sua conta não puderam ser carregados.'
             action='Carregar novamente'
             onCallAction={this.handleRefresh}
           />
 
-          <View style={themedStyle.container}>
-            <SignOutButton themedStyle={themedStyle} />
-          </View>
-        </>
+          <SignOutButton themedStyle={themedStyle} />
+        </ScrollView>
       );
     }
 
@@ -117,7 +118,10 @@ class AccountComponent extends React.Component<Props, State> {
     }
 
     return (
-      <ScrollView refreshControl={<RefreshControl refreshing={loading} onRefresh={this.handleRefresh} />}>
+      <ScrollView
+        contentContainerStyle={themedStyle.container}
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={this.handleRefresh} />}
+      >
         <KeyboardAwareScrollView>
           <View style={themedStyle.photoSection}>
             <ProfilePhoto artist={artist} onChange={this.handlePhotoUriChange} />
@@ -136,23 +140,22 @@ class AccountComponent extends React.Component<Props, State> {
               onCategoriesChange={this.handleCategoriesChange}
               onBirthdateChange={this.handleBirthdateChange}
             />
+            <Button
+              style={themedStyle.button}
+              textStyle={textStyle.button}
+              size='giant'
+              status='info'
+              onPress={this.handleSaveClick}
+              disabled={saving}
+            >
+              {saving
+                ? 'Enviando dados...'
+                : artist.registerStatus === ArtistRegisterStatus.INCOMPLETED
+                ? 'Enviar dados para análise'
+                : 'Atualizar Perfil'}
+            </Button>
+            <SignOutButton themedStyle={themedStyle} />
           </View>
-
-          <Button
-            style={themedStyle.button}
-            textStyle={textStyle.button}
-            size='giant'
-            status='info'
-            onPress={this.handleSaveClick}
-            disabled={saving}
-          >
-            {saving
-              ? 'Enviando dados...'
-              : artist.registerStatus === ArtistRegisterStatus.INCOMPLETED
-              ? 'Enviar dados para análise'
-              : 'Atualizar Perfil'}
-          </Button>
-          <SignOutButton themedStyle={themedStyle} />
         </KeyboardAwareScrollView>
       </ScrollView>
     );
@@ -187,7 +190,7 @@ class AccountComponent extends React.Component<Props, State> {
   };
 
   private handleCategoriesChange = (categories = []) => {
-    this.setState({ artist: { ...this.state.artist, categories: categories.filter((c) => c.trim()) } });
+    this.setState({ artist: { ...this.state.artist, categories } });
   };
 
   private handleBirthdateChange = (birthdateFormatted, birthdate) => {
@@ -296,8 +299,7 @@ export const Account = withStyles(AccountComponent, (theme: ThemeType) => ({
   container: {
     alignItems: 'center',
     backgroundColor: theme['background-basic-color-2'],
-    flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
   },
   photoSection: {
