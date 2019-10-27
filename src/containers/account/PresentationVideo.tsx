@@ -1,13 +1,14 @@
 import { Artist } from '@favid-inc/api';
 import { ThemeType, withStyles } from '@kitten/theme';
 import { AvatarProps, Button } from '@kitten/ui';
-import { VideoIcon } from '@src/assets/icons';
 import { Audio, Video } from 'expo-av';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import React from 'react';
 import { Alert, Dimensions, View } from 'react-native';
+import Modal from 'react-native-modal';
 
+import { VideoIcon, CameraIconFill, GridIconOutline } from '@src/assets/icons';
 import { Canceler, CancelToken, uploadProfileVideo } from './uploadProfileVideo';
 
 interface ComponentProps {
@@ -16,16 +17,20 @@ interface ComponentProps {
 }
 
 interface State {
-  isUploading: boolean;
   uploadPercentage: number;
+  isUploading: boolean;
+  isModalVisible: boolean;
+  pickerSource: 'camera' | 'gallery' | null;
 }
 
 type Props = ComponentProps & AvatarProps;
 
 class PresentationVideoComponent extends React.Component<Props, State> {
   public state: State = {
-    isUploading: false,
     uploadPercentage: 0,
+    isUploading: false,
+    isModalVisible: false,
+    pickerSource: null,
   };
 
   private uploadCanceler: Canceler;
@@ -68,16 +73,56 @@ class PresentationVideoComponent extends React.Component<Props, State> {
             activeOpacity={0.95}
             disabled={isUploading}
             icon={!isUploading && VideoIcon}
-            onPress={this.handlePickerPress}
+            onPress={this.handleModalShow}
           >
             {isUploading && `${Math.round(uploadPercentage)}%`}
           </Button>
         </View>
+        <Modal
+          isVisible={this.state.isModalVisible}
+          onBackButtonPress={this.hideModal}
+          onBackdropPress={this.hideModal}
+          onModalHide={this.handleModalHide}
+          style={themedStyle.modal}
+        >
+          <View style={themedStyle.modalContent}>
+            <Button icon={CameraIconFill} onPress={this.handleCameraButtonPress} size='giant' appearance='ghost'>
+              Camera
+            </Button>
+            <Button icon={GridIconOutline} onPress={this.handleGalleryButtonPress} size='giant' appearance='ghost'>
+              Galeria
+            </Button>
+          </View>
+        </Modal>
       </View>
     );
   }
 
-  private handlePickerPress = async () => {
+  private showModal = () => this.setState({ isModalVisible: true });
+  private hideModal = () => this.setState({ isModalVisible: false });
+
+  private handleModalShow = () => {
+    this.setState({ pickerSource: null });
+    this.showModal();
+  };
+  private handleModalHide = () => {
+    const { pickerSource } = this.state;
+    if (pickerSource) {
+      this.uploadMedia(pickerSource);
+    }
+  };
+
+  private handleCameraButtonPress = () => {
+    this.setState({ pickerSource: 'camera' });
+    this.hideModal();
+  };
+
+  private handleGalleryButtonPress = () => {
+    this.setState({ pickerSource: 'gallery' });
+    this.hideModal();
+  };
+
+  private uploadMedia = async (source: 'camera' | 'gallery') => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
     if (status !== 'granted') {
@@ -89,12 +134,17 @@ class PresentationVideoComponent extends React.Component<Props, State> {
       this.setState({ isUploading: true, uploadPercentage: 0 });
     }
 
-    const result = await ImagePicker.launchImageLibraryAsync({
+    const imagePickerOptions: ImagePicker.ImagePickerOptions = {
       allowsEditing: true,
       quality: 0,
       allowsMultipleSelection: false,
       mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-    });
+    };
+
+    const result =
+      source === 'camera'
+        ? await ImagePicker.launchCameraAsync(imagePickerOptions)
+        : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
 
     try {
       if (result.cancelled === false) {
@@ -133,5 +183,12 @@ export const PresentationVideo = withStyles<ComponentProps>(PresentationVideoCom
     height: 48,
     borderColor: theme['border-basic-color-4'],
     backgroundColor: theme['background-basic-color-4'],
+  },
+  modal: {
+    justifyContent: 'flex-end',
+    margin: 0,
+  },
+  modalContent: {
+    backgroundColor: 'white',
   },
 }));
