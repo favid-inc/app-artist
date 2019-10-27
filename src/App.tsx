@@ -18,10 +18,7 @@ import { apiClient } from '@src/core/utils/apiClient';
 import { DynamicStatusBar } from '@src/components/common';
 import { ThemeContext, ThemeContextType, ThemeKey, themes, ThemeStore } from '@src/core/themes';
 
-const images: ImageRequireSource[] = [
-  require('./assets/images/source/favid-logo.png'),
-  require('./assets/images/source/google.png'),
-];
+const images: ImageRequireSource[] = [require('./assets/images/source/favid-logo.png')];
 
 const fonts: { [key: string]: number } = {
   'opensans-semibold': require('./assets/fonts/opensans-semibold.ttf'),
