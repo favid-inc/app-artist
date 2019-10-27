@@ -4,7 +4,7 @@
     "icon": "./src/assets/images/source/favid-logo.png",
     "version": "2.0.7",
     "slug": "favid-artist",
-    "sdkVersion": "34.0.0",
+    "sdkVersion": "35.0.0",
     "privacy": "public",
     "orientation": "portrait",
     "githubUrl": "https://github.com/favid-inc/app-artist",
