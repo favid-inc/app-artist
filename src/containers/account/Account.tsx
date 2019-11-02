@@ -228,7 +228,7 @@ class AccountComponent extends React.Component<Props, State> {
         listAvailableArtistCategories(),
         firebase.auth().currentUser.getIdToken(true),
       ]);
-
+      console.log("categories: ", categories)
       if (!this.isLive) {
         return;
       }
