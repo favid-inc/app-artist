@@ -7,6 +7,7 @@ import * as Permissions from 'expo-permissions';
 import React from 'react';
 import { Alert, Dimensions, View } from 'react-native';
 import Modal from 'react-native-modal';
+import Constants from 'expo-constants';
 
 import { VideoIcon, CameraIconFill, GridIconOutline } from '@src/assets/icons';
 import { Canceler, CancelToken, uploadProfileVideo } from './uploadProfileVideo';
@@ -123,30 +124,32 @@ class PresentationVideoComponent extends React.Component<Props, State> {
   };
 
   private uploadMedia = async (source: 'camera' | 'gallery') => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-    if (status !== 'granted') {
-      Alert.alert('Desculpe, precisamos de permissão para essa ação');
-      return;
-    }
-
-    if (this.isLive) {
-      this.setState({ isUploading: true, uploadPercentage: 0 });
-    }
-
-    const imagePickerOptions: ImagePicker.ImagePickerOptions = {
-      allowsEditing: true,
-      quality: 0,
-      allowsMultipleSelection: false,
-      mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-    };
-
-    const result =
-      source === 'camera'
-        ? await ImagePicker.launchCameraAsync(imagePickerOptions)
-        : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
-
     try {
+      if (Constants.platform.ios) {
+        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+        if (status !== 'granted') {
+          Alert.alert('Desculpe, precisamos de permissão para essa ação');
+          return;
+        }
+      }
+
+      if (this.isLive) {
+        this.setState({ isUploading: true, uploadPercentage: 0 });
+      }
+
+      const imagePickerOptions: ImagePicker.ImagePickerOptions = {
+        allowsEditing: true,
+        quality: 0,
+        allowsMultipleSelection: false,
+        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+      };
+
+      const result =
+        source === 'camera'
+          ? await ImagePicker.launchCameraAsync(imagePickerOptions)
+          : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
+
       if (result.cancelled === false) {
         const cancelToken: CancelToken = (canceler) => {
           this.uploadCanceler = canceler;
@@ -161,7 +164,7 @@ class PresentationVideoComponent extends React.Component<Props, State> {
         this.props.onChange(videoUri);
       }
     } catch (e) {
-      Alert.alert('Erro', 'Não foi possível enviar o vídeo. Verifique sua conexão e tente novamente.');
+      Alert.alert('Erro', 'Infelizmente não foi possível atualizar seu vídeo de apresentação.');
     } finally {
       if (this.isLive) {
         this.setState({ isUploading: false });
