@@ -6,6 +6,7 @@ import * as Permissions from 'expo-permissions';
 import React from 'react';
 import { ActivityIndicator, Alert, View } from 'react-native';
 import Modal from 'react-native-modal';
+import Constants from 'expo-constants';
 
 import { CameraIconFill, GridIconOutline } from '@src/assets/icons';
 
@@ -97,31 +98,33 @@ class ProfilePhotoComponent extends React.Component<Props, State> {
   };
 
   private uploadMedia = async (source: 'camera' | 'gallery') => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-    if (status !== 'granted') {
-      Alert.alert('Desculpe, precisamos de permissão para essa ação');
-      return;
-    }
-
-    if (this.isLive) {
-      this.setState({ isUploading: true });
-    }
-
-    const imagePickerOptions: ImagePicker.ImagePickerOptions = {
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      allowsMultipleSelection: false,
-      aspect: [4, 4],
-      quality: 1,
-    };
-
-    const result =
-      source === 'camera'
-        ? await ImagePicker.launchCameraAsync(imagePickerOptions)
-        : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
-
     try {
+      if (Constants.platform.ios) {
+        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+        if (status !== 'granted') {
+          Alert.alert('Desculpe, precisamos de permissão para essa ação');
+          return;
+        }
+      }
+
+      const imagePickerOptions: ImagePicker.ImagePickerOptions = {
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        allowsMultipleSelection: false,
+        aspect: [4, 4],
+        quality: 1,
+      };
+
+      const result =
+        source === 'camera'
+          ? await ImagePicker.launchCameraAsync(imagePickerOptions)
+          : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
+
+      if (this.isLive) {
+        this.setState({ isUploading: true });
+      }
+
       if (result.cancelled === false) {
         const cancelToken: CancelToken = (canceler) => {
           this.uploadCanceler = canceler;
@@ -132,7 +135,7 @@ class ProfilePhotoComponent extends React.Component<Props, State> {
         this.props.onChange(photoUri);
       }
     } catch (e) {
-      Alert.alert('Erro', 'Não foi possível enviar a foto. Verifique sua conexão e tente novamente.');
+      Alert.alert('Erro', 'Infelizmente não foi possível atualizar sua foto de perfil.');
     } finally {
       if (this.isLive) {
         this.setState({ isUploading: false });
