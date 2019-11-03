@@ -1,26 +1,14 @@
-import {
-  StyleType,
-  ThemedComponentProps,
-  ThemeType,
-  withStyles,
-} from '@kitten/theme';
+import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Text } from '@kitten/ui';
 import React from 'react';
-import {
-  ImageProps,
-  ImageStyle,
-  StyleProp,
-  TextStyle,
-  View,
-  ViewProps,
-} from 'react-native';
+import { ImageProps, ImageStyle, StyleProp, TextStyle, View, ViewProps } from 'react-native';
 import { textStyle } from './style';
 
-type IconProp = (style: StyleType) => React.ReactElement<ImageProps>;
+type IconProp = (style: StyleProp<ImageStyle>) => React.ReactElement<ImageProps>;
 
 interface ComponentProps {
   textStyle?: StyleProp<TextStyle>;
-  iconStyle?: StyleProp<ImageProps>;
+  iconStyle?: StyleProp<ImageStyle>;
   icon?: IconProp;
   children?: string;
 }
@@ -28,7 +16,6 @@ interface ComponentProps {
 export type TextIconProps = ThemedComponentProps & ViewProps & ComponentProps;
 
 class TextIconComponent extends React.Component<TextIconProps> {
-
   public render(): React.ReactNode {
     const { style, themedStyle, textStyle: derivedTextStyle, iconStyle, icon, children } = this.props;
 
@@ -37,9 +24,7 @@ class TextIconComponent extends React.Component<TextIconProps> {
     return (
       <View style={[themedStyle.container, style]}>
         {iconElement}
-        <Text style={[themedStyle.text, derivedTextStyle]}>
-          {children}
-        </Text>
+        <Text style={[themedStyle.text, derivedTextStyle]}>{children}</Text>
       </View>
     );
   }

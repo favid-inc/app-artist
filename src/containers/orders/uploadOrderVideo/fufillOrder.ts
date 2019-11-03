@@ -1,7 +1,7 @@
-import { Order } from '@favid-inc/api';
-import * as firebase from 'firebase';
-import { FulfillOrder, ARTIST_UPLOAD_DIRECTORY } from '@favid-inc/api/lib/app-artist';
+import { Order, ARTIST_UPLOAD_DIRECTORY } from '@favid-inc/api';
+import { FulfillOrder } from '@favid-inc/api/lib/app-artist';
 import { apiClient } from '@src/core/utils/apiClient';
+import * as firebase from 'firebase';
 
 export type Canceler = () => void;
 export type CancelToken = (canceler: Canceler) => void;
@@ -48,9 +48,7 @@ export async function fufillOrder(order: Order, cancelToken: CancelToken, onProg
     try {
       const filename = uri.split('/').pop();
 
-      const directory: ARTIST_UPLOAD_DIRECTORY = 'Artist/:userUid/temporary';
-
-      const destination = `${directory.replace(':userUid', firebase.auth().currentUser.uid)}/${filename}`;
+      const destination = `${ARTIST_UPLOAD_DIRECTORY.replace(':userUid', firebase.auth().currentUser.uid)}/${filename}`;
 
       const blob = await fileUriToBlob(uri);
 

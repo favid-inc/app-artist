@@ -1,6 +1,6 @@
-import React from 'react';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Input, InputProps } from '@kitten/ui';
+import React from 'react';
 
 interface ComponentProps extends InputProps {
   validator: (value: string) => boolean;

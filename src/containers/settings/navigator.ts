@@ -1,22 +1,21 @@
 import { createStackNavigator } from 'react-navigation';
 
+import { AccountContainer } from '@src/containers/account';
+import { PoliciesContainer } from '@src/containers/policies';
 import { TopBarNavigationOptions } from '@src/core/navigation/options';
 
-import { WalletNavigation } from './wallet';
-import { connect } from './context';
 import { SettingsContainer } from './SettingsContainer';
-import { AccountNavigation } from './account';
+import { WalletNavigation } from './wallet';
 
-export const SettingsNavigator = connect(
-  createStackNavigator(
-    {
-      Configurações: SettingsContainer,
-      ...AccountNavigation,
-      ...WalletNavigation,
-    },
-    {
-      headerMode: 'screen',
-      defaultNavigationOptions: TopBarNavigationOptions,
-    },
-  ),
+export const SettingsNavigator = createStackNavigator(
+  {
+    Configurações: SettingsContainer,
+    Políticas: PoliciesContainer,
+    Conta: AccountContainer,
+    ...WalletNavigation,
+  },
+  {
+    headerMode: 'screen',
+    defaultNavigationOptions: TopBarNavigationOptions,
+  },
 );

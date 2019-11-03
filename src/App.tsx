@@ -18,10 +18,7 @@ import { apiClient } from '@src/core/utils/apiClient';
 import { DynamicStatusBar } from '@src/components/common';
 import { ThemeContext, ThemeContextType, ThemeKey, themes, ThemeStore } from '@src/core/themes';
 
-const images: ImageRequireSource[] = [
-  require('./assets/images/source/favid-logo.png'),
-  require('./assets/images/source/google.png'),
-];
+const images: ImageRequireSource[] = [require('./assets/images/source/favid-logo.png')];
 
 const fonts: { [key: string]: number } = {
   'opensans-semibold': require('./assets/fonts/opensans-semibold.ttf'),
@@ -40,14 +37,17 @@ interface State {
   theme: ThemeKey;
 }
 
-firebase.auth().onIdTokenChanged(async (auth) => {
-  const headers = apiClient.defaults.headers.common;
+apiClient.interceptors.request.use(async (axiosRequestConfig) => {
+  const headers = { Authorization: '' };
+
   try {
-    const idToken = await auth.getIdToken();
-    headers.Authorization = `Bearer ${idToken}`;
-  } catch (e) {
-    delete headers.Authorization;
+    const idToken = await firebase.auth().currentUser.getIdToken();
+    Object.assign(headers, axiosRequestConfig.headers, { Authorization: `Bearer ${idToken}` });
+  } finally {
+    axiosRequestConfig.headers = headers;
   }
+
+  return axiosRequestConfig;
 });
 
 export class App extends React.Component<{}, State> {

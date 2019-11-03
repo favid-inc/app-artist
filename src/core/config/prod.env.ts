@@ -14,9 +14,14 @@ export const api = {
 
 export const auth = {
   google: {
-    behavior: 'web',
-    clientId: '983263249595-2tclp7pj3b23h05l08v8v7af6mgbud1s.apps.googleusercontent.com',
+    clientId: '983263249595-u1brakoaa7qltqt6akrl44mmtu9ab0pa.apps.googleusercontent.com',
     issuer: 'https://accounts.google.com',
     scopes: ['profile', 'email'],
+  },
+  facebook: {
+    appid: '642908949561774',
+    options: {
+      permissions: ['public_profile', 'email'],
+    },
   },
 };

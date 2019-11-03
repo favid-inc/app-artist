@@ -1,9 +1,10 @@
 import { Artist, ArtistCategory } from '@favid-inc/api';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
+import { Text } from '@kitten/ui';
 import React from 'react';
 import { View } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import MultiSelect from 'react-native-multiple-select';
+import DatePicker from 'react-native-datepicker';
 
 import { textStyle, ValidationInput } from '@src/components/common';
 import { currencyFormatter } from '@src/core/formatters';
@@ -12,11 +13,13 @@ import { NameValidator, StringValidator } from '@src/core/validators';
 interface ComponentProps {
   artist: Artist;
   categories: ArtistCategory[];
+  onNameChange: (val: string) => void;
   onArtisticNameChange: (val: string) => void;
   onBiographyChange: (val: string) => void;
   onCategoriesChange: (val: string[]) => void;
   onMainCategoryChange: (val: string) => void;
   onPriceChange: (val: string) => void;
+  onBirthdateChange: (valStr: string, valDate: Date) => void;
 }
 
 export type Props = ThemedComponentProps & ComponentProps;
@@ -26,16 +29,12 @@ type State = Artist;
 class ArtistFormComponent extends React.Component<Props, State> {
   public state: State = {};
 
-  // public componentWillMount() {
-  //   this.setState({ ...this.props.artist });
-  // }
-
   public render(): React.ReactNode {
     const { themedStyle } = this.props;
 
     const { artist } = this.props;
 
-    let categories = [];
+    const categories = [];
 
     if (Array.isArray(this.props.categories)) {
       categories.push(...this.props.categories);
@@ -49,38 +48,77 @@ class ArtistFormComponent extends React.Component<Props, State> {
       categories.push(artist.mainCategory);
     }
 
-    categories = Array.from(new Set(categories));
-
     return (
-
-        <View style={themedStyle.container}>
-          <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-            <ValidationInput
-              label='Nome Artístico'
-              labelStyle={textStyle.label}
-              onChangeText={this.props.onArtisticNameChange}
-              style={themedStyle.input}
-              textStyle={[textStyle.paragraph, themedStyle.inputText]}
-              validator={NameValidator}
-              value={artist.artisticName}
-            />
-          </View>
-          <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-            <ValidationInput
-              keyboardType='numeric'
-              label='Preço'
-              formatter={currencyFormatter}
-              labelStyle={textStyle.label}
-              onChangeText={this.props.onPriceChange}
-              style={themedStyle.input}
-              textStyle={[textStyle.paragraph, themedStyle.inputText]}
-              validator={StringValidator}
-              value={`R$ ${artist.price || 0}`}
-            />
-          </View>
-          <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
+      <View style={themedStyle.container}>
+        <View style={themedStyle.middleContainer}>
+          <ValidationInput
+            label='Nome'
+            labelStyle={textStyle.label}
+            onChangeText={this.props.onNameChange}
+            style={themedStyle.input}
+            textStyle={[textStyle.paragraph, themedStyle.inputText]}
+            validator={NameValidator}
+            value={artist.name}
+          />
+        </View>
+        <View style={themedStyle.middleContainer}>
+          <ValidationInput
+            label='Nome Artístico'
+            labelStyle={textStyle.label}
+            onChangeText={this.props.onArtisticNameChange}
+            style={themedStyle.input}
+            textStyle={[textStyle.paragraph, themedStyle.inputText]}
+            validator={NameValidator}
+            value={artist.artisticName}
+          />
+        </View>
+        <View style={themedStyle.middleContainer}>
+          <ValidationInput
+            label={`Biografia (${(artist.biography && artist.biography.length) || 0}/240)`}
+            labelStyle={textStyle.label}
+            maxLength={240}
+            multiline={true}
+            numberOfLines={6}
+            onChangeText={this.props.onBiographyChange}
+            style={themedStyle.input}
+            textStyle={[textStyle.paragraph, themedStyle.inputText]}
+            validator={StringValidator}
+            value={artist.biography}
+          />
+        </View>
+        <View style={themedStyle.middleContainer}>
+          <ValidationInput
+            keyboardType='numeric'
+            label='Preço'
+            formatter={currencyFormatter}
+            labelStyle={textStyle.label}
+            onChangeText={this.props.onPriceChange}
+            style={themedStyle.input}
+            textStyle={[textStyle.paragraph, themedStyle.inputText]}
+            validator={StringValidator}
+            value={`R$ ${artist.price || 0}`}
+          />
+        </View>
+        <View style={themedStyle.middleContainer}>
+          <Text style={themedStyle.inputLabel} appearance='hint' category='label'>
+            Data de Nascimento
+          </Text>
+          <DatePicker
+            style={{ width: '100%' }}
+            onDateChange={this.props.onBirthdateChange}
+            date={artist.birthdate ? new Date(artist.birthdate) : ''}
+            format='DD/MM/YYYY'
+            maxDate={new Date()}
+            customStyles={{ dateInput: themedStyle.input }}
+            showIcon={false}
+          />
+        </View>
+        <View style={themedStyle.middleContainer}>
+          <Text style={themedStyle.inputLabel} appearance='hint'>
+            Categorias
+          </Text>
+          <View style={{ width: '100%' }}>
             <CategorySelector
-              selectText='Categorias'
               single={false}
               value={artist.categories}
               categories={categories}
@@ -94,11 +132,16 @@ class ArtistFormComponent extends React.Component<Props, State> {
                 themedStyle.profileSetting,
                 { flexDirection: 'column' },
               ]}
+              styleTextDropdownSelected={{ paddingHorizontal: 10 }}
             />
           </View>
-          <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
+        </View>
+        <View style={themedStyle.middleContainer}>
+          <Text style={themedStyle.inputLabel} appearance='hint'>
+            Categoria Principal
+          </Text>
+          <View style={{ width: '100%' }}>
             <CategorySelector
-              selectText='Categoria Principal'
               single={true}
               value={artist.mainCategory}
               categories={artist.categories}
@@ -111,34 +154,23 @@ class ArtistFormComponent extends React.Component<Props, State> {
                 themedStyle.profileSetting,
                 { flexDirection: 'column' },
               ]}
-            />
-          </View>
-          <View style={[themedStyle.middleContainer, themedStyle.profileSetting]}>
-            <ValidationInput
-              label={`Biografia (${(artist.biography && artist.biography.length) || 0}/240)`}
-              labelStyle={textStyle.label}
-              maxLength={240}
-              multiline={true}
-              numberOfLines={6}
-              onChangeText={this.props.onBiographyChange}
-              style={themedStyle.input}
-              textStyle={[textStyle.paragraph, themedStyle.inputText]}
-              validator={StringValidator}
-              value={artist.biography}
+              styleTextDropdownSelected={{ paddingHorizontal: 10 }}
             />
           </View>
         </View>
-
+      </View>
     );
   }
 }
 
 const CategorySelector = ({ categories, value, single, onChange, ...restProps }) => {
   const items = React.useMemo(() => {
-    return (categories || []).map((c) => ({ c }));
+    return Array.from(new Set(categories || []))
+      .filter((c: string) => c && c.trim())
+      .map((c) => ({ c }));
   }, [categories]);
 
-  const selectedItems = Array.isArray(value) ? value : [value];
+  const selectedItems = !value ? [] : Array.isArray(value) ? value : [value];
 
   const handleSelectedItemsChange = React.useCallback(
     (selection) => {
@@ -149,6 +181,7 @@ const CategorySelector = ({ categories, value, single, onChange, ...restProps })
 
   return (
     <MultiSelect
+      selectText='Selecionar'
       uniqueKey='c'
       displayKey='c'
       items={items}
@@ -177,9 +210,12 @@ export const ArtistForm = withStyles<ComponentProps>(ArtistFormComponent, (theme
   middleContainer: {
     display: 'flex',
     flexDirection: 'row',
-    // alignItems: 'center',
-    paddingVertical: 10,
+    flexWrap: 'wrap',
     paddingHorizontal: 20,
+  },
+  inputLabel: {
+    ...textStyle.label,
+    paddingVertical: 10,
   },
   inputText: {
     color: theme['text-alternative-color'],
@@ -189,9 +225,7 @@ export const ArtistForm = withStyles<ComponentProps>(ArtistFormComponent, (theme
     flex: 1,
     backgroundColor: theme['background-alternative-color-1'],
     borderColor: theme['text-alternative-color'],
-  },
-  text: {
-    width: '100%',
-    fontFamily: 'opensans-regular',
+    borderRadius: 5,
+    paddingVertical: 10,
   },
 }));

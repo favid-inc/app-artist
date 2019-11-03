@@ -4,9 +4,8 @@ import { ActivityIndicator, Alert, Image, View } from 'react-native';
 import { NavigationScreenProps } from 'react-navigation';
 
 import { favidImage } from '@src/assets/images';
-import { ScrollableAvoidKeyboard, textStyle } from '@src/components/common';
+import { ScrollableAvoidKeyboard } from '@src/components/common';
 import { AuthContext } from '@src/core/auth';
-import * as config from '@src/core/config';
 
 import { AuthForm } from './AuthForm';
 import { SocialAuth } from './SocialAuth';
@@ -33,7 +32,7 @@ class AuthContainerComponent extends React.Component<Props, State> {
     if (this.context.isSigningIn) {
       return (
         <View style={themedStyle.container}>
-          <Image source={favidImage.imageSource} style={themedStyle.logoStyle} />
+          <Image source={favidImage.imageSource} style={themedStyle.logo} />
           <View style={themedStyle.container}>
             <ActivityIndicator size='large' />
           </View>
@@ -43,7 +42,7 @@ class AuthContainerComponent extends React.Component<Props, State> {
 
     return (
       <View style={themedStyle.container}>
-        <Image source={favidImage.imageSource} style={themedStyle.logoStyle} />
+        <Image source={favidImage.imageSource} style={themedStyle.logo} />
         <ScrollableAvoidKeyboard>
           <AuthForm onSignIn={this.handleSignIn} onSignUp={this.handleSignUp} />
           <SocialAuth onGoogleSignIn={this.handleGoogleSignIn} onFacebookSignIn={this.handleFacebookSignIn} />
@@ -81,7 +80,7 @@ class AuthContainerComponent extends React.Component<Props, State> {
       Alert.alert('Termos de uso', 'Você deve aceitar os termos de uso para realizar essa ação');
       return;
     }
-    this.context.signInWithOAuth(config.auth.google);
+    this.context.signInWithGoogle();
   };
 
   private handleFacebookSignIn = () => {
@@ -89,7 +88,7 @@ class AuthContainerComponent extends React.Component<Props, State> {
       Alert.alert('Termos de uso', 'Você deve aceitar os termos de uso para realizar essa ação');
       return;
     }
-    // await this.signIn('google');
+    this.context.signInWithFacebook();
   };
 }
 
@@ -97,30 +96,14 @@ export const AuthContainer = withStyles(AuthContainerComponent, (theme: ThemeTyp
   container: {
     flex: 1,
     backgroundColor: theme['background-basic-color-2'],
-    alignItems: 'center',
-    paddingVertical: 10,
-  },
-  logoStyle: {
+    alignItems: 'stretch',
     padding: 10,
-    // margin: 5,
+  },
+  logo: {
+    padding: 10,
     height: 50,
     width: 50,
     resizeMode: 'stretch',
-  },
-  textStyle: {
-    color: theme['color-basic-400'],
-    fontFamily: 'opensans-bold',
-    fontSize: 18,
-    marginBottom: 4,
-    marginRight: 20,
-  },
-
-  termsCheckBox: {
-    marginHorizontal: 20,
-  },
-  termsCheckBoxText: {
-    fontSize: 11,
-    color: theme['text-hint-color'],
-    ...textStyle.paragraph,
+    alignSelf: 'center',
   },
 }));

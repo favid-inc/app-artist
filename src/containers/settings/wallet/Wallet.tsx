@@ -1,13 +1,13 @@
-import React from 'react';
-import { ActivityIndicator, Alert, View, ViewProps } from 'react-native';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Text } from '@kitten/ui';
-import { LoadWalletInfo } from '@favid-inc/api/lib/app-artist';
-import { apiClient } from '@src/core/utils/apiClient';
+import React from 'react';
+import { ActivityIndicator, Alert, View, ViewProps } from 'react-native';
 
-import { SettingsContext } from '../context';
-import { BankAccountInfo } from './BankAccountInfo';
-import { WithdrawCard } from './WithdrawCard';
+import { Card } from './Card';
+import { CreateWalletForm } from './createWalletForm';
+import { InfoItem } from './InfoItem';
+import { loadWalletInfo } from './loadWalletInfo';
+import { Balance, Recipient } from './types';
 
 interface ComponentProps {
   onNavigate: (pathName: string) => void;
@@ -16,13 +16,12 @@ interface ComponentProps {
 export type Props = ComponentProps & ThemedComponentProps & ViewProps;
 
 interface State {
+  balance?: Balance;
   loading: boolean;
+  recipient?: Recipient;
 }
 
 class WalletComponent extends React.Component<Props, State> {
-  static contextType = SettingsContext;
-  public context: React.ContextType<typeof SettingsContext>;
-
   public state: State = {
     loading: false,
   };
@@ -31,14 +30,7 @@ class WalletComponent extends React.Component<Props, State> {
     this.setState({ loading: true });
 
     try {
-      const request: LoadWalletInfo['Request'] = {
-        url: '/LoadWalletInfo',
-        method: 'GET',
-      };
-
-      const response = await apiClient.request<LoadWalletInfo['Response']>(request);
-
-      this.context.setWalletInfo(response.data);
+      this.setState(await loadWalletInfo());
     } catch (e) {
       Alert.alert('Erro ao buscar dados da carteira');
     } finally {
@@ -57,32 +49,42 @@ class WalletComponent extends React.Component<Props, State> {
       );
     }
 
+    const { balance, recipient } = this.state;
+
     return (
       <View style={[themedStyle.container, style]} {...restProps}>
-        <Text appearance='hint' style={themedStyle.title} category='h5'>
-          Dados Bancários
-        </Text>
-        <BankAccountInfo />
-        <WithdrawCard onWithdraw={this.navigateToWithdraw} />
+        {recipient && (
+          <Card>
+            <InfoItem hint='Status' value={recipient.status} />
+          </Card>
+        )}
+        {balance && (
+          <Card>
+            <InfoItem hint='Saldo' value={`R$ ${balance.available.amount || 0}`} />
+          </Card>
+        )}
+        <Card>
+          <Text appearance='hint' style={themedStyle.title} category='h5'>
+            {recipient && recipient.bank_account ? 'Atualizar dados Bancários' : 'Enviar dados Bancários'}
+          </Text>
+          <CreateWalletForm recipient={recipient} onSubmitSuccess={this.onSubmitSuccess} />
+        </Card>
       </View>
     );
   }
 
-  // private navigateToWalletForm = () => {
-  //   this.props.onNavigate('Dados Bancários');
-  // };
-  private navigateToWithdraw = () => {
-    this.props.onNavigate('Sacar Dinheiro');
+  private onSubmitSuccess = (recipient: Recipient) => {
+    this.setState({ recipient });
   };
 }
 
 export const Wallet = withStyles(WalletComponent, (theme: ThemeType) => ({
   container: {
     flex: 1,
-    paddingVertical: 40,
     backgroundColor: theme['background-basic-color-2'],
   },
   title: {
     textAlign: 'center',
+    paddingVertical: 10,
   },
 }));

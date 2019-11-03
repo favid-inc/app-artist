@@ -1,6 +1,7 @@
-import { UploadProfileVideo, ARTIST_UPLOAD_DIRECTORY } from '@favid-inc/api/lib/app-artist';
-import * as firebase from 'firebase';
+import { UploadProfileVideo } from '@favid-inc/api/lib/app-artist';
+import { ARTIST_UPLOAD_DIRECTORY } from '@favid-inc/api';
 import { apiClient } from '@src/core/utils/apiClient';
+import * as firebase from 'firebase';
 
 export type Canceler = () => void;
 export type CancelToken = (canceler: Canceler) => void;
@@ -36,9 +37,7 @@ export async function uploadProfileVideo(uri: string, cancelToken: CancelToken, 
     try {
       const filename = uri.split('/').pop();
 
-      const directory: ARTIST_UPLOAD_DIRECTORY = 'Artist/:userUid/temporary';
-
-      const destination = `${directory.replace(':userUid', firebase.auth().currentUser.uid)}/${filename}`;
+      const destination = `${ARTIST_UPLOAD_DIRECTORY.replace(':userUid', firebase.auth().currentUser.uid)}/${filename}`;
 
       const blob = await fileUriToBlob();
 
