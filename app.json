@@ -18,7 +18,7 @@
     },
     "android": {
       "package": "br.com.favid.appartist",
-      "versionCode": 25,
+      "versionCode": 26,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=br.com.favid.appartist",
       "permissions": [
         "CAMERA",
