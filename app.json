@@ -2,7 +2,7 @@
   "expo": {
     "name": "Favid - Artist",
     "icon": "./src/assets/images/source/favid-logo.png",
-    "version": "2.0.11",
+    "version": "2.0.12",
     "slug": "favid-artist",
     "sdkVersion": "35.0.0",
     "privacy": "public",
@@ -10,6 +10,7 @@
     "githubUrl": "https://github.com/favid-inc/app-artist",
     "ios": {
       "infoPlist": {
+        "UIUserInterfaceStyle": "Light",
         "NSCameraUsageDescription": "Este aplicativo usa a biblioteca de fotos e vídeos para carregar vídeos e fotos na conta do usuário.",
         "NSPhotoLibraryUsageDescription": "Este aplicativo usa a biblioteca de fotos e vídeos para carregar vídeos e fotos na conta do usuário."
       },
