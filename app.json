@@ -2,7 +2,7 @@
   "expo": {
     "name": "Favid - Artist",
     "icon": "./src/assets/images/source/favid-logo.png",
-    "version": "2.0.8",
+    "version": "2.0.11",
     "slug": "favid-artist",
     "sdkVersion": "35.0.0",
     "privacy": "public",
