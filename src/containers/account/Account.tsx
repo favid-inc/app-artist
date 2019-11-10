@@ -198,6 +198,7 @@ class AccountComponent extends React.Component<Props, State> {
   };
 
   private handleSaveClick = async () => {
+
     const errors = validate(this.state.artist, constraints);
 
     if (errors) {
@@ -208,6 +209,7 @@ class AccountComponent extends React.Component<Props, State> {
     try {
       this.setState({ saving: true });
       const artist = await updateProfile(this.state.artist);
+
       if (this.isLive) {
         this.setState({ artist });
       }
@@ -228,7 +230,6 @@ class AccountComponent extends React.Component<Props, State> {
         listAvailableArtistCategories(),
         firebase.auth().currentUser.getIdToken(true),
       ]);
-      console.log("categories: ", categories)
       if (!this.isLive) {
         return;
       }
