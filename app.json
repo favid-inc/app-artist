@@ -43,6 +43,9 @@
       "android",
       "ios"
     ],
+    "facebookScheme": "fb642908949561774",
+    "facebookAppId": "642908949561774",
+    "facebookDisplayName": "Favid Artist",
     "description": "Favid é um marketplace que conecta os ídolos com os fãs de forma íntima, aproximando-os de artistas, atletas, influenciadores digitais, entre outros famosos através de vídeos."
   }
 }
