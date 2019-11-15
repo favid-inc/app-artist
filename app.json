@@ -23,9 +23,9 @@
       "playStoreUrl": "https://play.google.com/store/apps/details?id=br.com.favid.appartist",
       "permissions": [
         "CAMERA",
-        "READ_CONTACTS",
-        "READ_PHONE_STATE",
-        "RECORD_AUDIO"
+        "RECORD_AUDIO",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
       ]
     },
     "androidStatusBar": {

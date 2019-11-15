@@ -150,7 +150,7 @@ class AccountComponent extends React.Component<Props, State> {
             >
               {saving
                 ? 'Enviando dados...'
-                : artist.registerStatus === ArtistRegisterStatus.INCOMPLETED
+                : artist.registerStatus === ArtistRegisterStatus.INCOMPLETE
                 ? 'Enviar dados para análise'
                 : 'Atualizar Perfil'}
             </Button>
@@ -198,7 +198,6 @@ class AccountComponent extends React.Component<Props, State> {
   };
 
   private handleSaveClick = async () => {
-
     const errors = validate(this.state.artist, constraints);
 
     if (errors) {
@@ -233,7 +232,7 @@ class AccountComponent extends React.Component<Props, State> {
       if (!this.isLive) {
         return;
       }
-      if (artist.registerStatus === ArtistRegisterStatus.INCOMPLETED) {
+      if (artist.registerStatus === ArtistRegisterStatus.INCOMPLETE) {
         Alert.alert(
           'Criação de conta',
           'Preencha os campos abaixo para solicitar uma conta de Artista.' +
