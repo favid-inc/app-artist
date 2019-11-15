@@ -30,13 +30,13 @@ class SelectOrderComponent extends Component<Props> {
           {loading ? (
             <LoadingOrders themedStyle={themedStyle} />
           ) : (
-            <SwipeOrders
-              orders={this.context.orders}
-              themedStyle={themedStyle}
-              onSelectedOrderChanged={this.handleSelectedOrderChanged}
-              title={`${this.context.selectedOrder + 1} de ${this.context.orders.length}`}
-            />
-          )}
+              <SwipeOrders
+                orders={this.context.orders}
+                themedStyle={themedStyle}
+                onSelectedOrderChanged={this.handleSelectedOrderChanged}
+                title={`${this.context.selectedOrder + 1} de ${this.context.orders.length}`}
+              />
+            )}
         </View>
         <View style={themedStyle.buttonsWrapper}>
           <View style={themedStyle.buttons}>
@@ -109,7 +109,8 @@ const SwipeOrders = ({ themedStyle, orders, title, onSelectedOrderChanged }) => 
               </Text>
             )}
             <Text style={[themedStyle.text, themedStyle.expiration]} appearance='hint' category='c1'>
-              {`realizar até ${new Date(order.statusPlacedDate).toLocaleDateString()} - R$ ${order.price}`}
+              {order.dueDate && `realizar até ${formatDate(new Date(order.dueDate))} - `}
+              {`R$ ${order.price}`}
             </Text>
             <Text style={[themedStyle.text, themedStyle.instruction]} appearance='hint' category='p1'>
               {order.instructions}
@@ -120,6 +121,11 @@ const SwipeOrders = ({ themedStyle, orders, title, onSelectedOrderChanged }) => 
     </SwiperComponent>
   </View>
 );
+
+function formatDate(date: Date) {
+  const [, year, month, day] = date.toISOString().match(/(\d+)-(\d+)-(\d+)/);
+  return `${day}/${month}/${year}`;
+}
 
 const LoadingOrders = ({ themedStyle }) => (
   <View style={themedStyle.swiperWrapper}>
