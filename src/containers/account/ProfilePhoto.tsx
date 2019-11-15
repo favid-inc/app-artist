@@ -6,7 +6,6 @@ import * as Permissions from 'expo-permissions';
 import React from 'react';
 import { ActivityIndicator, Alert, View } from 'react-native';
 import Modal from 'react-native-modal';
-import Constants from 'expo-constants';
 
 import { CameraIconFill, GridIconOutline } from '@src/assets/icons';
 
@@ -51,8 +50,8 @@ class ProfilePhotoComponent extends React.Component<Props, State> {
         {this.state.isUploading ? (
           <ActivityIndicator style={themedStyle.edit} color='#0000ff' />
         ) : (
-          <Button style={themedStyle.edit} activeOpacity={0.95} icon={CameraIconFill} onPress={this.handleModalShow} />
-        )}
+            <Button style={themedStyle.edit} activeOpacity={0.95} icon={CameraIconFill} onPress={this.handleModalShow} />
+          )}
         <Modal
           isVisible={this.state.isModalVisible}
           onBackButtonPress={this.hideModal}
@@ -76,7 +75,14 @@ class ProfilePhotoComponent extends React.Component<Props, State> {
   private showModal = () => this.setState({ isModalVisible: true });
   private hideModal = () => this.setState({ isModalVisible: false });
 
-  private handleModalShow = () => {
+  private handleModalShow = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL);
+
+    if (status !== 'granted') {
+      Alert.alert('Precisamos de permissão para essa ação');
+      return;
+    }
+
     this.setState({ pickerSource: null });
     this.showModal();
   };
@@ -99,15 +105,6 @@ class ProfilePhotoComponent extends React.Component<Props, State> {
 
   private uploadMedia = async (source: 'camera' | 'gallery') => {
     try {
-      if (Constants.platform.ios) {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-        if (status !== 'granted') {
-          Alert.alert('Desculpe, precisamos de permissão para essa ação');
-          return;
-        }
-      }
-
       const imagePickerOptions: ImagePicker.ImagePickerOptions = {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,

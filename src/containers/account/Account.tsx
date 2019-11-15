@@ -150,7 +150,7 @@ class AccountComponent extends React.Component<Props, State> {
             >
               {saving
                 ? 'Enviando dados...'
-                : artist.registerStatus === ArtistRegisterStatus.INCOMPLETED
+                : artist.registerStatus === ArtistRegisterStatus.INCOMPLETE
                 ? 'Enviar dados para análise'
                 : 'Atualizar Perfil'}
             </Button>
@@ -208,6 +208,7 @@ class AccountComponent extends React.Component<Props, State> {
     try {
       this.setState({ saving: true });
       const artist = await updateProfile(this.state.artist);
+
       if (this.isLive) {
         this.setState({ artist });
       }
@@ -228,11 +229,10 @@ class AccountComponent extends React.Component<Props, State> {
         listAvailableArtistCategories(),
         firebase.auth().currentUser.getIdToken(true),
       ]);
-      console.log("categories: ", categories)
       if (!this.isLive) {
         return;
       }
-      if (artist.registerStatus === ArtistRegisterStatus.INCOMPLETED) {
+      if (artist.registerStatus === ArtistRegisterStatus.INCOMPLETE) {
         Alert.alert(
           'Criação de conta',
           'Preencha os campos abaixo para solicitar uma conta de Artista.' +

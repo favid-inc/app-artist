@@ -7,7 +7,6 @@ import * as Permissions from 'expo-permissions';
 import React from 'react';
 import { Alert, Dimensions, View } from 'react-native';
 import Modal from 'react-native-modal';
-import Constants from 'expo-constants';
 
 import { VideoIcon, CameraIconFill, GridIconOutline } from '@src/assets/icons';
 import { Canceler, CancelToken, uploadProfileVideo } from './uploadProfileVideo';
@@ -102,7 +101,14 @@ class PresentationVideoComponent extends React.Component<Props, State> {
   private showModal = () => this.setState({ isModalVisible: true });
   private hideModal = () => this.setState({ isModalVisible: false });
 
-  private handleModalShow = () => {
+  private handleModalShow = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA, Permissions.CAMERA_ROLL);
+
+    if (status !== 'granted') {
+      Alert.alert('Precisamos de permissão para essa ação');
+      return;
+    }
+
     this.setState({ pickerSource: null });
     this.showModal();
   };
@@ -125,15 +131,6 @@ class PresentationVideoComponent extends React.Component<Props, State> {
 
   private uploadMedia = async (source: 'camera' | 'gallery') => {
     try {
-      if (Constants.platform.ios) {
-        const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
-        if (status !== 'granted') {
-          Alert.alert('Desculpe, precisamos de permissão para essa ação');
-          return;
-        }
-      }
-
       if (this.isLive) {
         this.setState({ isUploading: true, uploadPercentage: 0 });
       }

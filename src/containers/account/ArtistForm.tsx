@@ -104,6 +104,9 @@ class ArtistFormComponent extends React.Component<Props, State> {
             Data de Nascimento
           </Text>
           <DatePicker
+            placeholder=' '
+            cancelBtnText='cancelar'
+            confirmBtnText='confirmar'
             style={{ width: '100%' }}
             onDateChange={this.props.onBirthdateChange}
             date={artist.birthdate ? new Date(artist.birthdate) : ''}
@@ -164,14 +167,13 @@ class ArtistFormComponent extends React.Component<Props, State> {
 }
 
 const CategorySelector = ({ categories, value, single, onChange, ...restProps }) => {
+
   const items = React.useMemo(() => {
     return Array.from(new Set(categories || []))
       .filter((c: string) => c && c.trim())
-      .map((c) => ({ c }));
+      .map((c: string) => ({ id: c, name: c}));
   }, [categories]);
-
   const selectedItems = !value ? [] : Array.isArray(value) ? value : [value];
-
   const handleSelectedItemsChange = React.useCallback(
     (selection) => {
       onChange(single ? selection[0] : selection);
@@ -182,8 +184,8 @@ const CategorySelector = ({ categories, value, single, onChange, ...restProps })
   return (
     <MultiSelect
       selectText='Selecionar'
-      uniqueKey='c'
-      displayKey='c'
+      uniqueKey='id'
+      displayKey='name'
       items={items}
       selectedItems={selectedItems}
       onSelectedItemsChange={handleSelectedItemsChange}
@@ -197,7 +199,6 @@ const CategorySelector = ({ categories, value, single, onChange, ...restProps })
       tagBorderColor='#CCC'
       tagRemoveIconColor='#CCC'
       tagTextColor='#CCC'
-      {...restProps}
     />
   );
 };

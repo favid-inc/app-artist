@@ -35,10 +35,9 @@ export class Camera extends Component<Props, State> {
   private camera: NativeCamera;
 
   public async componentDidMount() {
-    const camera = await Permissions.askAsync(Permissions.CAMERA);
-    const audio = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
+    const { status } = await Permissions.askAsync(Permissions.CAMERA, Permissions.AUDIO_RECORDING);
 
-    const hasPermission = `${camera.status}${audio.status}` === 'grantedgranted';
+    const hasPermission = status === 'granted';
 
     this.setState({ hasPermission });
   }
