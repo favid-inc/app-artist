@@ -2,7 +2,7 @@
   "expo": {
     "name": "Favid - Artist",
     "icon": "./src/assets/images/source/favid-logo.png",
-    "version": "2.0.12",
+    "version": "2.0.13",
     "slug": "favid-artist",
     "sdkVersion": "35.0.0",
     "privacy": "public",
@@ -19,7 +19,7 @@
     },
     "android": {
       "package": "br.com.favid.appartist",
-      "versionCode": 26,
+      "versionCode": 27,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=br.com.favid.appartist",
       "permissions": [
         "CAMERA",
