@@ -9,7 +9,7 @@ export const firebase = {
 };
 
 export const api = {
-  baseURL: 'https://onyx-harmony-239219.firebaseapp.com/api/appArtist',
+  baseURL: 'https://dash.firebaseapp.com/api/appArtist',
 };
 
 export const auth = {
