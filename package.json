@@ -47,7 +47,8 @@
     "react-navigation": "^3.13.0",
     "redux-thunk": "^2.3.0",
     "scheduler": "^0.15.0",
-    "validate.js": "^0.13.1"
+    "validate.js": "^0.13.1",
+    "react-native-svg": "9.9.5"
   },
   "devDependencies": {
     "@babel/core": "^7.7.4",
