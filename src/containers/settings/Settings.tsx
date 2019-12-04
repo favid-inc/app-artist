@@ -1,5 +1,5 @@
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
-import { Button } from '@kitten/ui';
+import { Button, Text } from '@kitten/ui';
 import React from 'react';
 import { Linking, Platform, Share, View } from 'react-native';
 
@@ -12,6 +12,7 @@ import {
   PersonIconFill,
 } from '@src/assets/icons';
 import { AuthContext } from '@src/core/auth';
+import pkg from '../../../package.json';
 
 import { readApplyForAffiliationLink } from './readApplyForAffiliationLink';
 
@@ -41,6 +42,7 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
         <NeedHelpButton themedStyle={themedStyle} />
         <PoliciesButton themedStyle={themedStyle} onNavigate={this.handleNavigatePolicies} />
         <SigOutButton themedStyle={themedStyle} />
+        <Text category='p1' appearance='hint'>Versão: {pkg.version}</Text>
       </View>
     );
   }

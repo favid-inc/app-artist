@@ -3,11 +3,12 @@ import { Text } from '@kitten/ui';
 import React from 'react';
 import { ActivityIndicator, Alert, View, ViewProps } from 'react-native';
 
+import { Balance, Recipient } from './types';
 import { Card } from './Card';
 import { CreateWalletForm } from './createWalletForm';
+import { formatAmount } from './formatAmount';
 import { InfoItem } from './InfoItem';
 import { loadWalletInfo } from './loadWalletInfo';
-import { Balance, Recipient } from './types';
 
 interface ComponentProps {
   onNavigate: (pathName: string) => void;
@@ -60,7 +61,7 @@ class WalletComponent extends React.Component<Props, State> {
         )}
         {balance && (
           <Card>
-            <InfoItem hint='Saldo' value={`R$ ${balance.available.amount || 0}`} />
+            <InfoItem hint='Saldo' value={formatAmount(balance.available.amount)} />
           </Card>
         )}
         <Card>

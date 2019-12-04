@@ -1,26 +1,28 @@
 {
   "expo": {
-    "name": "Favid - Artist",
-    "icon": "./src/assets/images/source/favid-logo.png",
-    "version": "2.0.12",
+    "name": "Favid Artist",
+    "version": "2.0.13",
     "slug": "favid-artist",
     "sdkVersion": "35.0.0",
     "privacy": "public",
     "orientation": "portrait",
     "githubUrl": "https://github.com/favid-inc/app-artist",
+    "icon": "./src/assets/images/source/favid-logo.png",
     "ios": {
+      "bundleIdentifier": "br.com.favid.appartist",
+      "appStoreUrl": "https://itunes.apple.com/us/app/favid/id1246143230",
+      "icon": "./src/assets/images/source/favid-logo.ios.png",
       "infoPlist": {
         "UIUserInterfaceStyle": "Light",
         "NSCameraUsageDescription": "Este aplicativo usa a biblioteca de fotos e vídeos para carregar vídeos e fotos na conta do usuário.",
         "NSPhotoLibraryUsageDescription": "Este aplicativo usa a biblioteca de fotos e vídeos para carregar vídeos e fotos na conta do usuário."
-      },
-      "bundleIdentifier": "br.com.favid.appartist",
-      "appStoreUrl": "https://itunes.apple.com/us/app/favid/id1246143230"
+      }
     },
     "android": {
       "package": "br.com.favid.appartist",
-      "versionCode": 26,
+      "versionCode": 27,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=br.com.favid.appartist",
+      "icon": "./src/assets/images/source/favid-logo.android.png",
       "permissions": [
         "CAMERA",
         "RECORD_AUDIO",
