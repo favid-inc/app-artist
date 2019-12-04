@@ -7,6 +7,7 @@
     "privacy": "public",
     "orientation": "portrait",
     "githubUrl": "https://github.com/favid-inc/app-artist",
+    "icon": "./src/assets/images/source/favid-logo.png",
     "ios": {
       "bundleIdentifier": "br.com.favid.appartist",
       "appStoreUrl": "https://itunes.apple.com/us/app/favid/id1246143230",
