@@ -9,7 +9,7 @@ export const firebase = {
 };
 
 export const api = {
-  baseURL: 'https://dash.firebaseapp.com/api/appArtist',
+  baseURL: 'https://dash.favid.com.br/api/appArtist',
 };
 
 export const auth = {
