@@ -147,7 +147,7 @@ class ArtistFormComponent extends React.Component<Props, State> {
             <CategorySelector
               single={true}
               value={artist.mainCategory}
-              categories={artist.categories}
+              categories={categories}
               onChange={this.props.onMainCategoryChange}
               styleMainWrapper={themedStyle.input}
               styleDropdownMenu={themedStyle.input}
@@ -171,7 +171,7 @@ const CategorySelector = ({ categories, value, single, onChange, ...restProps })
   const items = React.useMemo(() => {
     return Array.from(new Set(categories || []))
       .filter((c: string) => c && c.trim())
-      .map((c: string) => ({ id: c, name: c}));
+      .map((c: string) => ({ id: c, name: c }));
   }, [categories]);
   const selectedItems = !value ? [] : Array.isArray(value) ? value : [value];
   const handleSelectedItemsChange = React.useCallback(

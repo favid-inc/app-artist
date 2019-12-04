@@ -37,13 +37,19 @@ const constraints = {
       message: '^Preencha seu nome',
     },
   },
+  mainCategory: {
+    presence: {
+      allowEmpty: false,
+      message: '^Selecione sua categoria principal',
+    },
+  },
   birthdate: {
     presence: {
       message: '^Selecione uma data de nascimento',
     },
     numericality: {
       lessThanOrEqualTo: +moment().subtract(13, 'years'),
-      message: '^Voce deve ter no mínimo 13 anos de idade',
+      message: '^Você deve ter no mínimo 13 anos de idade',
     },
   },
 };
@@ -236,7 +242,7 @@ class AccountComponent extends React.Component<Props, State> {
         Alert.alert(
           'Criação de conta',
           'Preencha os campos abaixo para solicitar uma conta de Artista.' +
-            ' Os dados enviados passarão por análise e aprovação antes de você poder acessar a plataforma.',
+          ' Os dados enviados passarão por análise e aprovação antes de você poder acessar a plataforma.',
         );
       }
 
