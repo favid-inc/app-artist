@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Favid - Artist",
+    "name": "Favid Artist",
     "version": "2.0.13",
     "slug": "favid-artist",
     "sdkVersion": "35.0.0",
@@ -20,9 +20,9 @@
     },
     "android": {
       "package": "br.com.favid.appartist",
+      "versionCode": 27,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=br.com.favid.appartist",
       "icon": "./src/assets/images/source/favid-logo.android.png",
-      "versionCode": 27,
       "permissions": [
         "CAMERA",
         "RECORD_AUDIO",
