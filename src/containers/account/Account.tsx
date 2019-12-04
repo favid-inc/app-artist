@@ -151,8 +151,8 @@ class AccountComponent extends React.Component<Props, State> {
               {saving
                 ? 'Enviando dados...'
                 : artist.registerStatus === ArtistRegisterStatus.INCOMPLETE
-                ? 'Enviar dados para análise'
-                : 'Atualizar Perfil'}
+                  ? 'Enviar dados para análise'
+                  : 'Atualizar Perfil'}
             </Button>
             <SignOutButton themedStyle={themedStyle} />
           </View>
