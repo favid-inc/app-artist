@@ -158,7 +158,11 @@ class PresentationVideoComponent extends React.Component<Props, State> {
                 this.uploadCanceler = canceler;
               };
 
-              const { videoUri } = await uploadProfileVideo(result.uri, cancelToken, () => void 0);
+              const { videoUri } = await uploadProfileVideo(result.uri, cancelToken, (uploadPercentage) => {
+                if (this.isLive) {
+                  this.setState({ uploadPercentage });
+                }
+              });
 
               this.props.onChange(videoUri);
             }
