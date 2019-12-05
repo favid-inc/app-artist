@@ -20,7 +20,7 @@
     },
     "android": {
       "package": "br.com.favid.appartist",
-      "versionCode": 27,
+      "versionCode": 28,
       "playStoreUrl": "https://play.google.com/store/apps/details?id=br.com.favid.appartist",
       "icon": "./src/assets/images/source/favid-logo.android.png",
       "permissions": [
