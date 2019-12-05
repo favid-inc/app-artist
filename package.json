@@ -1,6 +1,6 @@
 {
   "name": "@favid-inc/app-artist",
-  "version": "2.0.1",
+  "version": "2.0.14",
   "private": true,
   "author": "Favid Team",
   "main": "node_modules/expo/AppEntry.js",
