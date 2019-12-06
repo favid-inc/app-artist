@@ -141,25 +141,38 @@ class PresentationVideoComponent extends React.Component<Props, State> {
         allowsMultipleSelection: false,
         mediaTypes: ImagePicker.MediaTypeOptions.Videos,
       };
+      await new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          try {
+            const result =
+              source === 'camera'
+                ? await ImagePicker.launchCameraAsync(imagePickerOptions)
+                : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
 
-      const result =
-        source === 'camera'
-          ? await ImagePicker.launchCameraAsync(imagePickerOptions)
-          : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
+            if (this.isLive) {
+              this.setState({ isUploading: true });
+            }
 
-      if (result.cancelled === false) {
-        const cancelToken: CancelToken = (canceler) => {
-          this.uploadCanceler = canceler;
-        };
+            if (result.cancelled === false) {
+              const cancelToken: CancelToken = (canceler) => {
+                this.uploadCanceler = canceler;
+              };
 
-        const { videoUri } = await uploadProfileVideo(result.uri, cancelToken, (uploadPercentage) => {
-          if (this.isLive) {
-            this.setState({ uploadPercentage });
+              const { videoUri } = await uploadProfileVideo(result.uri, cancelToken, (uploadPercentage) => {
+                if (this.isLive) {
+                  this.setState({ uploadPercentage });
+                }
+              });
+
+              this.props.onChange(videoUri);
+            }
+            resolve();
+          } catch (error) {
+            reject(error);
           }
-        });
+        }, 1200);
+      });
 
-        this.props.onChange(videoUri);
-      }
     } catch (e) {
       Alert.alert('Erro', 'Infelizmente não foi possível atualizar seu vídeo de apresentação.');
     } finally {

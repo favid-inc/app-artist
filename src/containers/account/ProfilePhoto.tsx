@@ -104,6 +104,7 @@ class ProfilePhotoComponent extends React.Component<Props, State> {
   };
 
   private uploadMedia = async (source: 'camera' | 'gallery') => {
+
     try {
       const imagePickerOptions: ImagePicker.ImagePickerOptions = {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -112,25 +113,33 @@ class ProfilePhotoComponent extends React.Component<Props, State> {
         aspect: [4, 4],
         quality: 1,
       };
+      await new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          try {
+            const result =
+              source === 'camera'
+                ? await ImagePicker.launchCameraAsync(imagePickerOptions)
+                : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
 
-      const result =
-        source === 'camera'
-          ? await ImagePicker.launchCameraAsync(imagePickerOptions)
-          : await ImagePicker.launchImageLibraryAsync(imagePickerOptions);
+            if (this.isLive) {
+              this.setState({ isUploading: true });
+            }
 
-      if (this.isLive) {
-        this.setState({ isUploading: true });
-      }
+            if (result.cancelled === false) {
+              const cancelToken: CancelToken = (canceler) => {
+                this.uploadCanceler = canceler;
+              };
 
-      if (result.cancelled === false) {
-        const cancelToken: CancelToken = (canceler) => {
-          this.uploadCanceler = canceler;
-        };
+              const { photoUri } = await uploadProfilePhoto(result.uri, cancelToken, () => void 0);
 
-        const { photoUri } = await uploadProfilePhoto(result.uri, cancelToken, () => void 0);
-
-        this.props.onChange(photoUri);
-      }
+              this.props.onChange(photoUri);
+            }
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        }, 1200);
+      });
     } catch (e) {
       Alert.alert('Erro', 'Infelizmente não foi possível atualizar sua foto de perfil.');
     } finally {
