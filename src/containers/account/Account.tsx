@@ -43,6 +43,12 @@ const constraints: Partial<Record<keyof Artist, any>> = {
       message: '^Preencha seu nome',
     },
   },
+  biography: {
+    length: {
+      minimum: 6,
+      message: '^Biografia muito curta',
+    },
+  },
   mainCategory: {
     presence: {
       allowEmpty: false,
