@@ -30,7 +30,13 @@ interface State {
   saving: boolean;
 }
 
-const constraints = {
+const constraints: Partial<Record<keyof Artist, any>> = {
+  artisticName: {
+    presence: {
+      allowEmpty: false,
+      message: '^Preencha seu nome artistico',
+    },
+  },
   name: {
     length: {
       minimum: 6,
@@ -41,6 +47,18 @@ const constraints = {
     presence: {
       allowEmpty: false,
       message: '^Selecione sua categoria principal',
+    },
+  },
+  photoUri: {
+    presence: {
+      allowEmpty: false,
+      message: '^Adicione uma foto',
+    },
+  },
+  videoUri: {
+    presence: {
+      allowEmpty: false,
+      message: '^Adicione um vídeo de apresentação',
     },
   },
   birthdate: {
@@ -218,8 +236,10 @@ class AccountComponent extends React.Component<Props, State> {
       if (this.isLive) {
         this.setState({ artist });
       }
+
+      Alert.alert('Sucesso', 'Dados atualizados');
     } catch (e) {
-      Alert.alert('Erro', 'Infelizmente os dados do seu perfil não puderam ser salvos.');
+      Alert.alert('Erro', e?.response?.data ?? 'Infelizmente os dados do seu perfil não puderam ser salvos.');
     } finally {
       if (this.isLive) {
         this.setState({ saving: false });
