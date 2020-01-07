@@ -1,5 +1,5 @@
 import { Order } from '@favid-inc/api';
-import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
+import { ThemedComponentProps, ThemeType, withStyles, ThemedStyleType } from '@kitten/theme';
 import { Button, Text } from '@kitten/ui';
 import { CloseIconOutline, EvaCheckmarkOutline } from '@src/assets/icons';
 import { SwiperComponent, textStyle } from '@src/components/common';
@@ -91,7 +91,13 @@ class SelectOrderComponent extends Component<Props> {
   };
 }
 
-const SwipeOrders = ({ themedStyle, orders, title, onSelectedOrderChanged }) => (
+interface SwipeOrdersProps {
+  title: string;
+  themedStyle: ThemedStyleType;
+  orders: Order[];
+  onSelectedOrderChanged: (i: number) => void;
+}
+const SwipeOrders = ({ themedStyle, orders, title, onSelectedOrderChanged }: SwipeOrdersProps) => (
   <View style={themedStyle.swiperWrapper}>
     <Text style={themedStyle.title} appearance='hint'>
       {title}
