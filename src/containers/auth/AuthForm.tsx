@@ -47,7 +47,7 @@ class AuthFormComponent extends React.Component<SignIn5Props, State> {
           <Tab titleStyle={themedStyle.tabTitle} title='Entrar'>
             <SignInForm style={themedStyle.tabContentContainer} onDataChange={this.handleSignInFormChange} />
           </Tab>
-          <Tab titleStyle={themedStyle.tabTitle} title='Registrar'>
+          <Tab titleStyle={themedStyle.tabTitle} title='Cadastrar'>
             <SignUpForm style={themedStyle.tabContentContainer} onDataChange={this.handleSignUpFormChange} />
           </Tab>
         </TabView>
