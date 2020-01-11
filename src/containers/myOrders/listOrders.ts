@@ -8,7 +8,7 @@ export async function listOrders(): Promise<Action['Response']> {
     method: 'GET',
     params: {
       orderStatus: OrderStatus.FULFILLED,
-    }
+    },
   };
 
   const response = await apiClient.request<Action['Response']>(request);
