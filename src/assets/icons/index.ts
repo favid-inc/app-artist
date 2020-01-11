@@ -649,6 +649,14 @@ export const MicIconFill = (style: StyleProp<ImageStyle>): IconElement => {
   return Icon(source, style);
 };
 
+export const FlagIconFill = (style: StyleProp<ImageStyle>): IconElement => {
+  const source: IconSource = {
+    imageSource: require('./eva/flag.png'),
+  };
+
+  return Icon(source, style);
+};
+
 export const PaperPlaneIconFill = (style: StyleProp<ImageStyle>): IconElement => {
   const source: IconSource = {
     imageSource: require('./eva/paper-plane.png'),
