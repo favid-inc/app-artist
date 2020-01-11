@@ -2,7 +2,7 @@ import { TopBarNavigationOptions } from '@src/core/navigation/options';
 import { ReviewsContainer } from './ReviewsContainer';
 
 export const ReviewsNavigation = {
-  Reviews: {
+  Avaliações: {
     screen: ReviewsContainer,
     navigationOptions: TopBarNavigationOptions,
   },

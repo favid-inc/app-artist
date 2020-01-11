@@ -68,7 +68,7 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
   };
 
   private handleNavigateToReviews = () => {
-    this.props.onNavigate('Reviews');
+    this.props.onNavigate('Avaliações');
   };
 
   private handleNavigatePolicies = () => {
@@ -117,7 +117,7 @@ const NavigateToReviewsButton = ({ themedStyle, onNavigate }) => {
       icon={MessageCircleIconFill}
       size='large'
     >
-      Minhas Reviews
+      Minhas Avaliações
     </Button>
   );
 };
