@@ -1,6 +1,6 @@
-import { Artist, ArtistCategory } from '@favid-inc/api';
+import { Artist, ArtistCategory, ArtistStatus } from '@favid-inc/api';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
-import { Text } from '@kitten/ui';
+import { Text, Toggle } from '@kitten/ui';
 import React from 'react';
 import { View } from 'react-native';
 import MultiSelect from 'react-native-multiple-select';
@@ -13,13 +13,14 @@ import { NameValidator, StringValidator } from '@src/core/validators';
 interface ComponentProps {
   artist: Artist;
   categories: ArtistCategory[];
-  onNameChange: (val: string) => void;
   onArtisticNameChange: (val: string) => void;
   onBiographyChange: (val: string) => void;
+  onBirthdateChange: (valStr: string, valDate: Date) => void;
   onCategoriesChange: (val: string[]) => void;
   onMainCategoryChange: (val: string) => void;
+  onNameChange: (val: string) => void;
   onPriceChange: (val: string) => void;
-  onBirthdateChange: (valStr: string, valDate: Date) => void;
+  onStatusChange: (status: boolean) => void;
 }
 
 export type Props = ThemedComponentProps & ComponentProps;
@@ -70,6 +71,14 @@ class ArtistFormComponent extends React.Component<Props, State> {
             textStyle={[textStyle.paragraph, themedStyle.inputText]}
             validator={NameValidator}
             value={artist.artisticName}
+          />
+        </View>
+        <View style={themedStyle.middleContainer}>
+          <Toggle
+            checked={artist.status === ArtistStatus.ACTIVE}
+            onChange={this.props.onStatusChange}
+            status='primary'
+            text='Recebendo pedidos'
           />
         </View>
         <View style={themedStyle.middleContainer}>

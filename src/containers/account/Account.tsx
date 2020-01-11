@@ -1,4 +1,4 @@
-import { Artist, ArtistCategory, ArtistRegisterStatus } from '@favid-inc/api';
+import { Artist, ArtistCategory, ArtistRegisterStatus, ArtistStatus } from '@favid-inc/api';
 import { ThemedComponentProps, ThemeType, withStyles } from '@kitten/theme';
 import { Button } from '@kitten/ui';
 import React from 'react';
@@ -162,13 +162,14 @@ class AccountComponent extends React.Component<Props, State> {
             <ArtistForm
               artist={artist}
               categories={this.state.categories}
-              onNameChange={this.handleNameChange}
               onArtisticNameChange={this.handleArtisticNameChange}
-              onPriceChange={this.handlePriceChange}
               onBiographyChange={this.handleBiographyChange}
-              onMainCategoryChange={this.handleMainCategoryChange}
-              onCategoriesChange={this.handleCategoriesChange}
               onBirthdateChange={this.handleBirthdateChange}
+              onCategoriesChange={this.handleCategoriesChange}
+              onMainCategoryChange={this.handleMainCategoryChange}
+              onNameChange={this.handleNameChange}
+              onPriceChange={this.handlePriceChange}
+              onStatusChange={this.handleStatusChange}
             />
             <Button
               style={themedStyle.button}
@@ -205,6 +206,13 @@ class AccountComponent extends React.Component<Props, State> {
 
   private handleArtisticNameChange = (artisticName = '') => {
     this.setState({ artist: { ...this.state.artist, artisticName } });
+  };
+
+  private handleStatusChange = (status) => {
+    if (![ArtistStatus.ACTIVE, ArtistStatus.INACTIVE].includes(this.state.artist.status)) {
+      return;
+    }
+    this.setState({ artist: { ...this.state.artist, status: status ? ArtistStatus.ACTIVE : ArtistStatus.INACTIVE } });
   };
 
   private handlePriceChange = (price = '') => {
