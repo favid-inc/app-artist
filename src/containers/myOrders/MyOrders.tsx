@@ -1,10 +1,10 @@
-import { ThemedComponentProps, withStyles } from '@kitten/theme';
-import { Text } from '@kitten/ui';
+import { ThemedComponentProps, withStyles, ThemeType } from '@kitten/theme';
 import React from 'react';
-import { View, ViewProps, ActivityIndicator } from 'react-native';
+import { View, ListRenderItemInfo, ViewProps, ActivityIndicator } from 'react-native';
 import { OrdersContext } from './context';
 import { Order } from '@favid-inc/api';
-
+import { OrderCard, OrderCardProps } from './OrderCard';
+import { List } from 'react-native-ui-kitten/ui';
 interface ComponentProps {
   loading: boolean;
 }
@@ -22,19 +22,26 @@ class MyOrdersComponent extends React.Component<Props> {
         { loading
           ? <ActivityIndicator size='large' />
           : (
-            this.context.orders.map((order: Order) => (
-              <Text>{order.instructions}</Text>
-            ))
+            <List contentContainerStyle={themedStyle.container} renderItem={this.renderItem} data={this.context.orders} />
           )
         }
       </View>
     );
-  }
+  };
+
+  private renderItem = (info: ListRenderItemInfo<Order>): React.ReactElement<OrderCardProps> => {
+    const { themedStyle } = this.props;
+    return <OrderCard key={info.item.id} style={themedStyle.item} order={info.item} />;
+  };
 }
 
-export const MyOrders = withStyles(MyOrdersComponent, () => ({
+export const MyOrders = withStyles(MyOrdersComponent, (theme: ThemeType) => ({
   container: {
     paddingHorizontal: 5,
-    paddingVertical: 30,
+    paddingVertical: 0,
+  },
+  item: {
+    marginVertical: 8,
+    backgroundColor: theme['background-basic-color-1'],
   },
 }));

@@ -49,20 +49,15 @@ class MyOrdersContainerComponent extends React.Component<Props, State> {
   }
 
   private handleRefresh = async () => {
-    console.log('refreshing ');
     if (this.state.loading) {
       return;
     }
 
     this.setState({ loading: true });
-    console.log('loading ');
     try {
       this.context.setOrders([]);
       const orders = await listOrders();
-      console.log('MyOrdersContainer.tsx orders: ', orders);
       this.context.setOrders(orders);
-    } catch (e) {
-      console.log('erro ', e);
     } finally {
       this.setState({ loading: false });
     }
