@@ -6,6 +6,7 @@ import { TopBarNavigationOptions } from '@src/core/navigation/options';
 
 import { SettingsContainer } from './SettingsContainer';
 import { WalletNavigation } from './wallet';
+import { ReviewsNavigation } from './reviews';
 
 export const SettingsNavigator = createStackNavigator(
   {
@@ -13,6 +14,7 @@ export const SettingsNavigator = createStackNavigator(
     Políticas: PoliciesContainer,
     Conta: AccountContainer,
     ...WalletNavigation,
+    ...ReviewsNavigation,
   },
   {
     headerMode: 'screen',

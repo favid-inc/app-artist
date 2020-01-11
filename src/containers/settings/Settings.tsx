@@ -10,6 +10,7 @@ import {
   MenuIconMessaging,
   PeopleIconFill,
   PersonIconFill,
+  MessageCircleIconFill,
 } from '@src/assets/icons';
 import { AuthContext } from '@src/core/auth';
 import pkg from '../../../package.json';
@@ -36,19 +37,38 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
 
     return (
       <View style={themedStyle.container}>
-        <NavigateToWalletButton themedStyle={themedStyle} onNavigate={this.handleNavigateToWallet} />
-        <NavigateToAccountButton themedStyle={themedStyle} onNavigate={this.handleNavigateToAccount} />
+        <NavigateToWalletButton
+          themedStyle={themedStyle}
+          onNavigate={this.handleNavigateToWallet}
+        />
+        <NavigateToAccountButton
+          themedStyle={themedStyle}
+          onNavigate={this.handleNavigateToAccount}
+        />
+        <NavigateToReviewsButton
+          themedStyle={themedStyle}
+          onNavigate={this.handleNavigateToReviews}
+        />
         <ShareAffilliationButton themedStyle={themedStyle} />
         <NeedHelpButton themedStyle={themedStyle} />
-        <PoliciesButton themedStyle={themedStyle} onNavigate={this.handleNavigatePolicies} />
+        <PoliciesButton
+          themedStyle={themedStyle}
+          onNavigate={this.handleNavigatePolicies}
+        />
         <SigOutButton themedStyle={themedStyle} />
-        <Text category='p1' appearance='hint'>Versão: {pkg.version}</Text>
+        <Text category='p1' appearance='hint'>
+          Versão: {pkg.version}
+        </Text>
       </View>
     );
   }
 
   private handleNavigateToAccount = () => {
     this.props.onNavigate('Conta');
+  };
+
+  private handleNavigateToReviews = () => {
+    this.props.onNavigate('Reviews');
   };
 
   private handleNavigatePolicies = () => {
@@ -62,7 +82,13 @@ class SettingsComponent extends React.Component<SettingsComponentProps, State> {
 
 const NavigateToAccountButton = ({ themedStyle, onNavigate }) => {
   return (
-    <Button status='info' style={themedStyle.button} onPress={onNavigate} icon={PersonIconFill} size='large'>
+    <Button
+      status='info'
+      style={themedStyle.button}
+      onPress={onNavigate}
+      icon={PersonIconFill}
+      size='large'
+    >
       Meu Perfil
     </Button>
   );
@@ -70,8 +96,28 @@ const NavigateToAccountButton = ({ themedStyle, onNavigate }) => {
 
 const NavigateToWalletButton = ({ themedStyle, onNavigate }) => {
   return (
-    <Button status='info' style={themedStyle.button} onPress={onNavigate} icon={BookFill} size='large'>
+    <Button
+      status='info'
+      style={themedStyle.button}
+      onPress={onNavigate}
+      icon={BookFill}
+      size='large'
+    >
       Minha Carteira
+    </Button>
+  );
+};
+
+const NavigateToReviewsButton = ({ themedStyle, onNavigate }) => {
+  return (
+    <Button
+      status='info'
+      style={themedStyle.button}
+      onPress={onNavigate}
+      icon={MessageCircleIconFill}
+      size='large'
+    >
+      Minhas Reviews
     </Button>
   );
 };
@@ -81,7 +127,13 @@ const SigOutButton = ({ themedStyle }) => {
   const handleClick = React.useCallback(() => context.signOut(), [context]);
 
   return (
-    <Button status='danger' style={themedStyle.button} onPress={handleClick} icon={LogOutIconFill} size='large'>
+    <Button
+      status='danger'
+      style={themedStyle.button}
+      onPress={handleClick}
+      icon={LogOutIconFill}
+      size='large'
+    >
       Deslogar
     </Button>
   );
@@ -106,17 +158,32 @@ const ShareAffilliationButton = ({ themedStyle }) => {
   }, [context]);
 
   return (
-    <Button status='warning' style={themedStyle.button} onPress={handleClick} icon={PeopleIconFill} size='large'>
+    <Button
+      status='warning'
+      style={themedStyle.button}
+      onPress={handleClick}
+      icon={PeopleIconFill}
+      size='large'
+    >
       Convidar Afiliado
     </Button>
   );
 };
 
 const NeedHelpButton = ({ themedStyle }) => {
-  const handleClick = React.useCallback(() => Linking.openURL('https://favid.com.br/suporte/'), []);
+  const handleClick = React.useCallback(
+    () => Linking.openURL('https://favid.com.br/suporte/'),
+    [],
+  );
 
   return (
-    <Button status='primary' style={themedStyle.button} onPress={handleClick} icon={MenuIconMessaging} size='large'>
+    <Button
+      status='primary'
+      style={themedStyle.button}
+      onPress={handleClick}
+      icon={MenuIconMessaging}
+      size='large'
+    >
       Preciso de Ajuda
     </Button>
   );
@@ -124,7 +191,13 @@ const NeedHelpButton = ({ themedStyle }) => {
 
 const PoliciesButton = ({ themedStyle, onNavigate }) => {
   return (
-    <Button status='primary' style={themedStyle.button} onPress={onNavigate} icon={FileTextIconFill} size='large'>
+    <Button
+      status='primary'
+      style={themedStyle.button}
+      onPress={onNavigate}
+      icon={FileTextIconFill}
+      size='large'
+    >
       Políticas
     </Button>
   );
