@@ -98,8 +98,6 @@ export const SelectOrderContainer = withStyles<{}>(Container, (theme: ThemeType)
   contentContainer: {
     flex: 1,
     backgroundColor: theme['background-basic-color-2'],
-    // paddingVertical: 30,
-    // paddingHorizontal: 20,
     justifyContent: 'center',
   },
   text: {

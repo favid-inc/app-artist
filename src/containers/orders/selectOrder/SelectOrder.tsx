@@ -5,7 +5,6 @@ import { CloseIconOutline, EvaCheckmarkOutline } from '@src/assets/icons';
 import { SwiperComponent, textStyle } from '@src/components/common';
 import React, { Component } from 'react';
 import { ActivityIndicator, View } from 'react-native';
-
 import { OrdersContext } from '../context';
 
 interface ComponentProps {
