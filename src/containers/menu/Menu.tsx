@@ -1,6 +1,6 @@
 import { ThemedComponentProps, ThemeProvider, ThemeType, withStyles } from '@kitten/theme';
 import { BottomNavigation, BottomNavigationTab } from '@kitten/ui';
-import { ListIconFill, PersonIconFill } from '@src/assets/icons';
+import { ListIconFill, PersonIconFill, GridIconOutline } from '@src/assets/icons';
 import { SafeAreaView } from '@src/core/navigation';
 import { themes } from '@src/core/themes';
 import React from 'react';
@@ -21,7 +21,8 @@ class MenuComponent extends React.Component<Props> {
       <SafeAreaView style={themedStyle.safeAreaContainer}>
         <ThemeProvider theme={{ ...this.props.theme, ...themes['App Theme'] }}>
           <BottomNavigation appearance='noIndicator' selectedIndex={selectedIndex} onSelect={this.onTabSelect}>
-            <BottomNavigationTab title='Pedidos' icon={ListIconFill} />
+            <BottomNavigationTab title='Novos Pedidos' icon={ListIconFill} />
+            <BottomNavigationTab title='Meus Pedidos' icon={GridIconOutline} />
             <BottomNavigationTab title='Configurações' icon={PersonIconFill} />
           </BottomNavigation>
         </ThemeProvider>
